@@ -1,0 +1,63 @@
+
+============================================================
+SCENARIO RESULTS
+============================================================
+
+--- HAPPY_PATH ---
+  Final state: COMPLETED
+  Financials:
+    ClearPath Municipal Infrastructure Authority_to_Meridian Engineering Group Inc.: $0.00
+  Narrative (last 5 lines):
+    2025-02-20 [sat_passed_explicitly] SAT_TESTING → SAT_PASSED
+    2025-02-21 [commissioning_started] SAT_PASSED → COMMISSIONING
+    2025-03-25 [acceptance_certificate_issued] COMMISSIONING → WARRANTY_ACTIVE
+    2026-03-25 [holdback_release_triggered] WARRANTY_ACTIVE → HOLDBACK_RELEASED
+    2027-03-25 [warranty_period_expired] HOLDBACK_RELEASED → COMPLETED
+
+--- LATE_DELIVERY ---
+  Final state: COMPLETED
+  Financials:
+    Meridian Engineering Group Inc._to_ClearPath Municipal Infrastructure Authority: $810,000.00
+    ClearPath Municipal Infrastructure Authority_to_Meridian Engineering Group Inc.: $0.00
+  Narrative (last 5 lines):
+    2025-03-25 [sat_passed_explicitly] SAT_TESTING → SAT_PASSED
+    2025-03-26 [commissioning_started] SAT_PASSED → COMMISSIONING
+    2025-04-20 [acceptance_certificate_issued] COMMISSIONING → WARRANTY_ACTIVE
+    2026-04-20 [holdback_release_triggered] WARRANTY_ACTIVE → HOLDBACK_RELEASED
+    2027-04-20 [warranty_period_expired] HOLDBACK_RELEASED → COMPLETED
+
+--- DEFECT_CORRECTION_AND_WARRANTY_CLAIMS ---
+  Final state: COMPLETED
+  Financials:
+    ClearPath Municipal Infrastructure Authority_to_Meridian Engineering Group Inc.: $0.00
+  Narrative (last 5 lines):
+    2025-09-15 [warranty_claim_submitted] WARRANTY_ACTIVE → WARRANTY_CLAIM_PENDING
+    2025-10-10 [warranty_remedy_completed] WARRANTY_CLAIM_PENDING → WARRANTY_ACTIVE
+    2025-10-15 [no transition] event='cure_deadline_passed' in state='WARRANTY_ACTIVE'
+    2026-04-28 [holdback_release_triggered] WARRANTY_ACTIVE → HOLDBACK_RELEASED
+    2027-04-28 [warranty_period_expired] HOLDBACK_RELEASED → COMPLETED
+
+--- FORCE_MAJEURE_SUSPENSION ---
+  Final state: COMPLETED
+  Financials:
+    Meridian Engineering Group Inc._to_ClearPath Municipal Infrastructure Authority: $810,000.00
+    ClearPath Municipal Infrastructure Authority_to_Meridian Engineering Group Inc.: $0.00
+  Narrative (last 5 lines):
+    2025-04-18 [sat_passed_explicitly] SAT_TESTING → SAT_PASSED
+    2025-04-19 [commissioning_started] SAT_PASSED → COMMISSIONING
+    2025-05-15 [acceptance_certificate_issued] COMMISSIONING → WARRANTY_ACTIVE
+    2026-05-15 [holdback_release_triggered] WARRANTY_ACTIVE → HOLDBACK_RELEASED
+    2027-05-15 [warranty_period_expired] HOLDBACK_RELEASED → COMPLETED
+
+--- HOLDBACK_DISPUTE_ARBITRATION ---
+  Final state: ACTIVE
+  Financials:
+    ClearPath Municipal Infrastructure Authority_to_Meridian Engineering Group Inc.: $0.00
+    Meridian Engineering Group Inc._to_Arbitrator: $0.00
+    ClearPath Municipal Infrastructure Authority_to_Arbitrator: $0.00
+  Narrative (last 5 lines):
+    2025-03-24 [acceptance_certificate_issued] COMMISSIONING → WARRANTY_ACTIVE
+    2026-03-24 [holdback_release_triggered] WARRANTY_ACTIVE → HOLDBACK_RELEASED
+    2026-04-10 [dispute_filed] HOLDBACK_RELEASED → ARBITRATION
+    2026-09-15 [arbitration_resolved_continue] ARBITRATION → ACTIVE
+    2027-03-24 [no transition] event='warranty_period_expired' in state='ACTIVE'

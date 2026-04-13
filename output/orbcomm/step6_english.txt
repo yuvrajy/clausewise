@@ -1,0 +1,454 @@
+================================================================
+CONTRACT: ORBCOMM-Orbital-amendment-1-AIS-payload-procurement-2006
+================================================================
+
+PARTIES
+────────────────────────────────────────
+  1. Iron Mountain
+  2. ORBCOMM Inc
+  3. Orbital Sciences Corporation
+
+CONTRACT PARAMETERS
+────────────────────────────────────────
+  Amounts:
+    Additional Testing First: $94,000.00
+    Additional Testing Subsequent: $26,000.00
+    Contract Price: $17,000,000.00
+    Early Delivery Per Day: $1,700.00
+    Holdback Amount: $680,000.00
+    Late Delivery Per Day: $8,500.00
+    On Time Incentive: $204,000.00
+    Optional Payload First Milestone: $200,000.00
+    Optional Payload Price: $2,200,000.00
+    Power Penalty Per 5W: $10,000.00
+    Weight Penalty Per Kg: $10,000.00
+  Rates:
+    Early Delivery Percent Per Day: 0.01%
+    Holdback Percent: 4.00%
+    Late Delivery Percent Per Day: 0.05%
+    On Time Incentive Percent: 1.20%
+  Durations:
+    Additional Testing Direction Months: 6 days
+    Additional Testing Schedule Relief Days: 14 days
+    Antenna Grace Period Days: 90 days
+    Bond Lc Deadline Days Before Launch: 30 days
+    Delivery Window Months: 14 days
+    Holdback Period Months: 12 days
+    Optional Payload Exercise Months: 3 days
+    Payload Grace Period Days: 60 days
+    Payment Net Days: 10 days
+  Thresholds:
+    Early Delivery Max Total: 100000
+    Late Delivery Max Per Day: 25000
+    Late Delivery Max Total: 2550000
+    Max Optional Payloads: 2
+    Max Payload Mass Kg: 20.31
+    Max Payload Power Watts: 120
+    Power Weight Penalty Max: 100000
+  Key Dates:
+    Delivery Schedule Date: (to be determined)
+    Effective Date: (to be determined)
+    Iot Completion Date: (to be determined)
+    Launch Date: (to be determined)
+    Option Exercise Date: (to be determined)
+
+CONTRACT STATES
+────────────────────────────────────────
+  Contract effective, payloads in development and manufacturing phase ← initial  [rules: R1, R4, R19, R20, R21, R30, R31, R32, R38, R39]
+  Payloads delivered, pending ORBCOMM acceptance and final payment  [rules: R4, R10]
+  Launch approaching, awaiting performance bond or letter of credit from ORBCOMM  [rules: R14, R15]
+  Payloads accepted and launched, awaiting successful IOT completion  [rules: R13]
+  Within grace period for payload/antenna delivery, no penalties yet  [rules: R2, R3, R6, R7]
+  Grace period exhausted, late delivery penalties accruing daily  [rules: R5]
+  All obligations met, holdback released, contract successfully completed ← terminal
+  IOT complete, one-year monitoring period before holdback release  [rules: R13, R15]
+  Contract terminated or obligations ended without full completion ← terminal
+
+RULES AND OBLIGATIONS
+────────────────────────────────────────
+  Rule R1: Obligation (inactive at formation)
+    Orbital Sciences Corporation → ORBCOMM Inc: Design, manufacture, test and deliver EDU Unit and six Additional Payloads
+    Orbital shall design, manufacture, test and deliver one (1) payload (without antenna) engineering development unit (the 'EDU Unit') and six (6) additional Automatic Identification System (AIS) Signal payloads (the 'Additional Payloads') in accordance with the Statement of Work and Specifications attached hereto, including (without limitation) the delivery schedule set forth in Section 2.1.1 of the SOW (the 'Delivery Schedule').
+    Trigger: On date — Amendment becomes effective when both parties sign AND first Milestone Payment received
+    Effect: Asset transfer — Delivery of EDU Unit and six Additional Payloads with associated antenna subsystems per SOW and Specifications
+    Constraint: Grace period
+      Value: $60.00
+      Duration: 60 days
+      60 days grace period for delivery of Additional Payloads (less antenna subsystem)
+    Constraint: Grace period
+      Value: $90.00
+      Duration: 90 days
+      90 days grace period for delivery of antenna subsystems
+
+  Rule R10: Obligation (inactive at formation)
+    Orbital Sciences Corporation → ORBCOMM Inc: Pay power penalty if payload exceeds weight limits
+    If ORBCOMM agrees to accept Additional Payloads that exceed the maximum operating power and/or weight limits set forth in the Specifications, then Orbital shall pay ORBCOMM as compensation therefor, $10,000 per Kg in excess of 20.31 Kg (inclusive of 1kg grace) for the total Additional Payload mass as set forth in Section 4.5.4 of the Specifications and $10,000 per 5 Watts in excess of 120 Watts (inclusive of 5 Watts margin) of total Additional Payload power as set forth in Section 4.5.5 of the Specifications, in each case per Additional Payload, and in each case pro rated for partial amounts in excess of such maximum weight and/or power. The maximum payment that shall be paid for exceeding the power and/or weight limits shall not exceed $100,000.
+    Trigger: When threshold crossed — Additional Payload mass exceeds 20.31 Kg (inclusive of 1kg grace)
+      Threshold: payload_mass_kg gt 20.31
+    Trigger: When threshold crossed — Additional Payload power exceeds 120 Watts (inclusive of 5 Watts margin)
+      Threshold: payload_power_watts gt 120
+    Trigger: When condition precedent holds — ORBCOMM agrees to accept Additional Payloads exceeding maximum limits
+    Effect: Payment — Weight penalty payment
+      Formula: max(0, payload mass kg - 20.31) * 10000
+      From: Orbital Sciences Corporation → To: ORBCOMM Inc
+      Cap: $100,000.00
+    Effect: Payment — Power penalty payment
+      Formula: max(0, (payload power watts - 120) / 5) * 10000
+      From: Orbital Sciences Corporation → To: ORBCOMM Inc
+      Cap: $100,000.00
+    Constraint: Maximum cap
+      Value: $100,000.00
+      Maximum payment cap of $100,000 for exceeding power and/or weight limits (combined)
+    Constraint: Pro rata allocation
+      Pro-rated for partial amounts in excess of maximum weight and/or power
+
+  Rule R13: Obligation (inactive at formation)
+    ORBCOMM Inc → Orbital Sciences Corporation: Hold back 4% of Price until one year after successful IOT
+    As shown in Exhibit E-1, four percent (4%) of the Price ($680,000) (the 'Holdback Amount') shall be held back by ORBCOMM until one-year (12 months) after the successful completion of payload IOT for the Additional Payloads. Said Holdback Amount shall be paid by ORBCOMM to Orbital if all of the Additional Payloads are successfully operating in accordance with their Specifications on said first anniversary date.
+    Trigger: After time period — One year (12 months) after successful completion of payload IOT
+      Duration: 12 months
+    Trigger: When condition precedent holds — All Additional Payloads successfully operating per Specifications on first anniversary date
+      Duration: 12 months
+    Effect: Payment — Payment of Holdback Amount
+      Formula: 680000
+      From: ORBCOMM Inc → To: Orbital Sciences Corporation
+
+  Rule R14: Obligation (inactive at formation)
+    ORBCOMM Inc → Orbital Sciences Corporation: Deliver performance bond or letter of credit
+    In order to holdback such amounts, ORBCOMM shall, not later than thirty (30) days prior to launch, deliver to ORBITAL a performance bond or letter of credit to receive such payment, failing which ORBCOMM shall make the Holdback Payment to Orbital or a mutually agreeable third party escrow agent at that time, but subject to refund by Orbital (or release to ORBCOMM by such escrow agent), on a pro rata basis, if one or more of the Additional Payloads are not so successfully operating on said first anniversary date.
+    Trigger: On date — Not later than 30 days prior to launch
+      Duration: -30 days
+    Effect: Asset transfer — Delivery of performance bond or letter of credit
+    Effect: Rule activation — If ORBCOMM fails to deliver bond/LC, triggers alternative payment obligation
+
+  Rule R15: Obligation (inactive at formation)
+    ORBCOMM Inc → Orbital Sciences Corporation: Make Holdback Payment if bond/LC not delivered
+    If ORBCOMM fails to deliver bond/LC within deadline: ORBCOMM shall make the Holdback Payment to Orbital or a mutually agreeable third party escrow agent at that time, but subject to refund by Orbital (or release to ORBCOMM by such escrow agent), on a pro rata basis, if one or more of the Additional Payloads are not so successfully operating on said first anniversary date.
+    Trigger: Upon absence of event — ORBCOMM fails to deliver performance bond or letter of credit within deadline
+      Duration: -30 days
+    Effect: Payment — Holdback Payment to Orbital or escrow agent
+      Formula: 680000
+      From: ORBCOMM Inc → To: Orbital Sciences Corporation
+    Effect: Payment — Refund by Orbital on pro-rata basis if payloads not successfully operating
+      Formula: 680000 * (failed payloads / total payloads)
+      From: Orbital Sciences Corporation → To: ORBCOMM Inc
+    Constraint: Pro rata allocation
+      Refund on pro-rata basis if one or more payloads not successfully operating
+
+  Rule R17: Obligation (inactive at formation)
+    Orbital Sciences Corporation → ORBCOMM Inc: Manufacture, test and deliver Optional Payloads if option exercised
+    Upon exercise of option, Orbital must manufacture, test and deliver up to two Optional Payloads per SOW and Specifications. Delivery of each Optional Payload (less antenna subsystem) within 14 months plus 60 days grace period after written direction and first milestone payment received. Delivery of antenna subsystem within 14 months plus 90 days grace period after written direction and payment received.
+    Trigger: Upon event — ORBCOMM exercises option per R16
+    Effect: Asset transfer — Delivery of Optional Payload (less antenna) within 14 months plus 60 days grace period
+    Effect: Asset transfer — Delivery of antenna subsystem within 14 months plus 90 days grace period
+    Constraint: Grace period
+      Value: $60.00
+      Duration: 60 days
+      60 days grace period for Optional Payload delivery (less antenna)
+    Constraint: Grace period
+      Value: $90.00
+      Duration: 90 days
+      90 days grace period for antenna subsystem delivery
+
+  Rule R19: Obligation (inactive at formation)
+    Orbital Sciences Corporation → ORBCOMM Inc: Provide all associated deliverables without additional charge
+    Orbital acknowledges and agrees that it shall provide all associated deliverables, including the EDU Unit, documentation, and services, as specified in the Procurement Agreement, this Amendment, and the SOW without additional charge, except if and to the extent that a particular task is expressly stated as being subject to additional payment for time and material expenses.
+    Effect: Asset transfer — Delivery of EDU Unit, documentation, and services without additional charge
+    Constraint: Carve-out
+      Exception for tasks expressly stated as subject to time and material charges
+
+  Rule R2: Obligation (inactive at formation)
+    Orbital Sciences Corporation → ORBCOMM Inc: Deliver Additional Payloads (less antenna) within deadline
+    Additional Payloads (less the antenna subsystem) must be delivered within fourteen (14) months of the Effective Date plus sixty (60) days grace period.
+    Trigger: On date — 14 months after Effective Date plus 60 day grace period
+      Duration: 14 months plus 60 days
+    Effect: Asset transfer — Delivery of Additional Payloads (less antenna subsystem)
+    Constraint: Grace period
+      Value: $60.00
+      Duration: 60 days
+      No penalty incurred during 60 day grace period for payload delivery
+    Exception: R18
+
+  Rule R20: Obligation (inactive at formation)
+    Orbital Sciences Corporation → ORBCOMM Inc: Be responsible for all U.S. tax payments
+    Orbital shall be responsible for all United States (including political subdivisions) tax payments, liabilities, or claims required by present or future laws and regulations.
+    Effect: Payment — Payment of all U.S. taxes, liabilities, or claims
+      Formula: us taxes
+      From: Orbital Sciences Corporation → To: None
+
+  Rule R21: Obligation (inactive at formation)
+    ORBCOMM Inc → Orbital Sciences Corporation: Be responsible for all non-U.S. taxes and customs duties
+    ORBCOMM shall be responsible for all non-U.S. (including political subdivisions) taxes, liabilities, or claims, and any customs duties, if any, levied upon or measured by the sale, the sales price, or the use of the equipment deliverable under this Amendment required by present or future laws and regulations.
+    Effect: Payment — Payment of all non-U.S. taxes, liabilities, claims, and customs duties
+      Formula: non us taxes and duties
+      From: ORBCOMM Inc → To: None
+
+  Rule R24: Obligation (inactive at formation)
+    ORBCOMM Inc → Orbital Sciences Corporation: Indemnify Orbital for damages from holding title after delivery
+    ORBCOMM shall indemnify and hold harmless Orbital from and against any damages as a result of Orbital holding title to any Additional Payloads following delivery thereof to the shipper at Orbital's facility.
+    Trigger: Upon event — Damages arise from Orbital holding title to Additional Payloads after delivery to shipper
+    Effect: Payment — Indemnification payment to hold Orbital harmless
+      Formula: damages from title holding
+      From: ORBCOMM Inc → To: Orbital Sciences Corporation
+
+  Rule R27: Obligation (inactive at formation)
+    Orbital Sciences Corporation → ORBCOMM Inc: Grant first priority security interest in work
+    As collateral for the timely performance by Orbital of its work hereunder, Orbital hereby grants to ORBCOMM a first priority security interest in the work and work in progress and any proceeds therefrom with respect to the Additional Payloads.
+    Effect: Asset transfer — Grant of first priority security interest to ORBCOMM
+
+  Rule R28: Obligation (inactive at formation)
+    ORBCOMM Inc → Orbital Sciences Corporation: Execute release of security interest upon title transfer
+    ORBCOMM agrees to execute any release of such security interest when Orbital has transferred to it title to the Additional Payloads and all deliverables associated therewith.
+    Trigger: Upon event — Orbital transfers title to Additional Payloads and all deliverables to ORBCOMM
+    Effect: Asset transfer — Execution of release of security interest
+
+  Rule R29: Obligation (inactive at formation)
+    Orbital Sciences Corporation → ORBCOMM Inc: Execute documentation of security interest as requested
+    Orbital shall execute such documentation thereof as ORBCOMM may reasonably request.
+    Trigger: Upon notice — ORBCOMM reasonably requests documentation of security interest
+    Effect: Asset transfer — Execution of security interest documentation
+
+  Rule R3: Obligation (inactive at formation)
+    Orbital Sciences Corporation → ORBCOMM Inc: Deliver antenna subsystems within deadline
+    Antenna subsystems must be delivered within fourteen (14) months of the Effective Date plus ninety (90) days grace period.
+    Trigger: On date — 14 months after Effective Date plus 90 day grace period
+      Duration: 14 months plus 90 days
+    Effect: Asset transfer — Delivery of antenna subsystems
+    Constraint: Grace period
+      Value: $90.00
+      Duration: 90 days
+      No penalty incurred during 90 day grace period for antenna delivery
+    Exception: R18
+
+  Rule R30: Obligation (inactive at formation)
+    Orbital Sciences Corporation → ORBCOMM Inc: Properly inventory and identify work
+    Supplies, prints, materials, components, subsystems, and systems as associated with such work shall be properly inventoried and identified as associated with such work in accordance with Orbital's normal inventory control practice, documentation of which shall be subject to inspection by ORBCOMM, and shall not be redeployed to other programs without ORBCOMM's consent.
+
+  Rule R31: Obligation (inactive at formation)
+    Orbital Sciences Corporation → ORBCOMM Inc: Execute and perform Preferred Escrow Agreement
+    Orbital shall, in addition, contemporaneously with its entry into this Amendment, execute (as the 'Depositor') and thereafter perform the obligations of a Depositor under the 'Preferred Escrow Agreement' with Iron Mountain and ORBCOMM (as the 'Preferred Beneficiary'), attached hereto as Exhibit G.
+    Trigger: On date — Contemporaneously with entry into Amendment
+    Effect: State transition — Execution and performance of Preferred Escrow Agreement obligations
+
+  Rule R32: Obligation (inactive at formation)
+    ORBCOMM Inc → Iron Mountain: Pay Iron Mountain's fees under Preferred Escrow Agreement
+    ORBCOMM agrees that it shall pay Iron Mountain's fees under the Preferred Escrow Agreement.
+    Trigger: Upon event — Iron Mountain fees become due under Preferred Escrow Agreement
+    Effect: Payment — Payment of Iron Mountain's escrow fees
+      Formula: iron mountain fees
+      From: ORBCOMM Inc → To: Iron Mountain
+
+  Rule R38: Prohibition (inactive at formation)
+    ORBCOMM Inc → Orbital Sciences Corporation: Must not make public announcement without approval
+    Except as may be required by applicable laws, neither party will make a public announcement regarding this Amendment without the approval of the other party, which approval will not be unreasonably withheld.
+
+  Rule R39: Prohibition (inactive at formation)
+    Orbital Sciences Corporation → ORBCOMM Inc: Must not make public announcement without approval
+    Except as may be required by applicable laws, neither party will make a public announcement regarding this Amendment without the approval of the other party, which approval will not be unreasonably withheld.
+
+  Rule R4: Obligation (inactive at formation)
+    ORBCOMM Inc → Orbital Sciences Corporation: Pay firm fixed price for Additional Payloads
+    The firm fixed price for the six (6) Additional Payloads, each with an additional SRX, shall total $17,000,000 (the 'Price'), which ORBCOMM shall pay Orbital, in accordance with Exhibit E-1 of this Amendment.
+    Trigger: Upon event — Completion of AP Milestones as described in Section 5.3 of Procurement Agreement and per Exhibit E-1
+    Effect: Payment — Payment of Price in accordance with milestone schedule
+      Formula: 17000000
+      From: ORBCOMM Inc → To: Orbital Sciences Corporation
+    Constraint: Maximum cap
+      Value: $10.00
+      Duration: net 10 days
+      Payments due net 10 days for payments defined in Exhibit E-1
+
+  Rule R5: Obligation (inactive at formation)
+    Orbital Sciences Corporation → ORBCOMM Inc: Pay liquidated damages for late delivery
+    If one or more of the Additional Payloads is not delivered in accordance with the requirements of this Amendment within fourteen (14) months of the Effective Date plus sixty (60) days grace period (no penalty shall be incurred in the grace period) for the Additional Payloads (less the antenna subsystem) and fourteen (14) months plus ninety (90) days grace period for the antenna subsystem associated therewith, starting on the first day after such applicable grace period has been exhausted, Orbital shall pay ORBCOMM liquidated delay damages of 0.05% ($8,500) per day for each Additional Payload that has not been so delivered for each day of delay, up to a total amount not to exceed 15 percent (15%) of the Price ($2,550,000) and not to exceed $25,000 per day and inclusive of the penalties described in clause 3.(iv) below.
+    Trigger: After time period — First day after applicable grace period exhausted for late delivery
+      Duration: 14 months plus applicable grace period
+    Effect: Payment — Liquidated delay damages per day of late delivery
+      Formula: days late * 8500
+      From: Orbital Sciences Corporation → To: ORBCOMM Inc
+      Cap: $2,550,000.00
+    Constraint: Maximum cap
+      Value: $2,550,000.00
+      Total maximum cap of 15% of Price ($2,550,000)
+    Constraint: Maximum cap
+      Value: $25,000.00
+      Maximum $25,000 per day cap
+    Constraint: Aggregate constraint
+      Late delivery penalties inclusive of power/weight penalties described in clause 3(iv)
+    Exception: R18
+
+  Rule R6: Obligation (inactive at formation)
+    ORBCOMM Inc → Orbital Sciences Corporation: Pay on-time delivery incentive
+    If the EDU Unit and all of the Additional Payloads are delivered in accordance with the requirements of this Amendment by the date specified in the Delivery Schedule, ORBCOMM shall pay Orbital a single on-time delivery incentive of 1.2% of the Price ($204,000).
+    Trigger: When condition precedent holds — EDU Unit AND all Additional Payloads delivered by Delivery Schedule date
+    Effect: Payment — Single on-time delivery incentive payment
+      Formula: 204000
+      From: ORBCOMM Inc → To: Orbital Sciences Corporation
+
+  Rule R7: Obligation (inactive at formation)
+    ORBCOMM Inc → Orbital Sciences Corporation: Pay early delivery incentive
+    If all of the Additional Payloads are so delivered on time, for each day that the Additional Payloads are so delivered early, ORBCOMM shall pay Orbital 0.01% of Price ($1700) per day of early delivery, up to a total amount not to exceed $100,000 for such early delivery (for all Additional Payloads combined).
+    Trigger: When condition precedent holds — All Additional Payloads delivered on time AND delivered early
+    Effect: Payment — Early delivery incentive per day early
+      Formula: days early * 1700
+      From: ORBCOMM Inc → To: Orbital Sciences Corporation
+      Cap: $100,000.00
+    Constraint: Maximum cap
+      Value: $100,000.00
+      Total maximum of $100,000 for early delivery (all Additional Payloads combined)
+    Constraint: Controlling provision
+      For early delivery calculation: use least early item associated with particular Additional Payload
+
+STATE TRANSITIONS
+────────────────────────────────────────
+  When in state "Contract effective, payloads in development and manufacturing phase":
+
+    On event "bond deadline approaching":
+      Launch date minus 30 days reached, ORBCOMM must provide bond or LC
+      Transitions to "Launch approaching, awaiting performance bond or letter of credit from ORBCOMM".
+
+    On event "delivery window reached":
+      14-month delivery window reached, grace periods now active
+      Transitions to "Within grace period for payload/antenna delivery, no penalties yet".
+
+  When in state "Payloads delivered, pending ORBCOMM acceptance and final payment":
+
+    On event "acceptance with penalty":
+      Guard: payload weight kg  >  20.31 or payload power watts  >  120
+      ORBCOMM accepts payloads exceeding power/weight limits, Orbital pays penalties
+      → Payment: ORBCOMM pays contract price minus holdback [contract price - holdback amount]
+      → Payment: Weight penalty for exceeding 20.31 kg at $10,000/kg [max(0, payload weight kg - 20.31) * weight penalty per kg]
+      → Payment: Power penalty for exceeding 120W at $10,000 per 5W increment [max(0, (payload power watts - 120) / 5) * power penalty per 5w]
+      Transitions to "Payloads accepted and launched, awaiting successful IOT completion".
+
+    On event "rejection":
+      ORBCOMM refuses to accept payloads, contract terminates
+      → Forfeiture: ORBCOMM rejects payloads as non-conforming beyond acceptable limits
+      Transitions to "Contract terminated or obligations ended without full completion".
+
+    On event "acceptance no penalty":
+      Guard: payload weight kg  ≤  20.31 and payload power watts  ≤  120
+      ORBCOMM accepts payloads meeting specs, pays contract price less holdback
+      → Payment: ORBCOMM pays contract price minus 4% holdback ($16,320,000) [contract price - holdback amount]
+      Transitions to "Payloads accepted and launched, awaiting successful IOT completion".
+
+  When in state "Launch approaching, awaiting performance bond or letter of credit from ORBCOMM":
+
+    On event "bond provided":
+      ORBCOMM provides bond or LC, contract proceeds normally
+      → Asset transfer: ORBCOMM delivers performance bond or letter of credit
+      Transitions to "Within grace period for payload/antenna delivery, no penalties yet".
+
+    On event "bond not provided":
+      ORBCOMM fails to provide bond/LC, must pay holdback immediately
+      → Payment: ORBCOMM pays holdback amount upfront due to missing bond/LC [holdback amount]
+      Transitions to "Within grace period for payload/antenna delivery, no penalties yet".
+
+  When in state "Payloads accepted and launched, awaiting successful IOT completion":
+
+    On event "iot completed":
+      In-orbit testing successfully completed, one-year monitoring period begins
+      Transitions to "IOT complete, one-year monitoring period before holdback release".
+
+  When in state "Within grace period for payload/antenna delivery, no penalties yet":
+
+    On event "on time delivery":
+      Guard: days late  =  0
+      Orbital delivers all payloads within grace period, earns on-time incentive
+      → Asset transfer: All payloads and antenna subsystems delivered on time
+      → Payment: On-time delivery incentive of $204,000 [on time incentive]
+      Transitions to "Payloads delivered, pending ORBCOMM acceptance and final payment".
+
+    On event "early delivery":
+      Guard: days early  >  0
+      Orbital delivers early, earns both on-time and early delivery incentives
+      → Asset transfer: All payloads and antenna subsystems delivered early
+      → Payment: On-time delivery incentive [on time incentive]
+      → Payment: Early delivery incentive at $1,700/day, capped at $100,000 [days early * early delivery per day]
+      Transitions to "Payloads delivered, pending ORBCOMM acceptance and final payment".
+
+    On event "grace period expired":
+      Grace period exhausted without delivery, late penalties begin accruing
+      Transitions to "Grace period exhausted, late delivery penalties accruing daily".
+
+  When in state "Grace period exhausted, late delivery penalties accruing daily":
+
+    On event "termination for default":
+      Contract terminated due to prolonged late delivery or other material breach
+      → Forfeiture: Contract terminated for excessive delay or other default
+      Transitions to "Contract terminated or obligations ended without full completion".
+
+    On event "late delivery":
+      Guard: days late  >  0
+      Orbital delivers late, pays liquidated damages
+      → Asset transfer: Payloads and antenna subsystems delivered late
+      → Payment: Liquidated damages at $8,500/day (max $25k/day), capped at $2,550,000 [days late * late delivery per day]
+      Transitions to "Payloads delivered, pending ORBCOMM acceptance and final payment".
+
+  When in state "IOT complete, one-year monitoring period before holdback release":
+
+    On event "one year success":
+      Guard: payloads operating  =  total payloads
+      All payloads successfully operating one year after IOT, holdback fully released
+      → Payment: Full holdback released, all payloads operating successfully for one year [holdback amount]
+      Transitions to "All obligations met, holdback released, contract successfully completed".
+
+    On event "one year partial failure":
+      Guard: payloads operating  <  total payloads
+      One or more payloads failed during one-year period, partial holdback release
+      → Payment: Pro-rata holdback payment based on successfully operating payloads [holdback amount * (payloads operating / total payloads)]
+      → Forfeiture: Orbital forfeits portion of holdback for non-operating payloads
+      Transitions to "All obligations met, holdback released, contract successfully completed".
+
+UNMODELED RULES
+────────────────────────────────────────
+  The following rules could not be formally modeled:
+
+  R11: [Permission] If ORBCOMM directs (in writing) Orbital to perform the additional environmental testing for flight payloads as set forth in Section 6.3.2.2 of the SOW, ORBCOMM shall pay Orbital an additional amount of $94,000 for the first Additional Payload so tested at ORBCOMM's direction and an amount of $26,000 for each subsequent Additional Payload thereafter. In addition, Orbital shall be allowed up to fourteen (14 days of schedule relief as necessary to accomplish such testing. ORBCOMM's direction for this additional testing must be received within six (6) months after the Effective Date.
+    Reason: PERMISSION is not in the four mappable primitives
+
+  R12: [Covenant] All time and material charges, if applicable, shall be calculated in accordance with Exhibit E-1 hereto. Where insofar in this regard it becomes necessary to calculate 'costs,' costs shall be limited to reasonable, out of pocket, and documented costs actually incurred, and only insofar as the costs exceed the cost that would have had to been incurred by Orbital in any event without additional charge.
+    Reason: COVENANT is not in the four mappable primitives
+
+  R16: [Power] ORBCOMM shall have the option to require Orbital to manufacture, test and deliver to ORBCOMM up to two (2) Additional Payloads (in addition to those delivered pursuant to clause 1 above) in accordance with the SOW and the Specifications (the 'Optional Payloads'). The firm fixed price for each Optional Payload, each with an additional SRX, shall be $2,200,000. Delivery of each Optional Payload(less the antenna subsystem) will be fourteen (14) months (plus sixty (60) days grace period) and fourteen (14) months (plus ninety (90) days grace period) for the antenna subsystem associated therewith, after ORBCOMM's written direction is received exercising this option and the first milestone payment for each Optional Payload in the amount of $200,000 is received. The payment schedule for the Optional Payloads shall correspond as closely as possible (in terms of time and percentage of total price) to the AP Milestones set forth on Exhibit E-1. This option must be exercised, if at all and at ORBCOMM's sole discretion, no later than three (3) months after the Effective Date with respect to each Additional Option. This option may be exercised by ORBCOMM in whole or in part.
+    Reason: POWER is not in the four mappable primitives
+
+  R18: [Immunity] If and to the extent that a delay in delivery is excused by force majeure then Orbital shall not be responsible for late charges under clause 3(i) above for the period of such force majeure delay. The time required for delivery in order for Orbital to achieve on-time or early delivery incentives under clause 3(ii) above shall, however, not be extended by force majeure delays.
+    Reason: IMMUNITY is not in the four mappable primitives
+
+  R22: [Representation] Transfer of title to each deliverable item will pass to ORBCOMM prior to each deliverable item entering non-U.S. territory and after each deliverable item leaves the United States.
+    Reason: REPRESENTATION is not in the four mappable primitives
+
+  R23: [Covenant] Orbital shall agree to make reasonable changes in the Procurement Agreement and this Amendment, such as modifying the place of delivery and/or delaying the passage of title, as ORBCOMM may request in writing, in order to improve the tax efficiencies with respect to the Additional Payloads, provided that any such change shall be economically neutral to Orbital.
+    Reason: COVENANT is not in the four mappable primitives
+
+  R25: [Covenant] Orbital shall, at ORBCOMM's request, provide reasonable assistance to ORBCOMM, in seeking to obtain launch and/or in-orbit insurance and/or in pursuing any claim thereunder, including participating in a reasonable number of technical presentations to insurers and providing such documentation as may be reasonably requested.
+    Reason: COVENANT is not in the four mappable primitives
+
+  R26: [Covenant] If integration testing reveals defects in the Additional Payloads resulting from a defect in workmanship or materials or noncompliance with the SOW or Specifications, Orbital shall be responsible, at its own expense, for the timely repair and correction of the Additional Payloads, if practical at the facility of the integrator (with the time spent by its personnel not charged against then allocated time to ORBCOMM) and if not, at Orbital's facilities, with all transportation, insurance, and risk of loss in transit to and from the integrator's facilities and those of Orbital borne by Orbital.
+    Reason: COVENANT is not in the four mappable primitives
+
+  R33: [Power] Subject to ORBCOMM's obligation to pay Iron Mountain's fees, Orbital agrees that ORBCOMM shall have the right to adjust the level of work to be performed by Iron Mountain and/or terminate the Preferred Escrow Agreement in accordance with its terms and Orbital shall execute and deliver such instructions to Iron Mountain as ORBCOMM may reasonably request to reflect ORBCOMM's decisions in this regard.
+    Reason: POWER is not in the four mappable primitives
+
+  R34: [Covenant] Each Party shall comply with all applicable laws and regulations with respect to the performance of this Amendment.
+    Reason: COVENANT is not in the four mappable primitives
+
+  R35: [Covenant] Each Party shall comply with all applicable laws and regulations with respect to the performance of this Amendment.
+    Reason: COVENANT is not in the four mappable primitives
+
+  R36: [Permission] Nothing in the Procurement Agreement or this Amendment shall be deemed to bar either party from seeking specific performance of the other party's obligations hereunder.
+    Reason: PERMISSION is not in the four mappable primitives
+
+  R37: [Permission] Nothing in the Procurement Agreement or this Amendment shall be deemed to bar either party from seeking specific performance of the other party's obligations hereunder.
+    Reason: PERMISSION is not in the four mappable primitives
+
+  R8: [Representation] Timely delivery of an Additional Payload shall require the timely delivery of both the payload unit (without the antenna) and the associated antenna (A) within fourteen (14) months of the Effective Date plus sixty (60) days grace period for the Additional Payloads (less the antenna subsystem) and fourteen (14) months plus ninety (90) days grace period for the antenna subsystem associated therewith, for purposes of clause 3(i) above and (B) in accordance with the Delivery Schedule for purposes of clause 3(ii) above.
+    Reason: REPRESENTATION is not in the four mappable primitives
+
+  R9: [Covenant] For purposes of calculating late delivery penalties, however, late deliveries of separate items associated with the same Additional Payload shall be determined by the greatest lateness of any single item, but shall not be additive. For example, if the first flight Additional Payload (less the antenna subsystem) is delivered seventy-five (75) days late, and the first flight antenna subsystem is delivered one hundred (100) days late, the late charge shall be calculated on the basis that the first Additional Payload was delivered seventy-five (75) days late, or fifteen (15) days worth of late charges.
+    Reason: COVENANT is not in the four mappable primitives
+
+================================================================
+END OF CONTRACT
+================================================================

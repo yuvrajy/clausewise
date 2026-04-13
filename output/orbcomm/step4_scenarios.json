@@ -1,0 +1,301 @@
+{
+  "happy_path": [
+    {
+      "timestamp": "2025-04-21",
+      "event_type": "bond_deadline_approaching",
+      "party": "ORBCOMM",
+      "details": {
+        "days_before_launch": 30,
+        "amount": 680000
+      }
+    },
+    {
+      "timestamp": "2025-04-25",
+      "event_type": "bond_provided",
+      "party": "ORBCOMM",
+      "details": {
+        "bond_type": "letter_of_credit",
+        "amount": 680000
+      }
+    },
+    {
+      "timestamp": "2025-06-15",
+      "event_type": "early_delivery",
+      "party": "Orbital Sciences Corporation",
+      "details": {
+        "days_early": 5,
+        "payload_weight_kg": 19.8,
+        "payload_power_watts": 115
+      }
+    },
+    {
+      "timestamp": "2025-06-20",
+      "event_type": "acceptance_no_penalty",
+      "party": "ORBCOMM",
+      "details": {
+        "amount": 16316000,
+        "days_late": 0,
+        "days_early": 5,
+        "early_delivery_bonus": 8500,
+        "on_time_bonus": 204000
+      }
+    },
+    {
+      "timestamp": "2025-07-01",
+      "event_type": "iot_completed",
+      "party": "ORBCOMM",
+      "details": {
+        "all_payloads_operational": true,
+        "total_payloads": 6
+      }
+    },
+    {
+      "timestamp": "2026-07-01",
+      "event_type": "one_year_success",
+      "party": "ORBCOMM",
+      "details": {
+        "payloads_operating": 6,
+        "total_payloads": 6,
+        "amount": 680000,
+        "days_late": 0
+      }
+    }
+  ],
+  "late_delivery": [
+    {
+      "timestamp": "2025-04-21",
+      "event_type": "bond_deadline_approaching",
+      "party": "ORBCOMM",
+      "details": {
+        "days_before_launch": 30,
+        "amount": 680000
+      }
+    },
+    {
+      "timestamp": "2025-04-25",
+      "event_type": "bond_provided",
+      "party": "ORBCOMM",
+      "details": {
+        "bond_type": "performance_bond",
+        "amount": 680000
+      }
+    },
+    {
+      "timestamp": "2025-08-20",
+      "event_type": "grace_period_expired",
+      "party": "Orbital Sciences Corporation",
+      "details": {
+        "grace_end_date": "2025-08-19",
+        "delivery_deadline": "2025-06-20"
+      }
+    },
+    {
+      "timestamp": "2025-09-15",
+      "event_type": "late_delivery",
+      "party": "Orbital Sciences Corporation",
+      "details": {
+        "days_late": 87,
+        "payload_weight_kg": 20.1,
+        "payload_power_watts": 118,
+        "penalty_amount": 739500
+      }
+    },
+    {
+      "timestamp": "2025-09-20",
+      "event_type": "acceptance_no_penalty",
+      "party": "ORBCOMM",
+      "details": {
+        "amount": 16260500,
+        "days_late": 87,
+        "late_delivery_penalty": 739500
+      }
+    },
+    {
+      "timestamp": "2025-10-05",
+      "event_type": "iot_completed",
+      "party": "ORBCOMM",
+      "details": {
+        "all_payloads_operational": true,
+        "total_payloads": 6
+      }
+    },
+    {
+      "timestamp": "2026-10-05",
+      "event_type": "one_year_success",
+      "party": "ORBCOMM",
+      "details": {
+        "payloads_operating": 6,
+        "total_payloads": 6,
+        "amount": 680000,
+        "days_late": 0
+      }
+    }
+  ],
+  "acceptance_with_penalty": [
+    {
+      "timestamp": "2025-04-21",
+      "event_type": "bond_deadline_approaching",
+      "party": "ORBCOMM",
+      "details": {
+        "days_before_launch": 30,
+        "amount": 680000
+      }
+    },
+    {
+      "timestamp": "2025-04-24",
+      "event_type": "bond_not_provided",
+      "party": "ORBCOMM",
+      "details": {
+        "escrow_arrangement": true,
+        "amount": 680000
+      }
+    },
+    {
+      "timestamp": "2025-06-20",
+      "event_type": "on_time_delivery",
+      "party": "Orbital Sciences Corporation",
+      "details": {
+        "days_late": 0,
+        "payload_weight_kg": 21.5,
+        "payload_power_watts": 127
+      }
+    },
+    {
+      "timestamp": "2025-06-25",
+      "event_type": "acceptance_with_penalty",
+      "party": "ORBCOMM",
+      "details": {
+        "amount": 16180000,
+        "days_late": 0,
+        "on_time_bonus": 204000,
+        "weight_excess_kg": 1.19,
+        "power_excess_watts": 7,
+        "weight_penalty": 11900,
+        "power_penalty": 14000,
+        "total_penalty": 25900
+      }
+    },
+    {
+      "timestamp": "2025-07-15",
+      "event_type": "iot_completed",
+      "party": "ORBCOMM",
+      "details": {
+        "all_payloads_operational": true,
+        "total_payloads": 6
+      }
+    },
+    {
+      "timestamp": "2026-07-15",
+      "event_type": "one_year_success",
+      "party": "ORBCOMM",
+      "details": {
+        "payloads_operating": 6,
+        "total_payloads": 6,
+        "amount": 680000,
+        "days_late": 0
+      }
+    }
+  ],
+  "partial_iot_failure": [
+    {
+      "timestamp": "2025-04-21",
+      "event_type": "bond_deadline_approaching",
+      "party": "ORBCOMM",
+      "details": {
+        "days_before_launch": 30,
+        "amount": 680000
+      }
+    },
+    {
+      "timestamp": "2025-04-26",
+      "event_type": "bond_provided",
+      "party": "ORBCOMM",
+      "details": {
+        "bond_type": "letter_of_credit",
+        "amount": 680000
+      }
+    },
+    {
+      "timestamp": "2025-06-18",
+      "event_type": "early_delivery",
+      "party": "Orbital Sciences Corporation",
+      "details": {
+        "days_early": 2,
+        "payload_weight_kg": 20.0,
+        "payload_power_watts": 119
+      }
+    },
+    {
+      "timestamp": "2025-06-22",
+      "event_type": "acceptance_no_penalty",
+      "party": "ORBCOMM",
+      "details": {
+        "amount": 16316000,
+        "days_late": 0,
+        "days_early": 2,
+        "early_delivery_bonus": 3400,
+        "on_time_bonus": 204000
+      }
+    },
+    {
+      "timestamp": "2025-07-10",
+      "event_type": "iot_completed",
+      "party": "ORBCOMM",
+      "details": {
+        "all_payloads_operational": true,
+        "total_payloads": 6
+      }
+    },
+    {
+      "timestamp": "2026-07-10",
+      "event_type": "one_year_partial_failure",
+      "party": "ORBCOMM",
+      "details": {
+        "payloads_operating": 5,
+        "total_payloads": 6,
+        "amount": 566667,
+        "prorated_refund": 113333
+      }
+    }
+  ],
+  "termination_for_default": [
+    {
+      "timestamp": "2025-04-21",
+      "event_type": "bond_deadline_approaching",
+      "party": "ORBCOMM",
+      "details": {
+        "days_before_launch": 30,
+        "amount": 680000
+      }
+    },
+    {
+      "timestamp": "2025-04-25",
+      "event_type": "bond_provided",
+      "party": "ORBCOMM",
+      "details": {
+        "bond_type": "letter_of_credit",
+        "amount": 680000
+      }
+    },
+    {
+      "timestamp": "2025-08-20",
+      "event_type": "grace_period_expired",
+      "party": "Orbital Sciences Corporation",
+      "details": {
+        "grace_end_date": "2025-08-19",
+        "delivery_deadline": "2025-06-20"
+      }
+    },
+    {
+      "timestamp": "2026-01-15",
+      "event_type": "termination_for_default",
+      "party": "ORBCOMM",
+      "details": {
+        "days_late": 209,
+        "accumulated_penalties": 1776500,
+        "reason": "excessive_delay_and_penalties",
+        "contract_value_at_risk": 17000000
+      }
+    }
+  ]
+}

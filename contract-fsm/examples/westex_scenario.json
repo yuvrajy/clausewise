@@ -1,0 +1,15 @@
+{
+  "scenario_name": "Mixed usage: purchases, late payment, cure, full payoff",
+  "events": [
+    { "timestamp": "2026-01-15", "event_type": "purchase",                "party": "Cardholder", "details": { "amount": 1200.00, "merchant": "Best Buy" } },
+    { "timestamp": "2026-01-22", "event_type": "purchase",                "party": "Cardholder", "details": { "amount": 350.00,  "merchant": "IKEA" } },
+    { "timestamp": "2026-02-14", "event_type": "billing_cycle_close",     "party": "WesTex Community Credit Union", "details": { "days_in_cycle": 30 } },
+    { "timestamp": "2026-02-20", "event_type": "payment_received",        "party": "Cardholder", "details": { "amount": 50.00 } },
+    { "timestamp": "2026-02-28", "event_type": "purchase",                "party": "Cardholder", "details": { "amount": 200.00,  "merchant": "Whole Foods" } },
+    { "timestamp": "2026-03-16", "event_type": "billing_cycle_close",     "party": "WesTex Community Credit Union", "details": { "days_in_cycle": 31 } },
+    { "timestamp": "2026-04-01", "event_type": "payment_deadline_passed", "party": "Cardholder", "details": { "days_late": 15 } },
+    { "timestamp": "2026-04-05", "event_type": "payment_received",        "party": "Cardholder", "details": { "amount": 100.00 } },
+    { "timestamp": "2026-04-15", "event_type": "billing_cycle_close",     "party": "WesTex Community Credit Union", "details": { "days_in_cycle": 30 } },
+    { "timestamp": "2026-04-20", "event_type": "payment_received",        "party": "Cardholder", "details": { "amount": 1800.00 } }
+  ]
+}

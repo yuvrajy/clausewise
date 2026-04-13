@@ -1,0 +1,2412 @@
+{
+  "contract_id": "ORBCOMM-Orbital-amendment-1-AIS-payload-procurement-2006",
+  "parties": [
+    "ORBCOMM",
+    "Orbital",
+    "Iron Mountain"
+  ],
+  "initial_state": "PENDING_EFFECTIVE",
+  "params": {
+    "parties": [
+      "ORBCOMM",
+      "Orbital",
+      "Iron Mountain"
+    ],
+    "base_dates": {
+      "effective_date": null,
+      "delivery_schedule_date": null,
+      "iot_completion_date": null,
+      "launch_date": null,
+      "option_exercise_date": null,
+      "defect_discovery_date": null,
+      "remedy_completion_date": null
+    },
+    "amounts": {
+      "contract_price": "17000000",
+      "holdback_amount": "680000",
+      "on_time_incentive": "204000",
+      "early_delivery_per_day": "1700",
+      "late_delivery_per_day": "8500",
+      "optional_payload_price": "2200000",
+      "optional_payload_first_milestone": "200000",
+      "environmental_testing_first": "94000",
+      "environmental_testing_subsequent": "26000",
+      "weight_penalty_per_kg": "10000",
+      "power_penalty_per_5w": "10000"
+    },
+    "rates": {},
+    "durations": {
+      "delivery_deadline_payload_days": 420,
+      "delivery_deadline_antenna_days": 420,
+      "grace_period_payload_days": 60,
+      "grace_period_antenna_days": 90,
+      "holdback_period_months": 12,
+      "bond_delivery_before_launch_days": 30,
+      "optional_payload_exercise_window_days": 90,
+      "environmental_testing_direction_window_days": 180,
+      "environmental_testing_schedule_relief_days": 14,
+      "payment_net_days": 10
+    },
+    "thresholds": {
+      "payload_weight_kg": "20.31",
+      "payload_power_watts": "120",
+      "late_delivery_cap": "2550000",
+      "daily_late_delivery_cap": "25000",
+      "early_delivery_cap": "100000",
+      "power_weight_penalty_cap": "100000"
+    }
+  },
+  "states": [
+    {
+      "id": "PENDING_EFFECTIVE",
+      "description": "Contract signed but not yet effective; awaiting first milestone payment",
+      "terminal": false,
+      "active_rule_ids": []
+    },
+    {
+      "id": "ACTIVE",
+      "description": "Contract effective; Orbital obligated to design, manufacture, test and deliver payloads",
+      "terminal": false,
+      "active_rule_ids": [
+        "R1",
+        "R2",
+        "R18",
+        "R21",
+        "R23",
+        "R24",
+        "R25",
+        "R27",
+        "R29",
+        "R31",
+        "R32",
+        "R38",
+        "R39",
+        "R40"
+      ]
+    },
+    {
+      "id": "AWAITING_BOND",
+      "description": "30 days before launch; ORBCOMM must deliver bond/LOC or make holdback payment",
+      "terminal": false,
+      "active_rule_ids": [
+        "R1",
+        "R2",
+        "R13",
+        "R18",
+        "R21",
+        "R23",
+        "R24",
+        "R25",
+        "R27",
+        "R29",
+        "R31",
+        "R32",
+        "R38",
+        "R39",
+        "R40"
+      ]
+    },
+    {
+      "id": "BOND_DELIVERED",
+      "description": "Performance bond or letter of credit delivered; no holdback payment required",
+      "terminal": false,
+      "active_rule_ids": [
+        "R1",
+        "R2",
+        "R18",
+        "R21",
+        "R23",
+        "R24",
+        "R25",
+        "R27",
+        "R29",
+        "R31",
+        "R32",
+        "R38",
+        "R39",
+        "R40"
+      ]
+    },
+    {
+      "id": "HOLDBACK_PAID",
+      "description": "ORBCOMM paid holdback instead of delivering bond/LOC",
+      "terminal": false,
+      "active_rule_ids": [
+        "R1",
+        "R2",
+        "R18",
+        "R21",
+        "R23",
+        "R24",
+        "R25",
+        "R27",
+        "R29",
+        "R31",
+        "R32",
+        "R38",
+        "R39",
+        "R40"
+      ]
+    },
+    {
+      "id": "DELIVERY_COMPLETE_ON_TIME",
+      "description": "All payloads delivered on time; eligible for on-time incentive",
+      "terminal": false,
+      "active_rule_ids": [
+        "R2",
+        "R5",
+        "R18",
+        "R21",
+        "R23",
+        "R24",
+        "R25",
+        "R28",
+        "R31",
+        "R32",
+        "R38",
+        "R39"
+      ]
+    },
+    {
+      "id": "DELIVERY_COMPLETE_EARLY",
+      "description": "All payloads delivered early; eligible for early delivery incentive",
+      "terminal": false,
+      "active_rule_ids": [
+        "R2",
+        "R6",
+        "R18",
+        "R21",
+        "R23",
+        "R24",
+        "R25",
+        "R28",
+        "R31",
+        "R32",
+        "R38",
+        "R39"
+      ]
+    },
+    {
+      "id": "DELIVERY_COMPLETE_LATE",
+      "description": "All payloads delivered late; late penalties apply",
+      "terminal": false,
+      "active_rule_ids": [
+        "R2",
+        "R4",
+        "R8",
+        "R18",
+        "R21",
+        "R23",
+        "R24",
+        "R25",
+        "R28",
+        "R31",
+        "R32",
+        "R38",
+        "R39"
+      ]
+    },
+    {
+      "id": "INTEGRATION_TESTING",
+      "description": "Payloads undergoing integration testing; defects may be discovered",
+      "terminal": false,
+      "active_rule_ids": [
+        "R2",
+        "R18",
+        "R21",
+        "R23",
+        "R24",
+        "R25",
+        "R28",
+        "R31",
+        "R32",
+        "R38",
+        "R39"
+      ]
+    },
+    {
+      "id": "DEFECT_CURE",
+      "description": "Defects discovered during integration testing; Orbital must repair",
+      "terminal": false,
+      "active_rule_ids": [
+        "R2",
+        "R18",
+        "R21",
+        "R23",
+        "R24",
+        "R25",
+        "R28",
+        "R31",
+        "R32",
+        "R38",
+        "R39"
+      ]
+    },
+    {
+      "id": "OPTION_EXERCISED",
+      "description": "ORBCOMM exercised option for Optional Payload; Orbital must deliver",
+      "terminal": false,
+      "active_rule_ids": [
+        "R1",
+        "R2",
+        "R16",
+        "R17",
+        "R18",
+        "R21",
+        "R23",
+        "R24",
+        "R25",
+        "R27",
+        "R29",
+        "R31",
+        "R32",
+        "R38",
+        "R39",
+        "R40"
+      ]
+    },
+    {
+      "id": "ENVIRONMENTAL_TESTING_REQUESTED",
+      "description": "ORBCOMM directed additional environmental testing",
+      "terminal": false,
+      "active_rule_ids": [
+        "R1",
+        "R2",
+        "R19",
+        "R20",
+        "R18",
+        "R21",
+        "R23",
+        "R24",
+        "R25",
+        "R27",
+        "R29",
+        "R31",
+        "R32",
+        "R38",
+        "R39",
+        "R40"
+      ]
+    },
+    {
+      "id": "SECURITY_INTEREST_GRANTED",
+      "description": "Security interest in work granted to ORBCOMM",
+      "terminal": false,
+      "active_rule_ids": [
+        "R1",
+        "R2",
+        "R18",
+        "R21",
+        "R23",
+        "R24",
+        "R25",
+        "R27",
+        "R28",
+        "R29",
+        "R31",
+        "R32",
+        "R38",
+        "R39",
+        "R40"
+      ]
+    },
+    {
+      "id": "SECURITY_INTEREST_RELEASED",
+      "description": "Security interest released upon title transfer",
+      "terminal": false,
+      "active_rule_ids": [
+        "R2",
+        "R18",
+        "R21",
+        "R23",
+        "R24",
+        "R31",
+        "R32",
+        "R38",
+        "R39"
+      ]
+    },
+    {
+      "id": "FINAL_SETTLEMENT",
+      "description": "All deliverables provided, all payments made, all penalties/incentives settled",
+      "terminal": false,
+      "active_rule_ids": [
+        "R18",
+        "R21",
+        "R38",
+        "R39"
+      ]
+    },
+    {
+      "id": "COMPLETED",
+      "description": "Contract fully performed and closed",
+      "terminal": true,
+      "active_rule_ids": []
+    }
+  ],
+  "transitions": [
+    {
+      "id": "TR1",
+      "from_states": [
+        "PENDING_EFFECTIVE"
+      ],
+      "to_state": "ACTIVE",
+      "event_type": "first_milestone_payment_received",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E1_TR1",
+          "type": "STATE_TRANSITION",
+          "new_state": "ACTIVE",
+          "description": "Contract becomes effective upon first milestone payment"
+        },
+        {
+          "id": "E2_TR1",
+          "type": "RULE_ACTIVATION",
+          "target_rule_id": "R1",
+          "new_state": "active",
+          "description": "Activate Orbital's delivery obligation"
+        }
+      ],
+      "description": "Contract becomes effective when both parties sign and first milestone payment received"
+    },
+    {
+      "id": "TR2",
+      "from_states": [
+        "ACTIVE",
+        "OPTION_EXERCISED",
+        "ENVIRONMENTAL_TESTING_REQUESTED",
+        "SECURITY_INTEREST_GRANTED"
+      ],
+      "to_state": "AWAITING_BOND",
+      "event_type": "bond_deadline_reached",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E1_TR2",
+          "type": "STATE_TRANSITION",
+          "new_state": "AWAITING_BOND",
+          "description": "30 days before launch; bond/LOC or holdback payment required"
+        },
+        {
+          "id": "E2_TR2",
+          "type": "RULE_ACTIVATION",
+          "target_rule_id": "R13",
+          "new_state": "active",
+          "description": "Activate ORBCOMM's bond delivery obligation"
+        }
+      ],
+      "description": "Trigger bond/LOC requirement 30 days before launch"
+    },
+    {
+      "id": "TR3",
+      "from_states": [
+        "AWAITING_BOND"
+      ],
+      "to_state": "BOND_DELIVERED",
+      "event_type": "bond_delivered",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E1_TR3",
+          "type": "ASSET_TRANSFER",
+          "description": "ORBCOMM delivers performance bond or letter of credit to Orbital"
+        },
+        {
+          "id": "E2_TR3",
+          "type": "STATE_TRANSITION",
+          "new_state": "BOND_DELIVERED",
+          "description": "Bond delivered; no holdback payment needed"
+        }
+      ],
+      "description": "ORBCOMM delivers performance bond or letter of credit"
+    },
+    {
+      "id": "TR4",
+      "from_states": [
+        "AWAITING_BOND"
+      ],
+      "to_state": "HOLDBACK_PAID",
+      "event_type": "bond_not_delivered",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E1_TR4",
+          "type": "PAYMENT",
+          "payment_formula": "holdback_amount",
+          "payment_from": "ORBCOMM",
+          "payment_to": "Orbital",
+          "cap": null,
+          "description": "ORBCOMM pays $680,000 holdback to Orbital or escrow agent"
+        },
+        {
+          "id": "E2_TR4",
+          "type": "STATE_TRANSITION",
+          "new_state": "HOLDBACK_PAID",
+          "description": "Holdback payment made instead of bond/LOC"
+        }
+      ],
+      "description": "ORBCOMM fails to deliver bond/LOC; pays holdback instead"
+    },
+    {
+      "id": "TR5",
+      "from_states": [
+        "ACTIVE",
+        "BOND_DELIVERED",
+        "HOLDBACK_PAID",
+        "OPTION_EXERCISED",
+        "ENVIRONMENTAL_TESTING_REQUESTED",
+        "SECURITY_INTEREST_GRANTED"
+      ],
+      "to_state": "DELIVERY_COMPLETE_ON_TIME",
+      "event_type": "on_time_delivery_complete",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E1_TR5",
+          "type": "ASSET_TRANSFER",
+          "description": "Orbital delivers EDU Unit and all Additional Payloads on schedule"
+        },
+        {
+          "id": "E2_TR5",
+          "type": "STATE_TRANSITION",
+          "new_state": "DELIVERY_COMPLETE_ON_TIME",
+          "description": "All deliverables provided on time"
+        },
+        {
+          "id": "E3_TR5",
+          "type": "RULE_ACTIVATION",
+          "target_rule_id": "R5",
+          "new_state": "active",
+          "description": "Activate on-time incentive payment obligation"
+        }
+      ],
+      "description": "Orbital completes delivery by Delivery Schedule date"
+    },
+    {
+      "id": "TR6",
+      "from_states": [
+        "ACTIVE",
+        "BOND_DELIVERED",
+        "HOLDBACK_PAID",
+        "OPTION_EXERCISED",
+        "ENVIRONMENTAL_TESTING_REQUESTED",
+        "SECURITY_INTEREST_GRANTED"
+      ],
+      "to_state": "DELIVERY_COMPLETE_EARLY",
+      "event_type": "early_delivery_complete",
+      "guard": "days_early > 0",
+      "effects": [
+        {
+          "id": "E1_TR6",
+          "type": "ASSET_TRANSFER",
+          "description": "Orbital delivers all Additional Payloads early"
+        },
+        {
+          "id": "E2_TR6",
+          "type": "STATE_TRANSITION",
+          "new_state": "DELIVERY_COMPLETE_EARLY",
+          "description": "All deliverables provided early"
+        },
+        {
+          "id": "E3_TR6",
+          "type": "RULE_ACTIVATION",
+          "target_rule_id": "R6",
+          "new_state": "active",
+          "description": "Activate early delivery incentive payment obligation"
+        }
+      ],
+      "description": "Orbital completes delivery before Delivery Schedule date"
+    },
+    {
+      "id": "TR7",
+      "from_states": [
+        "ACTIVE",
+        "BOND_DELIVERED",
+        "HOLDBACK_PAID",
+        "OPTION_EXERCISED",
+        "ENVIRONMENTAL_TESTING_REQUESTED",
+        "SECURITY_INTEREST_GRANTED"
+      ],
+      "to_state": "DELIVERY_COMPLETE_LATE",
+      "event_type": "late_delivery_complete",
+      "guard": "days_late > 0",
+      "effects": [
+        {
+          "id": "E1_TR7",
+          "type": "ASSET_TRANSFER",
+          "description": "Orbital delivers payloads after deadline plus grace period"
+        },
+        {
+          "id": "E2_TR7",
+          "type": "STATE_TRANSITION",
+          "new_state": "DELIVERY_COMPLETE_LATE",
+          "description": "All deliverables provided late"
+        },
+        {
+          "id": "E3_TR7",
+          "type": "RULE_ACTIVATION",
+          "target_rule_id": "R4",
+          "new_state": "active",
+          "description": "Activate late delivery penalty obligation"
+        }
+      ],
+      "description": "Orbital completes delivery after grace period expires"
+    },
+    {
+      "id": "TR8",
+      "from_states": [
+        "DELIVERY_COMPLETE_ON_TIME"
+      ],
+      "to_state": "INTEGRATION_TESTING",
+      "event_type": "payment_on_time_incentive",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E1_TR8",
+          "type": "PAYMENT",
+          "payment_formula": "on_time_incentive",
+          "payment_from": "ORBCOMM",
+          "payment_to": "Orbital",
+          "cap": null,
+          "description": "ORBCOMM pays $204,000 on-time delivery incentive"
+        },
+        {
+          "id": "E2_TR8",
+          "type": "STATE_TRANSITION",
+          "new_state": "INTEGRATION_TESTING",
+          "description": "Proceed to integration testing phase"
+        }
+      ],
+      "description": "ORBCOMM pays on-time incentive and payloads enter integration testing"
+    },
+    {
+      "id": "TR9",
+      "from_states": [
+        "DELIVERY_COMPLETE_EARLY"
+      ],
+      "to_state": "INTEGRATION_TESTING",
+      "event_type": "payment_early_incentive",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E1_TR9",
+          "type": "PAYMENT",
+          "payment_formula": "days_early * early_delivery_per_day",
+          "payment_from": "ORBCOMM",
+          "payment_to": "Orbital",
+          "cap": 100000,
+          "description": "ORBCOMM pays early delivery incentive ($1,700/day, capped at $100,000)"
+        },
+        {
+          "id": "E2_TR9",
+          "type": "STATE_TRANSITION",
+          "new_state": "INTEGRATION_TESTING",
+          "description": "Proceed to integration testing phase"
+        }
+      ],
+      "description": "ORBCOMM pays early delivery incentive and payloads enter integration testing"
+    },
+    {
+      "id": "TR10",
+      "from_states": [
+        "DELIVERY_COMPLETE_LATE"
+      ],
+      "to_state": "INTEGRATION_TESTING",
+      "event_type": "payment_late_penalties",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E1_TR10",
+          "type": "PAYMENT",
+          "payment_formula": "days_late * late_delivery_per_day",
+          "payment_from": "Orbital",
+          "payment_to": "ORBCOMM",
+          "cap": 2550000,
+          "description": "Orbital pays late delivery damages ($8,500/day, max daily $25k, total cap $2.55M)"
+        },
+        {
+          "id": "E2_TR10",
+          "type": "STATE_TRANSITION",
+          "new_state": "INTEGRATION_TESTING",
+          "description": "Proceed to integration testing phase after penalty payment"
+        }
+      ],
+      "description": "Orbital pays late delivery penalties and payloads enter integration testing"
+    },
+    {
+      "id": "TR11",
+      "from_states": [
+        "DELIVERY_COMPLETE_LATE",
+        "INTEGRATION_TESTING"
+      ],
+      "to_state": "INTEGRATION_TESTING",
+      "event_type": "power_weight_penalty_assessed",
+      "guard": "payload_weight_kg > 20.31 or payload_power_watts > 120",
+      "effects": [
+        {
+          "id": "E1_TR11",
+          "type": "PAYMENT",
+          "payment_formula": "(payload_weight_kg - 20.31) * weight_penalty_per_kg if payload_weight_kg > 20.31 else 0",
+          "payment_from": "Orbital",
+          "payment_to": "ORBCOMM",
+          "cap": 100000,
+          "description": "Orbital pays weight penalty ($10,000 per kg over 20.31 kg)"
+        },
+        {
+          "id": "E2_TR11",
+          "type": "PAYMENT",
+          "payment_formula": "((payload_power_watts - 120) / 5) * power_penalty_per_5w if payload_power_watts > 120 else 0",
+          "payment_from": "Orbital",
+          "payment_to": "ORBCOMM",
+          "cap": 100000,
+          "description": "Orbital pays power penalty ($10,000 per 5W over 120W)"
+        },
+        {
+          "id": "E3_TR11",
+          "type": "STATE_TRANSITION",
+          "new_state": "INTEGRATION_TESTING",
+          "description": "Continue integration testing after penalty assessment"
+        }
+      ],
+      "description": "Orbital pays power/weight penalties if payload exceeds specifications"
+    },
+    {
+      "id": "TR12",
+      "from_states": [
+        "INTEGRATION_TESTING"
+      ],
+      "to_state": "DEFECT_CURE",
+      "event_type": "defect_discovered",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E1_TR12",
+          "type": "STATE_TRANSITION",
+          "new_state": "DEFECT_CURE",
+          "description": "Defect found during integration testing; Orbital must repair"
+        },
+        {
+          "id": "E2_TR12",
+          "type": "CURE_WINDOW",
+          "duration_days": 90,
+          "description": "Orbital has reasonable time to repair defects"
+        }
+      ],
+      "description": "Integration testing reveals defects requiring repair"
+    },
+    {
+      "id": "TR13",
+      "from_states": [
+        "DEFECT_CURE"
+      ],
+      "to_state": "INTEGRATION_TESTING",
+      "event_type": "defect_repaired",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E1_TR13",
+          "type": "ASSET_TRANSFER",
+          "description": "Orbital completes repair and correction of defects"
+        },
+        {
+          "id": "E2_TR13",
+          "type": "STATE_TRANSITION",
+          "new_state": "INTEGRATION_TESTING",
+          "description": "Return to integration testing after repair"
+        }
+      ],
+      "description": "Orbital successfully repairs defects; resume integration testing"
+    },
+    {
+      "id": "TR14",
+      "from_states": [
+        "ACTIVE",
+        "BOND_DELIVERED",
+        "HOLDBACK_PAID",
+        "SECURITY_INTEREST_GRANTED"
+      ],
+      "to_state": "OPTION_EXERCISED",
+      "event_type": "option_exercised",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E1_TR14",
+          "type": "PAYMENT",
+          "payment_formula": "optional_payload_first_milestone",
+          "payment_from": "ORBCOMM",
+          "payment_to": "Orbital",
+          "cap": null,
+          "description": "ORBCOMM pays first milestone payment of $200,000 for Optional Payload"
+        },
+        {
+          "id": "E2_TR14",
+          "type": "STATE_TRANSITION",
+          "new_state": "OPTION_EXERCISED",
+          "description": "ORBCOMM exercises option; Orbital must deliver Optional Payload"
+        },
+        {
+          "id": "E3_TR14",
+          "type": "RULE_ACTIVATION",
+          "target_rule_id": "R16",
+          "new_state": "active",
+          "description": "Activate Optional Payload delivery obligation"
+        }
+      ],
+      "description": "ORBCOMM exercises option for Optional Payload with first payment"
+    },
+    {
+      "id": "TR15",
+      "from_states": [
+        "OPTION_EXERCISED"
+      ],
+      "to_state": "ACTIVE",
+      "event_type": "optional_payload_milestone_paid",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E1_TR15",
+          "type": "PAYMENT",
+          "payment_formula": "2200000 * (milestone_percentage / 100)",
+          "payment_from": "ORBCOMM",
+          "payment_to": "Orbital",
+          "cap": null,
+          "description": "ORBCOMM pays Optional Payload milestone amounts per schedule"
+        },
+        {
+          "id": "E2_TR15",
+          "type": "STATE_TRANSITION",
+          "new_state": "ACTIVE",
+          "description": "Continue with Optional Payload work"
+        }
+      ],
+      "description": "ORBCOMM pays Optional Payload milestones"
+    },
+    {
+      "id": "TR16",
+      "from_states": [
+        "ACTIVE",
+        "BOND_DELIVERED",
+        "HOLDBACK_PAID",
+        "OPTION_EXERCISED",
+        "SECURITY_INTEREST_GRANTED"
+      ],
+      "to_state": "ENVIRONMENTAL_TESTING_REQUESTED",
+      "event_type": "environmental_testing_requested",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E1_TR16",
+          "type": "PAYMENT",
+          "payment_formula": "environmental_testing_first if first_payload else environmental_testing_subsequent",
+          "payment_from": "ORBCOMM",
+          "payment_to": "Orbital",
+          "cap": null,
+          "description": "ORBCOMM pays for additional environmental testing ($94k first, $26k subsequent)"
+        },
+        {
+          "id": "E2_TR16",
+          "type": "STATE_TRANSITION",
+          "new_state": "ENVIRONMENTAL_TESTING_REQUESTED",
+          "description": "ORBCOMM directs additional environmental testing"
+        },
+        {
+          "id": "E3_TR16",
+          "type": "RULE_ACTIVATION",
+          "target_rule_id": "R20",
+          "new_state": "active",
+          "description": "Activate Orbital's environmental testing performance obligation"
+        }
+      ],
+      "description": "ORBCOMM requests additional environmental testing"
+    },
+    {
+      "id": "TR17",
+      "from_states": [
+        "ENVIRONMENTAL_TESTING_REQUESTED"
+      ],
+      "to_state": "ACTIVE",
+      "event_type": "environmental_testing_complete",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E1_TR17",
+          "type": "ASSET_TRANSFER",
+          "description": "Orbital completes additional environmental testing"
+        },
+        {
+          "id": "E2_TR17",
+          "type": "STATE_TRANSITION",
+          "new_state": "ACTIVE",
+          "description": "Return to active state after environmental testing"
+        }
+      ],
+      "description": "Orbital completes additional environmental testing"
+    },
+    {
+      "id": "TR18",
+      "from_states": [
+        "ACTIVE"
+      ],
+      "to_state": "SECURITY_INTEREST_GRANTED",
+      "event_type": "security_interest_executed",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E1_TR18",
+          "type": "STATE_TRANSITION",
+          "new_state": "SECURITY_INTEREST_GRANTED",
+          "description": "Orbital grants security interest to ORBCOMM in work and work in progress"
+        },
+        {
+          "id": "E2_TR18",
+          "type": "RULE_ACTIVATION",
+          "target_rule_id": "R27",
+          "new_state": "active",
+          "description": "Security interest now active"
+        }
+      ],
+      "description": "Orbital executes security interest documentation"
+    },
+    {
+      "id": "TR19",
+      "from_states": [
+        "DELIVERY_COMPLETE_ON_TIME",
+        "DELIVERY_COMPLETE_EARLY",
+        "DELIVERY_COMPLETE_LATE",
+        "INTEGRATION_TESTING"
+      ],
+      "to_state": "SECURITY_INTEREST_RELEASED",
+      "event_type": "title_transferred",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E1_TR19",
+          "type": "ASSET_TRANSFER",
+          "description": "Orbital transfers title to Additional Payloads and all deliverables to ORBCOMM"
+        },
+        {
+          "id": "E2_TR19",
+          "type": "STATE_TRANSITION",
+          "new_state": "SECURITY_INTEREST_RELEASED",
+          "description": "ORBCOMM releases security interest upon title transfer"
+        },
+        {
+          "id": "E3_TR19",
+          "type": "RULE_ACTIVATION",
+          "target_rule_id": "R28",
+          "new_state": "active",
+          "description": "Activate security interest release"
+        }
+      ],
+      "description": "Title transferred; security interest released"
+    },
+    {
+      "id": "TR20",
+      "from_states": [
+        "INTEGRATION_TESTING",
+        "DEFECT_CURE",
+        "SECURITY_INTEREST_RELEASED"
+      ],
+      "to_state": "FINAL_SETTLEMENT",
+      "event_type": "all_milestones_paid",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E1_TR20",
+          "type": "PAYMENT",
+          "payment_formula": "milestone_payment_amount",
+          "payment_from": "ORBCOMM",
+          "payment_to": "Orbital",
+          "cap": null,
+          "description": "ORBCOMM pays final milestone amounts per Exhibit E-1 (net 10 days)"
+        },
+        {
+          "id": "E2_TR20",
+          "type": "STATE_TRANSITION",
+          "new_state": "FINAL_SETTLEMENT",
+          "description": "All milestone payments complete; final settlement phase"
+        }
+      ],
+      "description": "ORBCOMM completes all milestone payments"
+    },
+    {
+      "id": "TR21",
+      "from_states": [
+        "FINAL_SETTLEMENT"
+      ],
+      "to_state": "COMPLETED",
+      "event_type": "contract_closed",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E1_TR21",
+          "type": "STATE_TRANSITION",
+          "new_state": "COMPLETED",
+          "description": "Contract fully performed and terminated"
+        },
+        {
+          "id": "E2_TR21",
+          "type": "TERMINATION",
+          "new_state": "COMPLETED",
+          "description": "All obligations satisfied; contract terminates normally"
+        }
+      ],
+      "description": "All deliverables provided, all payments made, contract complete"
+    },
+    {
+      "id": "TR22",
+      "from_states": [
+        "ACTIVE",
+        "BOND_DELIVERED",
+        "HOLDBACK_PAID",
+        "OPTION_EXERCISED",
+        "ENVIRONMENTAL_TESTING_REQUESTED",
+        "SECURITY_INTEREST_GRANTED"
+      ],
+      "to_state": "FINAL_SETTLEMENT",
+      "event_type": "us_tax_paid",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E1_TR22",
+          "type": "PAYMENT",
+          "payment_formula": "us_tax_amount",
+          "payment_from": "Orbital",
+          "payment_to": "US Government",
+          "cap": null,
+          "description": "Orbital pays US tax liabilities"
+        }
+      ],
+      "description": "Orbital pays US taxes as they arise"
+    },
+    {
+      "id": "TR23",
+      "from_states": [
+        "ACTIVE",
+        "BOND_DELIVERED",
+        "HOLDBACK_PAID",
+        "OPTION_EXERCISED",
+        "ENVIRONMENTAL_TESTING_REQUESTED",
+        "SECURITY_INTEREST_GRANTED"
+      ],
+      "to_state": "FINAL_SETTLEMENT",
+      "event_type": "non_us_tax_paid",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E1_TR23",
+          "type": "PAYMENT",
+          "payment_formula": "non_us_tax_amount",
+          "payment_from": "ORBCOMM",
+          "payment_to": "Foreign Government",
+          "cap": null,
+          "description": "ORBCOMM pays non-US taxes and customs duties"
+        }
+      ],
+      "description": "ORBCOMM pays non-US taxes and customs duties"
+    },
+    {
+      "id": "TR24",
+      "from_states": [
+        "DELIVERY_COMPLETE_ON_TIME",
+        "DELIVERY_COMPLETE_EARLY",
+        "DELIVERY_COMPLETE_LATE",
+        "INTEGRATION_TESTING",
+        "SECURITY_INTEREST_RELEASED"
+      ],
+      "to_state": "FINAL_SETTLEMENT",
+      "event_type": "title_indemnification_claim",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E1_TR24",
+          "type": "PAYMENT",
+          "payment_formula": "damages_amount",
+          "payment_from": "ORBCOMM",
+          "payment_to": "Orbital",
+          "cap": null,
+          "description": "ORBCOMM indemnifies Orbital for damages from holding title post-delivery"
+        }
+      ],
+      "description": "ORBCOMM indemnifies Orbital for title-holding damages"
+    },
+    {
+      "id": "TR25",
+      "from_states": [
+        "ACTIVE",
+        "BOND_DELIVERED",
+        "HOLDBACK_PAID",
+        "OPTION_EXERCISED",
+        "ENVIRONMENTAL_TESTING_REQUESTED",
+        "SECURITY_INTEREST_GRANTED"
+      ],
+      "to_state": "ACTIVE",
+      "event_type": "iron_mountain_fees_paid",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E1_TR25",
+          "type": "PAYMENT",
+          "payment_formula": "iron_mountain_fees",
+          "payment_from": "ORBCOMM",
+          "payment_to": "Iron Mountain",
+          "cap": null,
+          "description": "ORBCOMM pays Iron Mountain fees under Preferred Escrow Agreement"
+        }
+      ],
+      "description": "ORBCOMM pays Iron Mountain escrow fees"
+    },
+    {
+      "id": "TR26",
+      "from_states": [
+        "HOLDBACK_PAID"
+      ],
+      "to_state": "FINAL_SETTLEMENT",
+      "event_type": "holdback_refund",
+      "guard": "payloads_operating < total_payloads",
+      "effects": [
+        {
+          "id": "E1_TR26",
+          "type": "PAYMENT",
+          "payment_formula": "holdback_amount * ((total_payloads - payloads_operating) / total_payloads)",
+          "payment_from": "Orbital",
+          "payment_to": "ORBCOMM",
+          "cap": null,
+          "description": "Pro rata refund of holdback if payloads not operating on first anniversary"
+        },
+        {
+          "id": "E2_TR26",
+          "type": "STATE_TRANSITION",
+          "new_state": "FINAL_SETTLEMENT",
+          "description": "Holdback refund processed; move to final settlement"
+        }
+      ],
+      "description": "Orbital refunds pro rata portion of holdback if payloads fail"
+    }
+  ],
+  "rules": [
+    {
+      "id": "R1",
+      "type": "OBLIGATION",
+      "party": "Orbital",
+      "counterparty": "ORBCOMM",
+      "action": "Design, manufacture, test and deliver EDU Unit and Additional Payloads",
+      "activation": "INACTIVE",
+      "description": "Orbital shall design, manufacture, test and deliver one (1) payload (without antenna) engineering development unit (the 'EDU Unit') and six (6) additional Automatic Identification System (AIS) Signal payloads (the 'Additional Payloads') in accordance with the Statement of Work and Specifications attached hereto, including (without limitation) the delivery schedule set forth in Section 2.1.1 of the SOW (the 'Delivery Schedule').",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T1",
+          "type": "DATE_TRIGGER",
+          "condition": "Effective Date established (both parties signed AND first Milestone Payment received)",
+          "reference_date": "effective_date"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E1",
+          "type": "ASSET_TRANSFER",
+          "description": "Delivery of EDU Unit and six Additional Payloads per Delivery Schedule",
+          "new_state": "delivery_complete"
+        }
+      ],
+      "constraints": [
+        {
+          "id": "C1",
+          "type": "GRACE_PERIOD",
+          "value": "60",
+          "duration": "60 days",
+          "duration_days": 60,
+          "scope": [
+            "E1"
+          ],
+          "description": "Grace period for Additional Payloads (less antenna subsystem) - no penalty during this period"
+        },
+        {
+          "id": "C2",
+          "type": "GRACE_PERIOD",
+          "value": "90",
+          "duration": "90 days",
+          "duration_days": 90,
+          "scope": [
+            "E1"
+          ],
+          "description": "Grace period for antenna subsystem - no penalty during this period"
+        }
+      ],
+      "exceptions": [
+        "R10"
+      ]
+    },
+    {
+      "id": "R2",
+      "type": "OBLIGATION",
+      "party": "Orbital",
+      "counterparty": "ORBCOMM",
+      "action": "Provide all associated deliverables without additional charge",
+      "activation": "INACTIVE",
+      "description": "Orbital acknowledges and agrees that it shall provide all associated deliverables, including the EDU Unit, documentation, and services, as specified in the Procurement Agreement, this Amendment, and the SOW without additional charge, except if and to the extent that a particular task is expressly stated as being subject to additional payment for time and material expenses.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T2",
+          "type": "EVENT_TRIGGER",
+          "condition": "Throughout performance of contract"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E2",
+          "type": "ASSET_TRANSFER",
+          "description": "Provision of deliverables, documentation, and services"
+        }
+      ],
+      "constraints": [],
+      "exceptions": [
+        "R19"
+      ]
+    },
+    {
+      "id": "R3",
+      "type": "OBLIGATION",
+      "party": "ORBCOMM",
+      "counterparty": "Orbital",
+      "action": "Pay firm fixed price for Additional Payloads",
+      "activation": "INACTIVE",
+      "description": "The firm fixed price for the six (6) Additional Payloads, each with an additional SRX, shall total $17,000,000 (the 'Price'), which ORBCOMM shall pay Orbital, in accordance with Exhibit E-1 of this Amendment.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T3",
+          "type": "EVENT_TRIGGER",
+          "condition": "Completion of AP Milestones as described in Section 5.3 of Procurement Agreement"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E3",
+          "type": "PAYMENT",
+          "description": "Payment of milestone amounts per Exhibit E-1",
+          "payment_formula": "milestone_payment_amount",
+          "payment_from": "ORBCOMM",
+          "payment_to": "Orbital"
+        }
+      ],
+      "constraints": [
+        {
+          "id": "C3",
+          "type": "GRACE_PERIOD",
+          "value": "10",
+          "duration": "10 days",
+          "duration_days": 10,
+          "scope": [
+            "E3"
+          ],
+          "description": "Payments due net 10 days for payments defined in Exhibit E-1"
+        }
+      ],
+      "exceptions": []
+    },
+    {
+      "id": "R4",
+      "type": "OBLIGATION",
+      "party": "Orbital",
+      "counterparty": "ORBCOMM",
+      "action": "Pay liquidated delay damages for late delivery",
+      "activation": "INACTIVE",
+      "description": "If one or more of the Additional Payloads is not delivered in accordance with the requirements of this Amendment within fourteen (14) months of the Effective Date plus sixty (60) days grace period (no penalty shall be incurred in the grace period) for the Additional Payloads (less the antenna subsystem) and fourteen (14) months plus ninety (90) days grace period for the antenna subsystem associated therewith, starting on the first day after such applicable grace period has been exhausted, Orbital shall pay ORBCOMM liquidated delay damages of 0.05% ($8,500) per day for each Additional Payload that has not been so delivered for each day of delay.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T4",
+          "type": "TEMPORAL_TRIGGER",
+          "condition": "Delivery not made within 14 months plus applicable grace period after Effective Date",
+          "reference_date": "effective_date",
+          "duration": "14 months plus 60 days for payloads, 14 months plus 90 days for antenna",
+          "duration_days": 480
+        }
+      ],
+      "effects": [
+        {
+          "id": "E4",
+          "type": "PAYMENT",
+          "description": "Liquidated delay damages payment",
+          "payment_formula": "days_late * 8500",
+          "payment_from": "Orbital",
+          "payment_to": "ORBCOMM",
+          "cap": "2550000"
+        }
+      ],
+      "constraints": [
+        {
+          "id": "C4",
+          "type": "CAP",
+          "value": "2550000",
+          "scope": [
+            "E4"
+          ],
+          "description": "Total late delivery damages capped at 15% of Price ($2,550,000)"
+        },
+        {
+          "id": "C5",
+          "type": "CAP",
+          "value": "25000",
+          "scope": [
+            "E4"
+          ],
+          "description": "Daily late delivery damages capped at $25,000 per day"
+        },
+        {
+          "id": "C6",
+          "type": "CONTROLLING_ITEM",
+          "scope": [
+            "E4"
+          ],
+          "description": "Late charges determined by greatest lateness of any single item associated with same Additional Payload, not additive for separate items"
+        },
+        {
+          "id": "C7",
+          "type": "AGGREGATE_CONSTRAINT",
+          "scope": [
+            "E4",
+            "E8"
+          ],
+          "description": "Late delivery damages inclusive of power and weight penalties described in clause 3.(iv)"
+        }
+      ],
+      "exceptions": [
+        "R10"
+      ]
+    },
+    {
+      "id": "R5",
+      "type": "OBLIGATION",
+      "party": "ORBCOMM",
+      "counterparty": "Orbital",
+      "action": "Pay on-time delivery incentive",
+      "activation": "INACTIVE",
+      "description": "If the EDU Unit and all of the Additional Payloads are delivered in accordance with the requirements of this Amendment by the date specified in the Delivery Schedule, ORBCOMM shall pay Orbital a single on-time delivery incentive of 1.2% of the Price ($204,000).",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T5",
+          "type": "CONDITION_PRECEDENT",
+          "condition": "EDU Unit and all Additional Payloads delivered by Delivery Schedule date",
+          "reference_date": "delivery_schedule_date"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E5",
+          "type": "PAYMENT",
+          "description": "Single on-time delivery incentive payment",
+          "payment_formula": "204000",
+          "payment_from": "ORBCOMM",
+          "payment_to": "Orbital"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R6",
+      "type": "OBLIGATION",
+      "party": "ORBCOMM",
+      "counterparty": "Orbital",
+      "action": "Pay early delivery incentive",
+      "activation": "INACTIVE",
+      "description": "If all of the Additional Payloads are so delivered on time, for each day that the Additional Payloads are so delivered early, ORBCOMM shall pay Orbital 0.01% of Price ($1700) per day of early delivery.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T6",
+          "type": "CONDITION_PRECEDENT",
+          "condition": "All Additional Payloads delivered early (before Delivery Schedule date)",
+          "reference_date": "delivery_schedule_date"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E6",
+          "type": "PAYMENT",
+          "description": "Early delivery incentive payment",
+          "payment_formula": "days_early * 1700",
+          "payment_from": "ORBCOMM",
+          "payment_to": "Orbital",
+          "cap": "100000"
+        }
+      ],
+      "constraints": [
+        {
+          "id": "C8",
+          "type": "CAP",
+          "value": "100000",
+          "scope": [
+            "E6"
+          ],
+          "description": "Total early delivery incentive capped at $100,000 for all Additional Payloads combined"
+        },
+        {
+          "id": "C9",
+          "type": "CONTROLLING_ITEM",
+          "scope": [
+            "E6"
+          ],
+          "description": "For early delivery calculation, least early item associated with particular Additional Payload controls"
+        }
+      ],
+      "exceptions": []
+    },
+    {
+      "id": "R8",
+      "type": "OBLIGATION",
+      "party": "Orbital",
+      "counterparty": "ORBCOMM",
+      "action": "Pay power and weight penalties",
+      "activation": "INACTIVE",
+      "description": "If ORBCOMM agrees to accept Additional Payloads that exceed the maximum operating power and/or weight limits set forth in the Specifications, then Orbital shall pay ORBCOMM as compensation therefor, $10,000 per Kg in excess of 20.31 Kg (inclusive of 1kg grace) for the total Additional Payload mass as set forth in Section 4.5.4 of the Specifications and $10,000 per 5 Watts in excess of 120 Watts (inclusive of 5 Watts margin) of total Additional Payload power as set forth in Section 4.5.5 of the Specifications, in each case per Additional Payload, and in each case pro rated for partial amounts in excess of such maximum weight and/or power.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T7",
+          "type": "THRESHOLD_TRIGGER",
+          "condition": "Additional Payload exceeds weight limit",
+          "threshold_field": "payload_weight_kg",
+          "threshold_value": "20.31",
+          "threshold_operator": "gt"
+        },
+        {
+          "id": "T8",
+          "type": "THRESHOLD_TRIGGER",
+          "condition": "Additional Payload exceeds power limit",
+          "threshold_field": "payload_power_watts",
+          "threshold_value": "120",
+          "threshold_operator": "gt"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E7",
+          "type": "PAYMENT",
+          "description": "Weight penalty payment",
+          "payment_formula": "(payload_weight_kg - 20.31) * 10000",
+          "payment_from": "Orbital",
+          "payment_to": "ORBCOMM"
+        },
+        {
+          "id": "E8",
+          "type": "PAYMENT",
+          "description": "Power penalty payment",
+          "payment_formula": "((payload_power_watts - 120) / 5) * 10000",
+          "payment_from": "Orbital",
+          "payment_to": "ORBCOMM"
+        }
+      ],
+      "constraints": [
+        {
+          "id": "C10",
+          "type": "CAP",
+          "value": "100000",
+          "scope": [
+            "E7",
+            "E8"
+          ],
+          "description": "Combined power and/or weight penalties capped at $100,000"
+        },
+        {
+          "id": "C11",
+          "type": "PRO_RATA",
+          "scope": [
+            "E7",
+            "E8"
+          ],
+          "description": "Penalties pro-rated for partial amounts in excess of limits"
+        }
+      ],
+      "exceptions": []
+    },
+    {
+      "id": "R13",
+      "type": "OBLIGATION",
+      "party": "ORBCOMM",
+      "counterparty": "Orbital",
+      "action": "Deliver performance bond or letter of credit",
+      "activation": "INACTIVE",
+      "description": "In order to holdback such amounts, ORBCOMM shall, not later than thirty (30) days prior to launch, deliver to ORBITAL a performance bond or letter of credit to receive such payment, failing which ORBCOMM shall make the Holdback Payment to Orbital or a mutually agreeable third party escrow agent at that time.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T12",
+          "type": "TEMPORAL_TRIGGER",
+          "condition": "30 days prior to launch",
+          "reference_date": "launch_date",
+          "duration": "-30 days",
+          "duration_days": -30
+        }
+      ],
+      "effects": [
+        {
+          "id": "E12",
+          "type": "ASSET_TRANSFER",
+          "description": "Delivery of performance bond or letter of credit",
+          "payment_from": "ORBCOMM",
+          "payment_to": "Orbital"
+        }
+      ],
+      "constraints": [],
+      "exceptions": [
+        "R14"
+      ]
+    },
+    {
+      "id": "R14",
+      "type": "OBLIGATION",
+      "party": "ORBCOMM",
+      "counterparty": "Orbital",
+      "action": "Make Holdback Payment if bond/LOC not delivered",
+      "activation": "INACTIVE",
+      "description": "If ORBCOMM fails to deliver bond/letter of credit, ORBCOMM shall make the Holdback Payment to Orbital or a mutually agreeable third party escrow agent at that time, but subject to refund by Orbital (or release to ORBCOMM by such escrow agent), on a pro rata basis, if one or more of the Additional Payloads are not so successfully operating on said first anniversary date.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T13",
+          "type": "ABSENCE_TRIGGER",
+          "condition": "ORBCOMM fails to deliver performance bond or letter of credit by 30 days prior to launch",
+          "reference_date": "launch_date",
+          "duration": "-30 days",
+          "duration_days": -30
+        }
+      ],
+      "effects": [
+        {
+          "id": "E13",
+          "type": "PAYMENT",
+          "description": "Holdback Payment to Orbital or escrow agent",
+          "payment_formula": "680000",
+          "payment_from": "ORBCOMM",
+          "payment_to": "Orbital"
+        }
+      ],
+      "constraints": [
+        {
+          "id": "C14",
+          "type": "PRO_RATA",
+          "scope": [
+            "E13"
+          ],
+          "description": "Subject to pro rata refund if one or more Additional Payloads not successfully operating on first anniversary date"
+        }
+      ],
+      "exceptions": []
+    },
+    {
+      "id": "R16",
+      "type": "OBLIGATION",
+      "party": "Orbital",
+      "counterparty": "ORBCOMM",
+      "action": "Deliver Optional Payload if option exercised",
+      "activation": "INACTIVE",
+      "description": "Delivery of each Optional Payload (less the antenna subsystem) will be fourteen (14) months (plus sixty (60) days grace period) and fourteen (14) months (plus ninety (90) days grace period) for the antenna subsystem associated therewith, after ORBCOMM's written direction is received exercising this option and the first milestone payment for each Optional Payload in the amount of $200,000 is received.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T15",
+          "type": "CONDITION_PRECEDENT",
+          "condition": "ORBCOMM exercises option in writing AND first milestone payment of $200,000 received",
+          "reference_date": "option_exercise_date",
+          "duration": "14 months",
+          "duration_days": 420
+        }
+      ],
+      "effects": [
+        {
+          "id": "E15",
+          "type": "ASSET_TRANSFER",
+          "description": "Delivery of Optional Payload"
+        }
+      ],
+      "constraints": [
+        {
+          "id": "C16",
+          "type": "GRACE_PERIOD",
+          "value": "60",
+          "duration": "60 days",
+          "duration_days": 60,
+          "scope": [
+            "E15"
+          ],
+          "description": "Grace period for Optional Payload (less antenna subsystem)"
+        },
+        {
+          "id": "C17",
+          "type": "GRACE_PERIOD",
+          "value": "90",
+          "duration": "90 days",
+          "duration_days": 90,
+          "scope": [
+            "E15"
+          ],
+          "description": "Grace period for Optional Payload antenna subsystem"
+        }
+      ],
+      "exceptions": []
+    },
+    {
+      "id": "R17",
+      "type": "OBLIGATION",
+      "party": "ORBCOMM",
+      "counterparty": "Orbital",
+      "action": "Pay for Optional Payloads",
+      "activation": "INACTIVE",
+      "description": "The payment schedule for the Optional Payloads shall correspond as closely as possible (in terms of time and percentage of total price) to the AP Milestones set forth on Exhibit E-1.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T16",
+          "type": "CONDITION_PRECEDENT",
+          "condition": "Optional Payload milestones completed"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E16",
+          "type": "PAYMENT",
+          "description": "Payment of Optional Payload milestone amounts",
+          "payment_formula": "2200000 * (milestone_percentage / 100)",
+          "payment_from": "ORBCOMM",
+          "payment_to": "Orbital"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R18",
+      "type": "OBLIGATION",
+      "party": "Orbital",
+      "counterparty": "ORBCOMM",
+      "action": "Pay all US tax liabilities",
+      "activation": "INACTIVE",
+      "description": "Orbital shall be responsible for all United States (including political subdivisions) tax payments, liabilities, or claims required by present or future laws and regulations.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T17",
+          "type": "EVENT_TRIGGER",
+          "condition": "US tax obligation arises"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E17",
+          "type": "PAYMENT",
+          "description": "Payment of US taxes",
+          "payment_formula": "us_tax_amount",
+          "payment_from": "Orbital",
+          "payment_to": "US Government"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R19",
+      "type": "OBLIGATION",
+      "party": "ORBCOMM",
+      "counterparty": "Orbital",
+      "action": "Pay for additional environmental testing if directed",
+      "activation": "INACTIVE",
+      "description": "If ORBCOMM directs testing: ORBCOMM shall pay Orbital an additional amount of $94,000 for the first Additional Payload so tested at ORBCOMM's direction and an amount of $26,000 for each subsequent Additional Payload thereafter.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T18",
+          "type": "EVENT_TRIGGER",
+          "condition": "ORBCOMM directs additional environmental testing in writing"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E18",
+          "type": "PAYMENT",
+          "description": "Payment for additional environmental testing",
+          "payment_formula": "94000 if first_payload else 26000",
+          "payment_from": "ORBCOMM",
+          "payment_to": "Orbital"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R20",
+      "type": "OBLIGATION",
+      "party": "Orbital",
+      "counterparty": "ORBCOMM",
+      "action": "Perform additional environmental testing",
+      "activation": "INACTIVE",
+      "description": "If ORBCOMM directs Orbital to perform additional environmental testing, Orbital shall perform such testing and shall be allowed up to fourteen (14) days of schedule relief as necessary to accomplish such testing.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T19",
+          "type": "EVENT_TRIGGER",
+          "condition": "ORBCOMM directs additional environmental testing in writing"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E19",
+          "type": "ASSET_TRANSFER",
+          "description": "Performance of additional environmental testing"
+        }
+      ],
+      "constraints": [
+        {
+          "id": "C18",
+          "type": "GRACE_PERIOD",
+          "value": "14",
+          "duration": "14 days",
+          "duration_days": 14,
+          "scope": [
+            "E19"
+          ],
+          "description": "Orbital allowed up to 14 days schedule relief to accomplish additional environmental testing"
+        }
+      ],
+      "exceptions": []
+    },
+    {
+      "id": "R21",
+      "type": "OBLIGATION",
+      "party": "ORBCOMM",
+      "counterparty": "ORBCOMM",
+      "action": "Pay non-US taxes and customs duties",
+      "activation": "INACTIVE",
+      "description": "ORBCOMM shall be responsible for all non-U.S. (including political subdivisions) taxes, liabilities, or claims, and any customs duties, if any, levied upon or measured by the sale, the sales price, or the use of the equipment deliverable under this Amendment required by present or future laws and regulations.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T20",
+          "type": "EVENT_TRIGGER",
+          "condition": "Non-US tax or customs duty obligation arises"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E20",
+          "type": "PAYMENT",
+          "description": "Payment of non-US taxes and customs duties",
+          "payment_formula": "non_us_tax_amount",
+          "payment_from": "ORBCOMM",
+          "payment_to": "Foreign Government"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R23",
+      "type": "OBLIGATION",
+      "party": "ORBCOMM",
+      "counterparty": "Orbital",
+      "action": "Indemnify Orbital for holding title post-delivery",
+      "activation": "INACTIVE",
+      "description": "ORBCOMM shall indemnify and hold harmless Orbital from and against any damages as a result of Orbital holding title to any Additional Payloads following delivery thereof to the shipper at Orbital's facility.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T22",
+          "type": "EVENT_TRIGGER",
+          "condition": "Orbital holds title to Additional Payloads after delivery to shipper"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E22",
+          "type": "PAYMENT",
+          "description": "Indemnification payment for damages",
+          "payment_formula": "damages_amount",
+          "payment_from": "ORBCOMM",
+          "payment_to": "Orbital"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R24",
+      "type": "OBLIGATION",
+      "party": "Orbital",
+      "counterparty": "ORBCOMM",
+      "action": "Provide insurance assistance",
+      "activation": "INACTIVE",
+      "description": "Orbital shall, at ORBCOMM's request, provide reasonable assistance to ORBCOMM, in seeking to obtain launch and/or in-orbit insurance and/or in pursuing any claim thereunder, including participating in a reasonable number of technical presentations to insurers and providing such documentation as may be reasonably requested.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T23",
+          "type": "EVENT_TRIGGER",
+          "condition": "ORBCOMM requests insurance assistance"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E23",
+          "type": "ASSET_TRANSFER",
+          "description": "Provision of insurance assistance"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R25",
+      "type": "OBLIGATION",
+      "party": "Orbital",
+      "counterparty": "ORBCOMM",
+      "action": "Repair and correct defects revealed in integration testing",
+      "activation": "INACTIVE",
+      "description": "If integration testing reveals defects in the Additional Payloads resulting from a defect in workmanship or materials or noncompliance with the SOW or Specifications, Orbital shall be responsible, at its own expense, for the timely repair and correction of the Additional Payloads, if practical at the facility of the integrator (with the time spent by its personnel not charged against then allocated time to ORBCOMM) and if not, at Orbital's facilities, with all transportation, insurance, and risk of loss in transit to and from the integrator's facilities and those of Orbital borne by Orbital.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T24",
+          "type": "EVENT_TRIGGER",
+          "condition": "Integration testing reveals defects from workmanship, materials, or noncompliance"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E24",
+          "type": "ASSET_TRANSFER",
+          "description": "Repair and correction of Additional Payloads"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R27",
+      "type": "OBLIGATION",
+      "party": "Orbital",
+      "counterparty": "ORBCOMM",
+      "action": "Grant security interest in work and work in progress",
+      "activation": "INACTIVE",
+      "description": "As collateral for the timely performance by Orbital of its work hereunder, Orbital hereby grants to ORBCOMM a first priority security interest in the work and work in progress and any proceeds therefrom with respect to the Additional Payloads.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T26",
+          "type": "DATE_TRIGGER",
+          "condition": "Upon execution of Amendment",
+          "reference_date": "effective_date"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E26",
+          "type": "STATE_TRANSITION",
+          "description": "Creation of security interest in favor of ORBCOMM",
+          "new_state": "security_interest_granted"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R28",
+      "type": "OBLIGATION",
+      "party": "ORBCOMM",
+      "counterparty": "Orbital",
+      "action": "Release security interest upon delivery",
+      "activation": "INACTIVE",
+      "description": "ORBCOMM agrees to execute any release of such security interest when Orbital has transferred to it title to the Additional Payloads and all deliverables associated therewith.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T27",
+          "type": "EVENT_TRIGGER",
+          "condition": "Orbital transfers title to Additional Payloads and all deliverables to ORBCOMM"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E27",
+          "type": "STATE_TRANSITION",
+          "description": "Release of security interest",
+          "new_state": "security_interest_released"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R29",
+      "type": "OBLIGATION",
+      "party": "Orbital",
+      "counterparty": "ORBCOMM",
+      "action": "Execute security interest documentation",
+      "activation": "INACTIVE",
+      "description": "Orbital shall execute such documentation thereof as ORBCOMM may reasonably request.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T28",
+          "type": "EVENT_TRIGGER",
+          "condition": "ORBCOMM requests security interest documentation"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E28",
+          "type": "ASSET_TRANSFER",
+          "description": "Execution of security interest documentation"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R31",
+      "type": "OBLIGATION",
+      "party": "Orbital",
+      "counterparty": "ORBCOMM",
+      "action": "Execute Preferred Escrow Agreement",
+      "activation": "INACTIVE",
+      "description": "Orbital shall, in addition, contemporaneously with its entry into this Amendment, execute (as the 'Depositor') and thereafter perform the obligations of a Depositor under the 'Preferred Escrow Agreement' with Iron Mountain and ORBCOMM (as the 'Preferred Beneficiary'), attached hereto as Exhibit G.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T30",
+          "type": "DATE_TRIGGER",
+          "condition": "Contemporaneously with entry into Amendment",
+          "reference_date": "effective_date"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E30",
+          "type": "STATE_TRANSITION",
+          "description": "Execution and performance of Preferred Escrow Agreement",
+          "new_state": "escrow_agreement_active"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R32",
+      "type": "OBLIGATION",
+      "party": "ORBCOMM",
+      "counterparty": "Iron Mountain",
+      "action": "Pay Iron Mountain fees under Preferred Escrow Agreement",
+      "activation": "INACTIVE",
+      "description": "ORBCOMM agrees that it shall pay Iron Mountain's fees under the Preferred Escrow Agreement.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T31",
+          "type": "EVENT_TRIGGER",
+          "condition": "Iron Mountain fees become due under Preferred Escrow Agreement"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E31",
+          "type": "PAYMENT",
+          "description": "Payment of Iron Mountain fees",
+          "payment_formula": "iron_mountain_fees",
+          "payment_from": "ORBCOMM",
+          "payment_to": "Iron Mountain"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R38",
+      "type": "PROHIBITION",
+      "party": "ORBCOMM",
+      "counterparty": "Orbital",
+      "action": "Make public announcement without approval",
+      "activation": "INACTIVE",
+      "description": "Except as may be required by applicable laws, neither party will make a public announcement regarding this Amendment without the approval of the other party, which approval will not be unreasonably withheld.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T35",
+          "type": "ABSENCE_TRIGGER",
+          "condition": "Absence of other party's approval for public announcement"
+        }
+      ],
+      "effects": [],
+      "constraints": [
+        {
+          "id": "C20",
+          "type": "CARVE_OUT",
+          "scope": [
+            "R38"
+          ],
+          "description": "Exception where public announcement required by applicable laws"
+        }
+      ],
+      "exceptions": []
+    },
+    {
+      "id": "R39",
+      "type": "PROHIBITION",
+      "party": "Orbital",
+      "counterparty": "ORBCOMM",
+      "action": "Make public announcement without approval",
+      "activation": "INACTIVE",
+      "description": "Except as may be required by applicable laws, neither party will make a public announcement regarding this Amendment without the approval of the other party, which approval will not be unreasonably withheld.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T36",
+          "type": "ABSENCE_TRIGGER",
+          "condition": "Absence of other party's approval for public announcement"
+        }
+      ],
+      "effects": [],
+      "constraints": [
+        {
+          "id": "C21",
+          "type": "CARVE_OUT",
+          "scope": [
+            "R39"
+          ],
+          "description": "Exception where public announcement required by applicable laws"
+        }
+      ],
+      "exceptions": []
+    },
+    {
+      "id": "R40",
+      "type": "PROHIBITION",
+      "party": "Orbital",
+      "counterparty": "ORBCOMM",
+      "action": "Redeploy work items to other programs without consent",
+      "activation": "INACTIVE",
+      "description": "Supplies, prints, materials, components, subsystems, and systems as associated with such work shall not be redeployed to other programs without ORBCOMM's consent.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T37",
+          "type": "ABSENCE_TRIGGER",
+          "condition": "Absence of ORBCOMM's consent for redeployment"
+        }
+      ],
+      "effects": [],
+      "constraints": [],
+      "exceptions": []
+    }
+  ],
+  "unmappable_rules": [
+    {
+      "id": "R7",
+      "type": "REPRESENTATION",
+      "party": "Orbital",
+      "counterparty": "ORBCOMM",
+      "action": "Timely delivery requirement definition",
+      "activation": "INACTIVE",
+      "description": "Timely delivery of an Additional Payload shall require the timely delivery of both the payload unit (without the antenna) and the associated antenna (A) within fourteen (14) months of the Effective Date plus sixty (60) days grace period for the Additional Payloads (less the antenna subsystem) and fourteen (14) months plus ninety (90) days grace period for the antenna subsystem associated therewith, for purposes of clause 3(i) above and (B) in accordance with the Delivery Schedule for purposes of clause 3(ii) above.",
+      "mappable": false,
+      "unmappable_reason": "REPRESENTATION is not in the four mappable primitives",
+      "triggers": [],
+      "effects": [],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R9",
+      "type": "PERMISSION",
+      "party": "ORBCOMM",
+      "counterparty": "Orbital",
+      "action": "Direct additional environmental testing",
+      "activation": "INACTIVE",
+      "description": "ORBCOMM may direct (in writing) Orbital to perform the additional environmental testing for flight payloads as set forth in Section 6.3.2.2 of the SOW. ORBCOMM's direction for this additional testing must be received within six (6) months after the Effective Date.",
+      "mappable": false,
+      "unmappable_reason": "PERMISSION is not in the four mappable primitives",
+      "triggers": [
+        {
+          "id": "T9",
+          "type": "TEMPORAL_TRIGGER",
+          "condition": "Within 6 months after Effective Date",
+          "reference_date": "effective_date",
+          "duration": "6 months",
+          "duration_days": 180
+        }
+      ],
+      "effects": [
+        {
+          "id": "E9",
+          "type": "RULE_ACTIVATION",
+          "description": "Activation of additional environmental testing obligation",
+          "target_rule_id": "R20"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R10",
+      "type": "IMMUNITY",
+      "party": "Orbital",
+      "counterparty": "ORBCOMM",
+      "action": "Immunity from late charges during force majeure",
+      "activation": "INACTIVE",
+      "description": "If and to the extent that a delay in delivery is excused by force majeure then Orbital shall not be responsible for late charges under clause 3(i) above for the period of such force majeure delay. The time required for delivery in order for Orbital to achieve on-time or early delivery incentives under clause 3(ii) above shall, however, not be extended by force majeure delays.",
+      "mappable": false,
+      "unmappable_reason": "IMMUNITY is not in the four mappable primitives",
+      "triggers": [
+        {
+          "id": "T10",
+          "type": "EVENT_TRIGGER",
+          "condition": "Force majeure event occurs causing delay"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E10",
+          "type": "RULE_ACTIVATION",
+          "description": "Suspension of late charge liability during force majeure period",
+          "target_rule_id": "R4",
+          "new_state": "force_majeure_active"
+        }
+      ],
+      "constraints": [
+        {
+          "id": "C12",
+          "type": "CARVE_OUT",
+          "scope": [
+            "R5",
+            "R6"
+          ],
+          "description": "Force majeure does NOT extend time required for on-time or early delivery incentives"
+        }
+      ],
+      "exceptions": []
+    },
+    {
+      "id": "R11",
+      "type": "REPRESENTATION",
+      "party": "Orbital",
+      "counterparty": "ORBCOMM",
+      "action": "Force majeure definition",
+      "activation": "INACTIVE",
+      "description": "Force majeure includes: act of God, terrorism, riot, or other hostilities, act of the public enemy, embargo, governmental act, orders or regulations, fire, war, riot, strikes, hurricane or other catastrophic weather condition, delay of spacecraft bus for integration, delay of launch or other cause of a similar nature that is beyond the control of such party claiming force majeure. Any failure or delay that could have been avoided or greater minimized by the exercise of commercially reasonable diligence and care (including work around solutions to minimize the effect of a force majeure event) is excluded.",
+      "mappable": false,
+      "unmappable_reason": "REPRESENTATION is not in the four mappable primitives",
+      "triggers": [],
+      "effects": [],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R12",
+      "type": "COVENANT",
+      "party": "ORBCOMM",
+      "counterparty": "Orbital",
+      "action": "Hold back payment until one year after IOT completion",
+      "activation": "INACTIVE",
+      "description": "As shown in Exhibit E-1, four percent (4%) of the Price ($680,000) (the 'Holdback Amount') shall be held back by ORBCOMM until one-year (12 months) after the successful completion of payload IOT for the Additional Payloads.",
+      "mappable": false,
+      "unmappable_reason": "COVENANT is not in the four mappable primitives",
+      "triggers": [
+        {
+          "id": "T11",
+          "type": "TEMPORAL_TRIGGER",
+          "condition": "12 months after successful completion of payload IOT",
+          "reference_date": "iot_completion_date",
+          "duration": "12 months",
+          "duration_days": 365
+        }
+      ],
+      "effects": [
+        {
+          "id": "E11",
+          "type": "PAYMENT",
+          "description": "Release of Holdback Amount",
+          "payment_formula": "680000",
+          "payment_from": "ORBCOMM",
+          "payment_to": "Orbital"
+        }
+      ],
+      "constraints": [
+        {
+          "id": "C13",
+          "type": "CAP",
+          "scope": [
+            "E11"
+          ],
+          "description": "Payment contingent on all Additional Payloads successfully operating per Specifications on first anniversary date"
+        }
+      ],
+      "exceptions": []
+    },
+    {
+      "id": "R15",
+      "type": "POWER",
+      "party": "ORBCOMM",
+      "counterparty": "Orbital",
+      "action": "Option to require Optional Payloads",
+      "activation": "INACTIVE",
+      "description": "ORBCOMM shall have the option to require Orbital to manufacture, test and deliver to ORBCOMM up to two (2) Additional Payloads (in addition to those delivered pursuant to clause 1 above) in accordance with the SOW and the Specifications (the 'Optional Payloads'). The firm fixed price for each Optional Payload, each with an additional SRX, shall be $2,200,000. This option must be exercised, if at all and at ORBCOMM's sole discretion, no later than three (3) months after the Effective Date with respect to each Additional Option. This option may be exercised by ORBCOMM in whole or in part.",
+      "mappable": false,
+      "unmappable_reason": "POWER is not in the four mappable primitives",
+      "triggers": [
+        {
+          "id": "T14",
+          "type": "TEMPORAL_TRIGGER",
+          "condition": "No later than 3 months after Effective Date",
+          "reference_date": "effective_date",
+          "duration": "3 months",
+          "duration_days": 90
+        }
+      ],
+      "effects": [
+        {
+          "id": "E14",
+          "type": "RULE_ACTIVATION",
+          "description": "Activation of Optional Payload procurement obligations",
+          "target_rule_id": "R16",
+          "new_state": "optional_payload_activated"
+        }
+      ],
+      "constraints": [
+        {
+          "id": "C15",
+          "type": "CAP",
+          "value": "2",
+          "scope": [
+            "E14"
+          ],
+          "description": "Option limited to up to two (2) Optional Payloads"
+        }
+      ],
+      "exceptions": []
+    },
+    {
+      "id": "R22",
+      "type": "COVENANT",
+      "party": "Orbital",
+      "counterparty": "ORBCOMM",
+      "action": "Agree to tax efficiency modifications",
+      "activation": "INACTIVE",
+      "description": "Orbital shall agree to make reasonable changes in the Procurement Agreement and this Amendment, such as modifying the place of delivery and/or delaying the passage of title, as ORBCOMM may request in writing, in order to improve the tax efficiencies with respect to the Additional Payloads, provided that any such change shall be economically neutral to Orbital.",
+      "mappable": false,
+      "unmappable_reason": "COVENANT is not in the four mappable primitives",
+      "triggers": [
+        {
+          "id": "T21",
+          "type": "EVENT_TRIGGER",
+          "condition": "ORBCOMM requests changes for tax efficiency in writing"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E21",
+          "type": "STATE_TRANSITION",
+          "description": "Agreement modification for tax efficiency",
+          "new_state": "tax_optimized"
+        }
+      ],
+      "constraints": [
+        {
+          "id": "C19",
+          "type": "CAP",
+          "scope": [
+            "E21"
+          ],
+          "description": "Change must be economically neutral to Orbital"
+        }
+      ],
+      "exceptions": []
+    },
+    {
+      "id": "R26",
+      "type": "COVENANT",
+      "party": "Orbital",
+      "counterparty": "ORBCOMM",
+      "action": "Delivery date adjustment for defect remediation",
+      "activation": "INACTIVE",
+      "description": "If such remedies are required, the elapsed time needed to remedy such defects or noncompliance shall be added to the actual delivery date to establish the delivery of such items for the purpose of calculating a revised delivery date for the purpose of assessing incentives and penalties.",
+      "mappable": false,
+      "unmappable_reason": "COVENANT is not in the four mappable primitives",
+      "triggers": [
+        {
+          "id": "T25",
+          "type": "EVENT_TRIGGER",
+          "condition": "Defects remedied after integration testing"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E25",
+          "type": "RETROACTIVE_REVISION",
+          "description": "Adjustment of delivery date for incentive/penalty calculation",
+          "payment_formula": "actual_delivery_date + (remedy_completion_date - defect_discovery_date)"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R30",
+      "type": "COVENANT",
+      "party": "Orbital",
+      "counterparty": "ORBCOMM",
+      "action": "Properly inventory and identify work items",
+      "activation": "INACTIVE",
+      "description": "Supplies, prints, materials, components, subsystems, and systems as associated with such work shall be properly inventoried and identified as associated with such work in accordance with Orbital's normal inventory control practice, documentation of which shall be subject to inspection by ORBCOMM, and shall not be redeployed to other programs without ORBCOMM's consent.",
+      "mappable": false,
+      "unmappable_reason": "COVENANT is not in the four mappable primitives",
+      "triggers": [
+        {
+          "id": "T29",
+          "type": "EVENT_TRIGGER",
+          "condition": "Throughout performance of work"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E29",
+          "type": "STATE_TRANSITION",
+          "description": "Maintenance of proper inventory control",
+          "new_state": "inventory_controlled"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R33",
+      "type": "POWER",
+      "party": "ORBCOMM",
+      "counterparty": "Orbital",
+      "action": "Adjust Iron Mountain work level or terminate Preferred Escrow Agreement",
+      "activation": "INACTIVE",
+      "description": "Subject to ORBCOMM's obligation to pay Iron Mountain's fees, Orbital agrees that ORBCOMM shall have the right to adjust the level of work to be performed by Iron Mountain and/or terminate the Preferred Escrow Agreement in accordance with its terms and Orbital shall execute and deliver such instructions to Iron Mountain as ORBCOMM may reasonably request to reflect ORBCOMM's decisions in this regard.",
+      "mappable": false,
+      "unmappable_reason": "POWER is not in the four mappable primitives",
+      "triggers": [
+        {
+          "id": "T32",
+          "type": "EVENT_TRIGGER",
+          "condition": "ORBCOMM decides to adjust or terminate"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E32",
+          "type": "STATE_TRANSITION",
+          "description": "Adjustment or termination of Preferred Escrow Agreement",
+          "new_state": "escrow_modified_or_terminated"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R34",
+      "type": "COVENANT",
+      "party": "Orbital",
+      "counterparty": "ORBCOMM",
+      "action": "Comply with all applicable laws and regulations",
+      "activation": "INACTIVE",
+      "description": "Each Party shall comply with all applicable laws and regulations with respect to the performance of this Amendment.",
+      "mappable": false,
+      "unmappable_reason": "COVENANT is not in the four mappable primitives",
+      "triggers": [
+        {
+          "id": "T33",
+          "type": "EVENT_TRIGGER",
+          "condition": "Throughout performance of Amendment"
+        }
+      ],
+      "effects": [],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R35",
+      "type": "COVENANT",
+      "party": "ORBCOMM",
+      "counterparty": "Orbital",
+      "action": "Comply with all applicable laws and regulations",
+      "activation": "INACTIVE",
+      "description": "Each Party shall comply with all applicable laws and regulations with respect to the performance of this Amendment.",
+      "mappable": false,
+      "unmappable_reason": "COVENANT is not in the four mappable primitives",
+      "triggers": [
+        {
+          "id": "T34",
+          "type": "EVENT_TRIGGER",
+          "condition": "Throughout performance of Amendment"
+        }
+      ],
+      "effects": [],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R36",
+      "type": "PERMISSION",
+      "party": "ORBCOMM",
+      "counterparty": "Orbital",
+      "action": "Seek specific performance",
+      "activation": "INACTIVE",
+      "description": "Nothing in the Procurement Agreement or this Amendment shall be deemed to bar either party from seeking specific performance of the other party's obligations hereunder.",
+      "mappable": false,
+      "unmappable_reason": "PERMISSION is not in the four mappable primitives",
+      "triggers": [],
+      "effects": [],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R37",
+      "type": "PERMISSION",
+      "party": "Orbital",
+      "counterparty": "ORBCOMM",
+      "action": "Seek specific performance",
+      "activation": "INACTIVE",
+      "description": "Nothing in the Procurement Agreement or this Amendment shall be deemed to bar either party from seeking specific performance of the other party's obligations hereunder.",
+      "mappable": false,
+      "unmappable_reason": "PERMISSION is not in the four mappable primitives",
+      "triggers": [],
+      "effects": [],
+      "constraints": [],
+      "exceptions": []
+    }
+  ]
+}

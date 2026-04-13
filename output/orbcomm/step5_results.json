@@ -1,0 +1,78 @@
+{
+  "happy_path": {
+    "final_state": "AWAITING_ACCEPTANCE",
+    "financial_summary": {
+      "ORBCOMM Inc_to_Orbital Sciences Corporation": 0.0
+    },
+    "narrative": [
+      "2025-04-21 [bond_deadline_approaching] ACTIVE \u2192 AWAITING_BOND",
+      "  [effect] ASSET_TRANSFER: ORBCOMM delivers performance bond or letter of credit",
+      "2025-04-25 [bond_provided] AWAITING_BOND \u2192 DELIVERY_GRACE",
+      "  [effect] ASSET_TRANSFER: All payloads and antenna subsystems delivered early",
+      "2025-06-15 [early_delivery] DELIVERY_GRACE \u2192 AWAITING_ACCEPTANCE",
+      "2025-06-20 [no transition] event='acceptance_no_penalty' in state='AWAITING_ACCEPTANCE'",
+      "2025-07-01 [no transition] event='iot_completed' in state='AWAITING_ACCEPTANCE'",
+      "2026-07-01 [no transition] event='one_year_success' in state='AWAITING_ACCEPTANCE'"
+    ]
+  },
+  "late_delivery": {
+    "final_state": "AWAITING_ACCEPTANCE",
+    "financial_summary": {
+      "Orbital Sciences Corporation_to_ORBCOMM Inc": 739500.0
+    },
+    "narrative": [
+      "2025-04-21 [bond_deadline_approaching] ACTIVE \u2192 AWAITING_BOND",
+      "  [effect] ASSET_TRANSFER: ORBCOMM delivers performance bond or letter of credit",
+      "2025-04-25 [bond_provided] AWAITING_BOND \u2192 DELIVERY_GRACE",
+      "2025-08-20 [grace_period_expired] DELIVERY_GRACE \u2192 DELIVERY_LATE",
+      "  [effect] ASSET_TRANSFER: Payloads and antenna subsystems delivered late",
+      "2025-09-15 [late_delivery] DELIVERY_LATE \u2192 AWAITING_ACCEPTANCE",
+      "2025-09-20 [no transition] event='acceptance_no_penalty' in state='AWAITING_ACCEPTANCE'",
+      "2025-10-05 [no transition] event='iot_completed' in state='AWAITING_ACCEPTANCE'",
+      "2026-10-05 [no transition] event='one_year_success' in state='AWAITING_ACCEPTANCE'"
+    ]
+  },
+  "acceptance_with_penalty": {
+    "final_state": "AWAITING_ACCEPTANCE",
+    "financial_summary": {
+      "ORBCOMM Inc_to_Orbital Sciences Corporation": 0.0
+    },
+    "narrative": [
+      "2025-04-21 [bond_deadline_approaching] ACTIVE \u2192 AWAITING_BOND",
+      "2025-04-24 [bond_not_provided] AWAITING_BOND \u2192 DELIVERY_GRACE",
+      "  [effect] ASSET_TRANSFER: All payloads and antenna subsystems delivered on time",
+      "2025-06-20 [on_time_delivery] DELIVERY_GRACE \u2192 AWAITING_ACCEPTANCE",
+      "2025-06-25 [no transition] event='acceptance_with_penalty' in state='AWAITING_ACCEPTANCE'",
+      "2025-07-15 [no transition] event='iot_completed' in state='AWAITING_ACCEPTANCE'",
+      "2026-07-15 [no transition] event='one_year_success' in state='AWAITING_ACCEPTANCE'"
+    ]
+  },
+  "partial_iot_failure": {
+    "final_state": "AWAITING_ACCEPTANCE",
+    "financial_summary": {
+      "ORBCOMM Inc_to_Orbital Sciences Corporation": 0.0
+    },
+    "narrative": [
+      "2025-04-21 [bond_deadline_approaching] ACTIVE \u2192 AWAITING_BOND",
+      "  [effect] ASSET_TRANSFER: ORBCOMM delivers performance bond or letter of credit",
+      "2025-04-26 [bond_provided] AWAITING_BOND \u2192 DELIVERY_GRACE",
+      "  [effect] ASSET_TRANSFER: All payloads and antenna subsystems delivered early",
+      "2025-06-18 [early_delivery] DELIVERY_GRACE \u2192 AWAITING_ACCEPTANCE",
+      "2025-06-22 [no transition] event='acceptance_no_penalty' in state='AWAITING_ACCEPTANCE'",
+      "2025-07-10 [no transition] event='iot_completed' in state='AWAITING_ACCEPTANCE'",
+      "2026-07-10 [no transition] event='one_year_partial_failure' in state='AWAITING_ACCEPTANCE'"
+    ]
+  },
+  "termination_for_default": {
+    "final_state": "TERMINATED",
+    "financial_summary": {},
+    "narrative": [
+      "2025-04-21 [bond_deadline_approaching] ACTIVE \u2192 AWAITING_BOND",
+      "  [effect] ASSET_TRANSFER: ORBCOMM delivers performance bond or letter of credit",
+      "2025-04-25 [bond_provided] AWAITING_BOND \u2192 DELIVERY_GRACE",
+      "2025-08-20 [grace_period_expired] DELIVERY_GRACE \u2192 DELIVERY_LATE",
+      "  [effect] FORFEITURE: Contract terminated for excessive delay or other default",
+      "2026-01-15 [termination_for_default] DELIVERY_LATE \u2192 TERMINATED"
+    ]
+  }
+}

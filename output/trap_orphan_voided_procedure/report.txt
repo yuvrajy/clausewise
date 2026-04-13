@@ -1,0 +1,669 @@
+
+============================================================
+FSM SUMMARY
+============================================================
+States: ['ACTIVE', 'DELIVERY_PENDING', 'DELIVERY_LATE', 'DELIVERY_LATE_PENALTY_ACCRUING', 'PENALTY_SUSPENDED', 'SAT_TESTING', 'DEFECT_CORRECTION', 'SAT_PASSED', 'COMMISSIONING', 'WARRANTY_ACTIVE', 'WARRANTY_CLAIM_PENDING', 'HOLDBACK_RELEASED', 'ARBITRATION', 'COMPLETED', 'TERMINATED']
+Initial: ACTIVE
+Transitions: 24
+Mappable rules: 23
+Unmappable rules: 15
+
+============================================================
+SCENARIO RESULTS
+============================================================
+
+--- HAPPY_PATH ---
+  Final state: COMPLETED
+  Financials:
+    ClearPath Municipal Infrastructure Authority_to_Meridian Engineering Group Inc.: $0.00
+  Narrative (last 5 lines):
+    2025-02-20 [sat_passed_explicitly] SAT_TESTING → SAT_PASSED
+    2025-02-21 [commissioning_started] SAT_PASSED → COMMISSIONING
+    2025-03-25 [acceptance_certificate_issued] COMMISSIONING → WARRANTY_ACTIVE
+    2026-03-25 [holdback_release_triggered] WARRANTY_ACTIVE → HOLDBACK_RELEASED
+    2027-03-25 [warranty_period_expired] HOLDBACK_RELEASED → COMPLETED
+
+--- LATE_DELIVERY ---
+  Final state: COMPLETED
+  Financials:
+    Meridian Engineering Group Inc._to_ClearPath Municipal Infrastructure Authority: $810,000.00
+    ClearPath Municipal Infrastructure Authority_to_Meridian Engineering Group Inc.: $0.00
+  Narrative (last 5 lines):
+    2025-03-25 [sat_passed_explicitly] SAT_TESTING → SAT_PASSED
+    2025-03-26 [commissioning_started] SAT_PASSED → COMMISSIONING
+    2025-04-20 [acceptance_certificate_issued] COMMISSIONING → WARRANTY_ACTIVE
+    2026-04-20 [holdback_release_triggered] WARRANTY_ACTIVE → HOLDBACK_RELEASED
+    2027-04-20 [warranty_period_expired] HOLDBACK_RELEASED → COMPLETED
+
+--- DEFECT_CORRECTION_AND_WARRANTY_CLAIMS ---
+  Final state: COMPLETED
+  Financials:
+    ClearPath Municipal Infrastructure Authority_to_Meridian Engineering Group Inc.: $0.00
+  Narrative (last 5 lines):
+    2025-09-15 [warranty_claim_submitted] WARRANTY_ACTIVE → WARRANTY_CLAIM_PENDING
+    2025-10-10 [warranty_remedy_completed] WARRANTY_CLAIM_PENDING → WARRANTY_ACTIVE
+    2025-10-15 [no transition] event='cure_deadline_passed' in state='WARRANTY_ACTIVE'
+    2026-04-28 [holdback_release_triggered] WARRANTY_ACTIVE → HOLDBACK_RELEASED
+    2027-04-28 [warranty_period_expired] HOLDBACK_RELEASED → COMPLETED
+
+--- FORCE_MAJEURE_SUSPENSION ---
+  Final state: COMPLETED
+  Financials:
+    Meridian Engineering Group Inc._to_ClearPath Municipal Infrastructure Authority: $810,000.00
+    ClearPath Municipal Infrastructure Authority_to_Meridian Engineering Group Inc.: $0.00
+  Narrative (last 5 lines):
+    2025-04-18 [sat_passed_explicitly] SAT_TESTING → SAT_PASSED
+    2025-04-19 [commissioning_started] SAT_PASSED → COMMISSIONING
+    2025-05-15 [acceptance_certificate_issued] COMMISSIONING → WARRANTY_ACTIVE
+    2026-05-15 [holdback_release_triggered] WARRANTY_ACTIVE → HOLDBACK_RELEASED
+    2027-05-15 [warranty_period_expired] HOLDBACK_RELEASED → COMPLETED
+
+--- HOLDBACK_DISPUTE_ARBITRATION ---
+  Final state: ACTIVE
+  Financials:
+    ClearPath Municipal Infrastructure Authority_to_Meridian Engineering Group Inc.: $0.00
+    Meridian Engineering Group Inc._to_Arbitrator: $0.00
+    ClearPath Municipal Infrastructure Authority_to_Arbitrator: $0.00
+  Narrative (last 5 lines):
+    2025-03-24 [acceptance_certificate_issued] COMMISSIONING → WARRANTY_ACTIVE
+    2026-03-24 [holdback_release_triggered] WARRANTY_ACTIVE → HOLDBACK_RELEASED
+    2026-04-10 [dispute_filed] HOLDBACK_RELEASED → ARBITRATION
+    2026-09-15 [arbitration_resolved_continue] ARBITRATION → ACTIVE
+    2027-03-24 [no transition] event='warranty_period_expired' in state='ACTIVE'
+
+============================================================
+REGENERATED CONTRACT ENGLISH
+============================================================
+================================================================
+CONTRACT: trap_orphan_voided_procedure
+================================================================
+
+PARTIES
+────────────────────────────────────────
+  1. ClearPath Municipal Infrastructure Authority
+  2. Meridian Engineering Group Inc.
+
+CONTRACT PARAMETERS
+────────────────────────────────────────
+  Amounts:
+    Contract Price: $5,400,000.00
+    Early Delivery Incentive Rate: $2,250.00
+    Holdback Amount: $540,000.00
+    Late Delivery Penalty Rate: $4,500.00
+    Per Node Deduction: $38,571.00
+    Third Party Remediation Cap Per Incident: $25,000.00
+  Rates:
+    Early Incentive Per Day: 2250.0%
+    Late Penalty Per Day: 4500.0%
+  Durations:
+    Cdr Days: 90 days
+    Com Days: 270 days
+    Del Days: 210 days
+    Fat Days: 180 days
+    Force Majeure Notice Business Days: 5 days
+    Holdback Dispute Arbitration Deadline Days: 30 days
+    Holdback Release Days: 365 days
+    Holdback Release Months: 12 days
+    Holdback Release Payment Days: 30 days
+    Late Delivery Grace Days: 14 days
+    Max Correction Period Days: 45 days
+    Pdr Days: 45 days
+    Sat Days: 240 days
+    Sat Testing Window Days: 30 days
+    Warranty Days: 730 days
+    Warranty Months: 24 days
+    Warranty Remedy Days: 30 days
+  Thresholds:
+    Early Incentive Cap: 63000
+    Late Delivery Grace Period Days: 14
+    Late Penalty Cap: 405000
+    Milestone Credit Max Days: 10
+    Total Monitoring Nodes: 14
+  Key Dates:
+    Com Acceptance Date: (to be determined)
+    Del Date: (to be determined)
+    Effective Date: 2024-07-01
+    Holdback Release Date: (to be determined)
+    Required Delivery Date: 2024-07-01 + 210 days
+
+CONTRACT STATES
+────────────────────────────────────────
+  Contract is active, milestones PDR/CDR/FAT in progress ← initial  [rules: R1, R2, R3, R4, R35, R36]
+  Dispute escalated to binding arbitration  [rules: R26, R27, R29, R31, R33, R35, R36]
+  COM milestone in progress  [rules: R9, R35, R36]
+  All obligations fulfilled, warranty period expired, holdback released ← terminal
+  Defect Notice issued during SAT, Supplier remedying defects  [rules: R8, R35, R36]
+  Delivery is late but within grace period (0-14 days)  [rules: R5, R23, R35, R36]
+  Delivery is late beyond grace period, penalties accruing  [rules: R5, R6, R23, R35, R36]
+  Design milestones complete, awaiting physical delivery (DEL)  [rules: R5, R35, R36]
+  Holdback released after warranty period and all claims resolved  [rules: R35, R36]
+  Late delivery penalty accrual suspended due to force majeure  [rules: R5, R23, R35, R36]
+  SAT passed (explicitly or deemed), ready for commissioning  [rules: R9, R12, R35, R36]
+  Delivery complete, Buyer conducting Site Acceptance Testing  [rules: R7, R35, R36]
+  Contract terminated due to failure or breach ← terminal
+  Acceptance Certificate issued, warranty period active  [rules: R13, R14, R18, R19, R20, R35, R36]
+  Warranty claim submitted, Supplier must remedy within 30 days  [rules: R19, R20, R35, R36]
+
+RULES AND OBLIGATIONS
+────────────────────────────────────────
+  Rule R1: Obligation (inactive at formation)
+    Meridian Engineering Group Inc. → ClearPath Municipal Infrastructure Authority: Design Infrastructure Monitoring System
+    Supplier shall design, manufacture, integrate, test, and commission an automated Infrastructure Monitoring System for Buyer's fourteen (14) regional water-distribution monitoring nodes, including sensors, communication hardware, central software platform, and staff training, in accordance with the Statement of Work (Exhibit A) and Technical Specifications (Exhibit B).
+
+  Rule R11: Obligation (inactive at formation)
+    ClearPath Municipal Infrastructure Authority → Meridian Engineering Group Inc.: Pay early delivery incentive
+    If the DEL milestone is completed before the Required Delivery Date, Buyer shall pay Supplier $2,250 per calendar day early, calculated from the actual delivery date to the Required Delivery Date. The early delivery incentive shall not exceed $63,000 (the 'Early Delivery Cap').
+    Trigger: Upon event — DEL milestone completed before Required Delivery Date
+    Effect: Payment — Early delivery incentive payment from Buyer to Supplier
+      Formula: early days * 2250
+      From: ClearPath Municipal Infrastructure Authority → To: Meridian Engineering Group Inc.
+      Cap: $63,000.00
+    Constraint: Maximum cap
+      Value: $63,000.00
+      Early delivery incentive shall not exceed $63,000
+    Exception: R24
+
+  Rule R12: Obligation (inactive at formation)
+    ClearPath Municipal Infrastructure Authority → Meridian Engineering Group Inc.: Issue Acceptance Certificate upon SAT passage
+    Upon SAT passage (original or after correction), Buyer issues a written Acceptance Certificate. The contract transitions to Warranty Active status.
+    Trigger: Upon event — SAT passed (original or after defect correction)
+    Effect: State transition — Contract transitions to Warranty Active status
+
+  Rule R13: Obligation (inactive at formation)
+    ClearPath Municipal Infrastructure Authority → Meridian Engineering Group Inc.: Withhold Holdback Amount from final payment
+    Ten percent (10%) of the Contract Price ($540,000) shall be withheld by Buyer from the final payment milestone invoice (the 'Holdback Amount').
+    Trigger: Upon event — Final payment milestone invoice
+    Effect: Payment — Holdback of $540,000 from final payment
+      Formula: 540000
+
+  Rule R14: Obligation (inactive at formation)
+    ClearPath Municipal Infrastructure Authority → Meridian Engineering Group Inc.: Release Holdback Amount
+    The Holdback Amount shall be released to Supplier in full within thirty (30) calendar days of the later of: (a) twelve (12) calendar months after the COM milestone acceptance date; and (b) resolution of all open warranty claims lodged before the twelve-month anniversary of COM. Partial release is not available; the full Holdback Amount is either released or retained (subject to deduction under Section 6.3).
+    Trigger: After time period — Later of: (a) 12 months after COM acceptance date, or (b) resolution of all open warranty claims lodged before 12-month anniversary of COM
+      Duration: 12 months
+    Trigger: Upon event — Resolution of all open warranty claims lodged before twelve-month anniversary of COM
+    Effect: Payment — Release of Holdback Amount to Supplier
+      Formula: 540000 - holdback deductions
+      From: ClearPath Municipal Infrastructure Authority → To: Meridian Engineering Group Inc.
+    Constraint: Controlling provision
+      Duration: 30 days
+      Holdback released within 30 days of trigger date; no partial release available
+    Exception: R15
+
+  Rule R19: Obligation (inactive at formation)
+    ClearPath Municipal Infrastructure Authority → Meridian Engineering Group Inc.: Submit warranty claims in writing
+    Buyer shall submit warranty claims in writing, specifying the non-conformance and the affected node(s).
+    Trigger: Upon event — Defect discovered during warranty period
+    Effect: Rule activation — Triggers Supplier's warranty remedy obligation
+
+  Rule R2: Obligation (inactive at formation)
+    Meridian Engineering Group Inc. → ClearPath Municipal Infrastructure Authority: Complete PDR milestone
+    Preliminary Design Review completed by CED + 45 days
+    Trigger: On date — PDR due date
+      Duration: 45 days
+
+  Rule R20: Obligation (inactive at formation)
+    Meridian Engineering Group Inc. → ClearPath Municipal Infrastructure Authority: Remedy warranty claims
+    Supplier shall remedy conforming warranty claims within thirty (30) calendar days of written notice at no cost to Buyer.
+    Trigger: Upon event — Receipt of written warranty claim from Buyer
+      Duration: 30 days
+    Effect: Cure window — 30-day period to remedy warranty defect
+
+  Rule R23: Obligation (inactive at formation)
+    Meridian Engineering Group Inc. → ClearPath Municipal Infrastructure Authority: Provide force majeure notice and updates
+    Late delivery penalties under Section 3.1 shall be suspended for each calendar day that a documented force majeure event directly prevents Supplier from performing critical-path activities. Supplier shall provide written notice within five (5) business days of onset and weekly updates thereafter.
+    Trigger: Upon event — Force majeure event onset
+      Duration: 5 business days
+    Effect: State transition — Suspends late delivery penalty accrual for documented force majeure days
+    Constraint: Grace period
+      Duration: 5 business days
+      Written notice required within 5 business days of force majeure onset
+
+  Rule R26: Obligation (inactive at formation)
+    Meridian Engineering Group Inc. → ClearPath Municipal Infrastructure Authority: Submit disputes to binding arbitration
+    Any and all disputes, claims, or controversies arising out of or relating to this Agreement, including disputes concerning its formation, performance, breach, termination, or validity, shall be resolved exclusively by binding arbitration administered by the American Arbitration Association ('AAA') under its Commercial Arbitration Rules, as modified by this Section 14. The arbitration shall be conducted in Austin, Texas, before a single arbitrator selected from the AAA's Large Complex Case roster.
+    Trigger: Upon event — Any dispute, claim, or controversy arising out of or relating to the Agreement
+    Effect: State transition — Dispute enters binding arbitration
+
+  Rule R27: Prohibition (inactive at formation)
+    Meridian Engineering Group Inc. → ClearPath Municipal Infrastructure Authority: No litigation except for interim injunctive relief
+    The arbitration procedure in this Section 14 is the sole and exclusive dispute resolution mechanism for this Agreement. No party shall initiate litigation or any other dispute resolution procedure with respect to any dispute that is or could be subject to this Section 14, except to seek interim injunctive relief pending arbitration.
+    Exception: R28
+
+  Rule R29: Obligation (inactive at formation)
+    Meridian Engineering Group Inc. → ClearPath Municipal Infrastructure Authority: Share arbitration costs equally
+    The costs of arbitration, including arbitrator fees, shall be borne equally by the parties, except that the prevailing party may seek recovery of reasonable attorneys' fees and arbitration costs from the non-prevailing party as part of the arbitral award.
+    Trigger: Upon event — Arbitration proceeding initiated
+    Effect: Payment — Equal sharing of arbitration costs
+      Formula: arbitration costs / 2
+      From: Meridian Engineering Group Inc. → To: None
+    Exception: R30
+
+  Rule R3: Obligation (inactive at formation)
+    Meridian Engineering Group Inc. → ClearPath Municipal Infrastructure Authority: Complete CDR milestone
+    Critical Design Review completed by CED + 90 days
+    Trigger: On date — CDR due date
+      Duration: 90 days
+
+  Rule R31: Obligation (inactive at formation)
+    ClearPath Municipal Infrastructure Authority → Meridian Engineering Group Inc.: Share arbitration costs equally
+    The costs of arbitration, including arbitrator fees, shall be borne equally by the parties, except that the prevailing party may seek recovery of reasonable attorneys' fees and arbitration costs from the non-prevailing party as part of the arbitral award.
+    Trigger: Upon event — Arbitration proceeding initiated
+    Effect: Payment — Equal sharing of arbitration costs
+      Formula: arbitration costs / 2
+      From: ClearPath Municipal Infrastructure Authority → To: None
+    Exception: R30
+
+  Rule R33: Prohibition (inactive at formation)
+    ClearPath Municipal Infrastructure Authority → Meridian Engineering Group Inc.: No litigation except for interim injunctive relief
+    The arbitration procedure in this Section 14 is the sole and exclusive dispute resolution mechanism for this Agreement. No party shall initiate litigation or any other dispute resolution procedure with respect to any dispute that is or could be subject to this Section 14, except to seek interim injunctive relief pending arbitration.
+    Exception: R34
+
+  Rule R35: Obligation (inactive at formation)
+    Meridian Engineering Group Inc. → ClearPath Municipal Infrastructure Authority: Deliver notices per specified methods
+    All notices shall be delivered by (a) hand delivery with signed receipt, (b) nationally recognized overnight courier, or (c) email with confirmed read receipt, to the addresses set forth in Exhibit D. Notices are effective upon receipt.
+    Trigger: Upon event — Any notice required or permitted under the Agreement
+
+  Rule R36: Obligation (inactive at formation)
+    ClearPath Municipal Infrastructure Authority → Meridian Engineering Group Inc.: Deliver notices per specified methods
+    All notices shall be delivered by (a) hand delivery with signed receipt, (b) nationally recognized overnight courier, or (c) email with confirmed read receipt, to the addresses set forth in Exhibit D. Notices are effective upon receipt.
+    Trigger: Upon event — Any notice required or permitted under the Agreement
+
+  Rule R4: Obligation (inactive at formation)
+    Meridian Engineering Group Inc. → ClearPath Municipal Infrastructure Authority: Complete FAT milestone
+    Factory Acceptance Testing passed by CED + 180 days
+    Trigger: On date — FAT due date
+      Duration: 180 days
+
+  Rule R5: Obligation (inactive at formation)
+    Meridian Engineering Group Inc. → ClearPath Municipal Infrastructure Authority: Complete DEL milestone - physical delivery
+    System physically delivered to Buyer's Operations Center by CED + 210 days (Required Delivery Date)
+    Trigger: On date — DEL due date (Required Delivery Date)
+      Duration: 210 days
+    Effect: Rule activation — Triggers SAT testing period obligation on Buyer
+    Effect: Rule activation — Triggers late delivery penalty rule if not completed by deadline
+    Effect: Rule activation — Triggers early delivery incentive rule if completed before deadline
+    Exception: R23
+
+  Rule R6: Obligation (inactive at formation)
+    Meridian Engineering Group Inc. → ClearPath Municipal Infrastructure Authority: Pay late delivery liquidated damages
+    If the DEL milestone is not completed by the Required Delivery Date, Supplier shall pay Buyer liquidated damages of $4,500 per calendar day of delay, beginning on the first day after the Required Delivery Date. A grace period of fourteen (14) calendar days applies; no penalty accrues within the grace period. If delay exceeds 14 days, all days from day 1 are penalised retroactively (threshold trigger, not an offset).
+    Trigger: When threshold crossed — Delay exceeds 14 calendar days
+      Threshold: delay_days gt 14
+    Effect: Payment — Liquidated damages payment from Supplier to Buyer at $4,500 per day
+      Formula: delay days * 4500
+      From: Meridian Engineering Group Inc. → To: ClearPath Municipal Infrastructure Authority
+      Cap: $405,000.00
+    Effect: Retroactive revision — Penalties calculated from day 1 of delay, not day 15
+    Constraint: Grace period
+      Duration: 14 days
+      No penalty accrues within 14-day grace period; if delay exceeds 14 days, all days from day 1 are retroactively penalized
+    Constraint: Maximum cap
+      Value: $405,000.00
+      Late delivery penalties shall not exceed $405,000 (7.5% of Contract Price)
+    Exception: R10
+    Exception: R23
+
+  Rule R7: Obligation (inactive at formation)
+    ClearPath Municipal Infrastructure Authority → Meridian Engineering Group Inc.: Conduct Site Acceptance Testing
+    Following physical delivery (DEL), Buyer shall conduct Site Acceptance Testing within thirty (30) calendar days.
+    Trigger: Upon event — DEL milestone completion
+      Duration: 30 days
+    Effect: State transition — SAT deemed passed if no Defect Notice issued within 30 days
+    Effect: Rule activation — Agreement proceeds to commissioning if SAT deemed passed
+
+  Rule R8: Obligation (inactive at formation)
+    Meridian Engineering Group Inc. → ClearPath Municipal Infrastructure Authority: Remedy SAT defects
+    If SAT reveals defects, Supplier shall remedy at its own expense. The elapsed time between Buyer's written Defect Notice and Supplier's written confirmation of remedy is the 'Correction Period.' The Revised Delivery Date for penalty and incentive purposes equals the Actual DEL Date plus the Correction Period, subject to a maximum addition of 45 days across all correction rounds.
+    Trigger: Upon event — Buyer issues Defect Notice during SAT period
+    Effect: State transition — Revised Delivery Date = Actual DEL Date + Correction Period
+    Constraint: Maximum cap
+      Duration: 45 days
+      Maximum addition to Revised Delivery Date: 45 days across all correction rounds
+
+  Rule R9: Obligation (inactive at formation)
+    Meridian Engineering Group Inc. → ClearPath Municipal Infrastructure Authority: Complete COM milestone - commissioning
+    System commissioned and live at all 14 nodes by CED + 270 days
+    Trigger: On date — COM due date
+      Duration: 270 days
+    Trigger: When condition precedent holds — SAT must be passed before COM can occur
+    Effect: State transition — Contract transitions to Warranty Active status upon Acceptance Certificate issuance
+    Effect: Rule activation — Triggers warranty period and holdback release timeline
+
+STATE TRANSITIONS
+────────────────────────────────────────
+  When in state "Contract is active, milestones PDR/CDR/FAT in progress":
+
+    On event "fat milestone completed":
+      Factory Acceptance Testing milestone completed
+      → State transition: FAT completed, moving to delivery phase
+      Transitions to "Design milestones complete, awaiting physical delivery (DEL)".
+
+    On event "dispute filed":
+      Either party files dispute for binding arbitration
+      → State transition: Dispute escalated to binding arbitration
+      → Rule activation: Activate arbitration obligation
+      → Payment: Supplier pays 50% of arbitration costs [arbitration costs / 2]
+      → Payment: Buyer pays 50% of arbitration costs [arbitration costs / 2]
+      Transitions to "Dispute escalated to binding arbitration".
+
+  When in state "Dispute escalated to binding arbitration":
+
+    On event "arbitration resolved continue":
+      Guard: arbitration decision  =  'continue'
+      Arbitration resolved in favor of continuing contract
+      → State transition: Arbitration resolved, contract continues
+      Transitions to "Contract is active, milestones PDR/CDR/FAT in progress".
+
+    On event "arbitration resolved terminate":
+      Guard: arbitration decision  =  'terminate'
+      Arbitration resolved in favor of terminating contract
+      → Termination: Arbitration results in contract termination
+      Transitions to "Contract terminated due to failure or breach".
+
+  When in state "COM milestone in progress":
+
+    On event "acceptance certificate issued":
+      COM completed, Acceptance Certificate issued, warranty begins
+      → State transition: Acceptance Certificate issued, warranty period begins
+      → Rule activation: Activate 24-month warranty period
+      → Rule activation: Activate holdback withholding
+      → Rule activation: Activate holdback release timeline (12 months)
+      Transitions to "Acceptance Certificate issued, warranty period active".
+
+    On event "dispute filed":
+      Either party files dispute for binding arbitration
+      → State transition: Dispute escalated to binding arbitration
+      → Rule activation: Activate arbitration obligation
+      → Payment: Supplier pays 50% of arbitration costs [arbitration costs / 2]
+      → Payment: Buyer pays 50% of arbitration costs [arbitration costs / 2]
+      Transitions to "Dispute escalated to binding arbitration".
+
+  When in state "Defect Notice issued during SAT, Supplier remedying defects":
+
+    On event "defects remedied":
+      Supplier remedies defects, SAT retesting commences
+      → State transition: Defects remedied, SAT retesting begins
+      Transitions to "Delivery complete, Buyer conducting Site Acceptance Testing".
+
+    On event "dispute filed":
+      Either party files dispute for binding arbitration
+      → State transition: Dispute escalated to binding arbitration
+      → Rule activation: Activate arbitration obligation
+      → Payment: Supplier pays 50% of arbitration costs [arbitration costs / 2]
+      → Payment: Buyer pays 50% of arbitration costs [arbitration costs / 2]
+      Transitions to "Dispute escalated to binding arbitration".
+
+    On event "defect correction failed":
+      Guard: correction days  >  max correction period days
+      Supplier fails to remedy defects within 45-day maximum correction period
+      → Termination: Contract terminated after defect correction period exceeded 45 days
+      Transitions to "Contract terminated due to failure or breach".
+
+  When in state "Delivery is late but within grace period (0-14 days)":
+
+    On event "dispute filed":
+      Either party files dispute for binding arbitration
+      → State transition: Dispute escalated to binding arbitration
+      → Rule activation: Activate arbitration obligation
+      → Payment: Supplier pays 50% of arbitration costs [arbitration costs / 2]
+      → Payment: Buyer pays 50% of arbitration costs [arbitration costs / 2]
+      Transitions to "Dispute escalated to binding arbitration".
+
+    On event "grace period exceeded":
+      Guard: days late  >  late delivery grace period days
+      Delivery delay exceeds 14-day grace period, penalties apply retroactively
+      → Retroactive revision: Penalties calculated retroactively from day 1 of delay
+      → Payment: Late delivery liquidated damages at $4,500/day from day 1, capped at $405,000 [days late * late penalty per day]
+      → State transition: Grace period exceeded, penalties now accruing
+      → Rule activation: Activate late delivery penalty rule
+      Transitions to "Delivery is late beyond grace period, penalties accruing".
+
+    On event "delivery completed late":
+      Delivery finally completed despite lateness, SAT begins
+      → Payment: Final late delivery penalty payment on actual delivery [days late * late penalty per day]
+      → State transition: Late delivery completed, SAT testing begins
+      → Rule activation: Activate SAT testing obligation for Buyer
+      Transitions to "Delivery complete, Buyer conducting Site Acceptance Testing".
+
+  When in state "Delivery is late beyond grace period, penalties accruing":
+
+    On event "dispute filed":
+      Either party files dispute for binding arbitration
+      → State transition: Dispute escalated to binding arbitration
+      → Rule activation: Activate arbitration obligation
+      → Payment: Supplier pays 50% of arbitration costs [arbitration costs / 2]
+      → Payment: Buyer pays 50% of arbitration costs [arbitration costs / 2]
+      Transitions to "Dispute escalated to binding arbitration".
+
+    On event "late penalty cap reached":
+      Guard: total penalties  ≥  late penalty cap
+      Late delivery penalties reach $405,000 cap, potential termination
+      → Payment: Final penalty payment at cap of $405,000 [late penalty cap]
+      → Termination: Contract terminates after reaching maximum late penalty
+      Transitions to "Contract terminated due to failure or breach".
+
+    On event "force majeure declared":
+      Force majeure event declared, suspending late delivery penalties
+      → State transition: Force majeure suspends penalty accrual
+      → Rule activation: Activate force majeure notice requirements
+      Transitions to "Late delivery penalty accrual suspended due to force majeure".
+
+    On event "delivery completed late":
+      Delivery finally completed despite lateness, SAT begins
+      → Payment: Final late delivery penalty payment on actual delivery [days late * late penalty per day]
+      → State transition: Late delivery completed, SAT testing begins
+      → Rule activation: Activate SAT testing obligation for Buyer
+      Transitions to "Delivery complete, Buyer conducting Site Acceptance Testing".
+
+  When in state "Design milestones complete, awaiting physical delivery (DEL)":
+
+    On event "dispute filed":
+      Either party files dispute for binding arbitration
+      → State transition: Dispute escalated to binding arbitration
+      → Rule activation: Activate arbitration obligation
+      → Payment: Supplier pays 50% of arbitration costs [arbitration costs / 2]
+      → Payment: Buyer pays 50% of arbitration costs [arbitration costs / 2]
+      Transitions to "Dispute escalated to binding arbitration".
+
+    On event "delivery completed on time":
+      Guard: days late  ≤  0
+      DEL milestone completed on time or early
+      → State transition: On-time delivery, SAT testing begins
+      → Rule activation: Activate SAT testing obligation for Buyer
+      Transitions to "Delivery complete, Buyer conducting Site Acceptance Testing".
+
+    On event "delivery completed early":
+      Guard: days early  >  0
+      DEL milestone completed early, incentive payment triggered
+      → Payment: Early delivery incentive at $2,250/day, capped at $63,000 [days early * early incentive per day]
+      → State transition: Early delivery, SAT testing begins
+      → Rule activation: Activate SAT testing obligation for Buyer
+      Transitions to "Delivery complete, Buyer conducting Site Acceptance Testing".
+
+    On event "delivery deadline missed":
+      Guard: days late  >  0 and days late  ≤  late delivery grace period days
+      Delivery missed but within grace period (1-14 days late)
+      → State transition: Delivery late but within 14-day grace period
+      Transitions to "Delivery is late but within grace period (0-14 days)".
+
+  When in state "Holdback released after warranty period and all claims resolved":
+
+    On event "warranty period expired":
+      Guard: months since com  ≥  24
+      Warranty period expires, contract completes successfully
+      → State transition: 24-month warranty expired, all obligations fulfilled
+      Transitions to "All obligations fulfilled, warranty period expired, holdback released".
+
+    On event "dispute filed":
+      Either party files dispute for binding arbitration
+      → State transition: Dispute escalated to binding arbitration
+      → Rule activation: Activate arbitration obligation
+      → Payment: Supplier pays 50% of arbitration costs [arbitration costs / 2]
+      → Payment: Buyer pays 50% of arbitration costs [arbitration costs / 2]
+      Transitions to "Dispute escalated to binding arbitration".
+
+  When in state "Late delivery penalty accrual suspended due to force majeure":
+
+    On event "dispute filed":
+      Either party files dispute for binding arbitration
+      → State transition: Dispute escalated to binding arbitration
+      → Rule activation: Activate arbitration obligation
+      → Payment: Supplier pays 50% of arbitration costs [arbitration costs / 2]
+      → Payment: Buyer pays 50% of arbitration costs [arbitration costs / 2]
+      Transitions to "Dispute escalated to binding arbitration".
+
+    On event "force majeure ended":
+      Force majeure condition resolved, penalty accrual resumes
+      → State transition: Force majeure ended, penalties resume accruing
+      Transitions to "Delivery is late beyond grace period, penalties accruing".
+
+    On event "delivery completed late":
+      Delivery finally completed despite lateness, SAT begins
+      → Payment: Final late delivery penalty payment on actual delivery [days late * late penalty per day]
+      → State transition: Late delivery completed, SAT testing begins
+      → Rule activation: Activate SAT testing obligation for Buyer
+      Transitions to "Delivery complete, Buyer conducting Site Acceptance Testing".
+
+  When in state "SAT passed (explicitly or deemed), ready for commissioning":
+
+    On event "commissioning started":
+      Commissioning phase begins after SAT passage
+      → State transition: COM milestone work begins
+      Transitions to "COM milestone in progress".
+
+    On event "dispute filed":
+      Either party files dispute for binding arbitration
+      → State transition: Dispute escalated to binding arbitration
+      → Rule activation: Activate arbitration obligation
+      → Payment: Supplier pays 50% of arbitration costs [arbitration costs / 2]
+      → Payment: Buyer pays 50% of arbitration costs [arbitration costs / 2]
+      Transitions to "Dispute escalated to binding arbitration".
+
+  When in state "Delivery complete, Buyer conducting Site Acceptance Testing":
+
+    On event "sat passed explicitly":
+      Buyer explicitly passes SAT
+      → State transition: SAT explicitly passed by Buyer
+      → Rule activation: Activate commissioning milestone
+      Transitions to "SAT passed (explicitly or deemed), ready for commissioning".
+
+    On event "sat deemed passed":
+      Guard: sat testing days  ≥  sat testing window days
+      SAT deemed passed after 30 days with no Defect Notice
+      → State transition: SAT deemed passed after 30-day window without Defect Notice
+      → Rule activation: Activate commissioning milestone
+      Transitions to "SAT passed (explicitly or deemed), ready for commissioning".
+
+    On event "dispute filed":
+      Either party files dispute for binding arbitration
+      → State transition: Dispute escalated to binding arbitration
+      → Rule activation: Activate arbitration obligation
+      → Payment: Supplier pays 50% of arbitration costs [arbitration costs / 2]
+      → Payment: Buyer pays 50% of arbitration costs [arbitration costs / 2]
+      Transitions to "Dispute escalated to binding arbitration".
+
+    On event "defect notice issued":
+      Buyer issues Defect Notice during SAT period
+      → State transition: Defect Notice issued, Supplier must remedy
+      → Rule activation: Activate defect remediation obligation
+      → Cure window: Supplier has up to 45 days total for defect correction
+      Transitions to "Defect Notice issued during SAT, Supplier remedying defects".
+
+  When in state "Acceptance Certificate issued, warranty period active":
+
+    On event "warranty claim submitted":
+      Buyer submits written warranty claim
+      → State transition: Warranty claim submitted in writing
+      → Rule activation: Activate Supplier's warranty remedy obligation
+      → Cure window: Supplier has 30 days to remedy warranty defect
+      Transitions to "Warranty claim submitted, Supplier must remedy within 30 days".
+
+    On event "holdback release triggered":
+      Guard: months since com  ≥  holdback release months and open warranty claims  =  0
+      Holdback released after 12 months post-COM and all claims resolved
+      → Payment: Release holdback after 12 months and all warranty claims resolved [holdback amount - holdback deductions]
+      → State transition: Holdback released within 30 days of trigger date
+      Transitions to "Holdback released after warranty period and all claims resolved".
+
+    On event "dispute filed":
+      Either party files dispute for binding arbitration
+      → State transition: Dispute escalated to binding arbitration
+      → Rule activation: Activate arbitration obligation
+      → Payment: Supplier pays 50% of arbitration costs [arbitration costs / 2]
+      → Payment: Buyer pays 50% of arbitration costs [arbitration costs / 2]
+      Transitions to "Dispute escalated to binding arbitration".
+
+  When in state "Warranty claim submitted, Supplier must remedy within 30 days":
+
+    On event "warranty claim resolved":
+      Warranty claim remedied and resolved
+      → State transition: Warranty claim resolved, warranty continues
+      Transitions to "Acceptance Certificate issued, warranty period active".
+
+    On event "dispute filed":
+      Either party files dispute for binding arbitration
+      → State transition: Dispute escalated to binding arbitration
+      → Rule activation: Activate arbitration obligation
+      → Payment: Supplier pays 50% of arbitration costs [arbitration costs / 2]
+      → Payment: Buyer pays 50% of arbitration costs [arbitration costs / 2]
+      Transitions to "Dispute escalated to binding arbitration".
+
+    On event "warranty remedy completed":
+      Guard: remedy days  ≤  warranty remedy days
+      Supplier successfully remedies warranty claim within 30-day window
+      → State transition: Warranty remedy completed within 30 days
+      Transitions to "Acceptance Certificate issued, warranty period active".
+
+UNMODELED RULES
+────────────────────────────────────────
+  The following rules could not be formally modeled:
+
+  R10: [Permission] If any of PDR, CDR, or FAT is completed ahead of schedule, the number of calendar days of early completion shall be credited against late delivery penalties calculated under Section 3.1, up to a maximum credit of 10 days in aggregate across all three pre-delivery milestones.
+    Reason: PERMISSION is not in the four mappable primitives
+
+  R15: [Power] If, on the Holdback release date, one or more of the fourteen monitoring nodes is not operating in conformance with the Specifications, Buyer may deduct from the Holdback Amount $38,571 per non-conforming node (equal to 1/14th of the Holdback Amount) and release the remainder to Supplier. Retained amounts are liquidated damages for in-service non-conformance; no further warranty claim may be brought in respect of those nodes.
+    Reason: POWER is not in the four mappable primitives
+
+  R16: [Power] Notwithstanding Section 6.4, any dispute by Supplier regarding a Holdback deduction made by Buyer under Section 6.3 shall be submitted directly to arbitration under Section 14.1. Supplier's sole remedy upon disagreeing with a Holdback deduction is to file for arbitration under Section 14.1 within thirty (30) calendar days of Buyer's written deduction notice; failure to do so within this period is a waiver of Supplier's right to contest the deduction.
+    Reason: POWER is not in the four mappable primitives
+
+  R17: [Immunity] Section 6.4 is superseded in its entirety by Section 14.3 and shall have no force or effect. The Holdback Dispute procedure described in Section 6.4 — including the Dispute Notice requirement, Holdback Dispute status, and the Joint Resolution Panel — is superseded.
+    Reason: IMMUNITY is not in the four mappable primitives
+
+  R18: [WARRANTY] Supplier warrants the IMS against defects in materials, workmanship, and conformance to Specifications for twenty-four (24) calendar months from the COM acceptance date. This warranty covers all fourteen monitoring nodes, communication hardware, and central software.
+    Reason: WARRANTY is not in the four mappable primitives
+
+  R21: [Power] Failure to remedy within this period entitles Buyer to procure third-party remediation and invoice Supplier for reasonable costs, up to $25,000 per incident.
+    Reason: POWER is not in the four mappable primitives
+
+  R22: [Immunity] Neither party shall be liable for delay or non-performance caused by events beyond that party's reasonable control, including acts of God, war, governmental embargo, flood, earthquake, or failure of a third-party sub-supplier whose failure could not have been avoided through commercially reasonable alternate sourcing.
+    Reason: IMMUNITY is not in the four mappable primitives
+
+  R24: [Immunity] The Required Delivery Date used to calculate early delivery incentives under Section 4 shall not be adjusted for force majeure. Incentive windows are fixed.
+    Reason: IMMUNITY is not in the four mappable primitives
+
+  R25: [Immunity] The Holdback release timeline in Section 6.2 is not suspended or extended by force majeure.
+    Reason: IMMUNITY is not in the four mappable primitives
+
+  R28: [Permission] No party shall initiate litigation or any other dispute resolution procedure with respect to any dispute that is or could be subject to this Section 14, except to seek interim injunctive relief pending arbitration.
+    Reason: PERMISSION is not in the four mappable primitives
+
+  R30: [Power] The prevailing party may seek recovery of reasonable attorneys' fees and arbitration costs from the non-prevailing party as part of the arbitral award.
+    Reason: POWER is not in the four mappable primitives
+
+  R32: [Power] The prevailing party may seek recovery of reasonable attorneys' fees and arbitration costs from the non-prevailing party as part of the arbitral award.
+    Reason: POWER is not in the four mappable primitives
+
+  R34: [Permission] No party shall initiate litigation or any other dispute resolution procedure with respect to any dispute that is or could be subject to this Section 14, except to seek interim injunctive relief pending arbitration.
+    Reason: PERMISSION is not in the four mappable primitives
+
+  R37: [Power] This Agreement may only be amended by a written instrument signed by authorized representatives of both parties.
+    Reason: POWER is not in the four mappable primitives
+
+  R38: [Power] This Agreement may only be amended by a written instrument signed by authorized representatives of both parties.
+    Reason: POWER is not in the four mappable primitives
+
+================================================================
+END OF CONTRACT
+================================================================

@@ -1,0 +1,61 @@
+
+============================================================
+SCENARIO RESULTS
+============================================================
+
+--- HAPPY_PATH ---
+  Final state: COMPLETED
+  Financials:
+    ORBCOMM_to_Orbital: $204,000.00
+  Narrative (last 5 lines):
+    2026-03-15 [payment_on_time_incentive] DELIVERY_COMPLETE_ON_TIME → INTEGRATION_TESTING
+      [effect] ASSET_TRANSFER: Orbital transfers title to Additional Payloads and all deliverables to ORBCOMM
+    2026-04-01 [title_transferred] INTEGRATION_TESTING → SECURITY_INTEREST_RELEASED
+    2026-08-01 [all_milestones_paid] SECURITY_INTEREST_RELEASED → FINAL_SETTLEMENT
+    2027-03-05 [contract_closed] FINAL_SETTLEMENT → COMPLETED
+
+--- LATE_DELIVERY ---
+  Final state: COMPLETED
+  Financials:
+    Orbital_to_ORBCOMM: $85,000.00
+    ORBCOMM_to_Orbital: $0.00
+  Narrative (last 5 lines):
+      [effect] ASSET_TRANSFER: Orbital transfers title to Additional Payloads and all deliverables to ORBCOMM
+    2026-08-01 [title_transferred] INTEGRATION_TESTING → SECURITY_INTEREST_RELEASED
+    2026-08-30 [no transition] event='cure_deadline_passed' in state='SECURITY_INTEREST_RELEASED'
+    2026-09-01 [all_milestones_paid] SECURITY_INTEREST_RELEASED → FINAL_SETTLEMENT
+    2026-09-15 [contract_closed] FINAL_SETTLEMENT → COMPLETED
+
+--- EARLY_DELIVERY_WITH_OPTION ---
+  Final state: COMPLETED
+  Financials:
+    ORBCOMM_to_Orbital: $225,500.00
+  Narrative (last 5 lines):
+    2026-02-28 [payment_early_incentive] DELIVERY_COMPLETE_EARLY → INTEGRATION_TESTING
+      [effect] ASSET_TRANSFER: Orbital transfers title to Additional Payloads and all deliverables to ORBCOMM
+    2026-03-15 [title_transferred] INTEGRATION_TESTING → SECURITY_INTEREST_RELEASED
+    2026-07-01 [all_milestones_paid] SECURITY_INTEREST_RELEASED → FINAL_SETTLEMENT
+    2026-08-01 [contract_closed] FINAL_SETTLEMENT → COMPLETED
+
+--- HOLDBACK_FAILURE ---
+  Final state: COMPLETED
+  Financials:
+    ORBCOMM_to_Orbital: $884,000.00
+  Narrative (last 5 lines):
+      [effect] ASSET_TRANSFER: Orbital transfers title to Additional Payloads and all deliverables to ORBCOMM
+    2026-04-01 [title_transferred] INTEGRATION_TESTING → SECURITY_INTEREST_RELEASED
+    2026-09-01 [all_milestones_paid] SECURITY_INTEREST_RELEASED → FINAL_SETTLEMENT
+    2027-04-01 [no transition] event='holdback_refund' in state='FINAL_SETTLEMENT'
+    2027-04-15 [contract_closed] FINAL_SETTLEMENT → COMPLETED
+
+--- MAXIMUM_LATE_PENALTIES ---
+  Final state: COMPLETED
+  Financials:
+    Orbital_to_ORBCOMM: $0.00
+    ORBCOMM_to_Orbital: $0.00
+  Narrative (last 5 lines):
+    2027-04-01 [power_weight_penalty_assessed] INTEGRATION_TESTING → INTEGRATION_TESTING
+      [effect] ASSET_TRANSFER: Orbital transfers title to Additional Payloads and all deliverables to ORBCOMM
+    2027-05-01 [title_transferred] INTEGRATION_TESTING → SECURITY_INTEREST_RELEASED
+    2027-06-01 [all_milestones_paid] SECURITY_INTEREST_RELEASED → FINAL_SETTLEMENT
+    2027-07-01 [contract_closed] FINAL_SETTLEMENT → COMPLETED

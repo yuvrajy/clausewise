@@ -1,0 +1,355 @@
+{
+  "contract_id": "WesTex Community Credit Union VISA Credit Card Agreement",
+  "parties": ["WesTex Community Credit Union", "Cardholder"],
+  "params": {
+    "parties": ["WesTex Community Credit Union", "Cardholder"],
+    "base_dates": {
+      "account_opening": null,
+      "statement_cycle_day": null
+    },
+    "amounts": {
+      "credit_limit": "5000.00",
+      "late_fee": "29.00",
+      "overlimit_fee": "29.00",
+      "min_payment_floor": "25.00"
+    },
+    "rates": {
+      "apr": "0.1499",
+      "cash_advance_apr": "0.1499",
+      "min_payment_rate": "0.02"
+    },
+    "durations": {
+      "grace_period": 25,
+      "default_threshold": 60,
+      "billing_cycle": 30
+    },
+    "thresholds": {
+      "default_days_past_due": "60"
+    }
+  },
+  "rules": [
+    {
+      "id": "R01",
+      "type": "OBLIGATION",
+      "party": "WesTex Community Credit Union",
+      "counterparty": "Cardholder",
+      "action": "Extend credit up to the credit limit upon card use",
+      "activation": "ACTIVE",
+      "triggers": [
+        { "id": "R01_T1", "type": "EVENT_TRIGGER", "condition": "Cardholder initiates purchase or cash advance" }
+      ],
+      "effects": [
+        { "id": "R01_E1", "type": "ASSET_TRANSFER", "description": "Credit extended for purchase amount" }
+      ],
+      "constraints": [
+        { "id": "R01_C1", "type": "CAP", "value": "5000.00", "description": "Total balance must not exceed credit limit" }
+      ],
+      "exceptions": ["Card may not be used for illegal transactions"],
+      "expiry": null,
+      "description": "Credit union extends credit via card purchases and cash advances up to the credit limit.",
+      "mappable": true
+    },
+    {
+      "id": "R02",
+      "type": "OBLIGATION",
+      "party": "Cardholder",
+      "counterparty": "WesTex Community Credit Union",
+      "action": "Make at least the minimum payment by each billing cycle due date",
+      "activation": "ACTIVE",
+      "triggers": [
+        { "id": "R02_T1", "type": "DATE_TRIGGER", "condition": "Billing cycle closes", "duration": "30 days", "duration_days": 30 }
+      ],
+      "effects": [
+        { "id": "R02_E1", "type": "PAYMENT", "description": "Minimum payment applied to balance", "payment_formula": "max(min_payment_floor, round(balance * min_payment_rate, 2))", "payment_from": "Cardholder", "payment_to": "WesTex Community Credit Union" }
+      ],
+      "constraints": [
+        { "id": "R02_C1", "type": "FLOOR", "value": "25.00", "description": "Minimum payment is at least $25" }
+      ],
+      "exceptions": [],
+      "expiry": null,
+      "description": "Cardholder must make at least the minimum payment each billing cycle.",
+      "mappable": true
+    },
+    {
+      "id": "R03",
+      "type": "OBLIGATION",
+      "party": "WesTex Community Credit Union",
+      "counterparty": "Cardholder",
+      "action": "Compute and apply periodic interest on outstanding balance",
+      "activation": "ACTIVE",
+      "triggers": [
+        { "id": "R03_T1", "type": "TEMPORAL_TRIGGER", "condition": "Billing cycle closes with outstanding balance" }
+      ],
+      "effects": [
+        { "id": "R03_E1", "type": "PAYMENT", "description": "Interest charge added to balance", "payment_formula": "round(balance * (apr / 365) * event_days_in_cycle, 2)", "payment_from": "Cardholder", "payment_to": "WesTex Community Credit Union" }
+      ],
+      "constraints": [
+        { "id": "R03_C1", "type": "GRACE_PERIOD", "duration": "25 days", "duration_days": 25, "description": "No interest if full balance paid within grace period" }
+      ],
+      "exceptions": ["Grace period: no interest if prior balance paid in full"],
+      "expiry": null,
+      "description": "Interest accrues daily on the outstanding balance at the daily periodic rate.",
+      "mappable": true
+    },
+    {
+      "id": "R04",
+      "type": "OBLIGATION",
+      "party": "Cardholder",
+      "counterparty": "WesTex Community Credit Union",
+      "action": "Pay late fee upon missing payment deadline",
+      "activation": "INACTIVE",
+      "triggers": [
+        { "id": "R04_T1", "type": "ABSENCE_TRIGGER", "condition": "Minimum payment not received by due date" }
+      ],
+      "effects": [
+        { "id": "R04_E1", "type": "PAYMENT", "description": "Late payment penalty", "payment_formula": "late_fee", "payment_from": "Cardholder", "payment_to": "WesTex Community Credit Union", "cap": "29.00" }
+      ],
+      "constraints": [
+        { "id": "R04_C1", "type": "CAP", "value": "29.00", "description": "Late fee capped at $29.00 per occurrence" }
+      ],
+      "exceptions": [],
+      "expiry": null,
+      "description": "Penalty: $29.00 late fee assessed when minimum payment is not received by the due date.",
+      "mappable": true
+    },
+    {
+      "id": "R05",
+      "type": "OBLIGATION",
+      "party": "Cardholder",
+      "counterparty": "WesTex Community Credit Union",
+      "action": "Pay over-limit fee when balance exceeds credit limit",
+      "activation": "INACTIVE",
+      "triggers": [
+        { "id": "R05_T1", "type": "THRESHOLD_TRIGGER", "condition": "Balance exceeds credit limit", "threshold_field": "balance", "threshold_value": "5000.00", "threshold_operator": "gt" }
+      ],
+      "effects": [
+        { "id": "R05_E1", "type": "PAYMENT", "description": "Over-limit penalty", "payment_formula": "overlimit_fee", "payment_from": "Cardholder", "payment_to": "WesTex Community Credit Union" }
+      ],
+      "constraints": [],
+      "exceptions": [],
+      "expiry": null,
+      "description": "Penalty: $29.00 over-limit fee when balance exceeds credit limit.",
+      "mappable": true
+    }
+  ],
+  "states": [
+    { "id": "s_active",   "description": "Account Active",             "terminal": false, "active_rule_ids": ["R01"] },
+    { "id": "s_grace",    "description": "Grace Period (No Interest)",  "terminal": false, "active_rule_ids": ["R01", "R03"] },
+    { "id": "s_accruing", "description": "Interest Accruing",           "terminal": false, "active_rule_ids": ["R01", "R02", "R03"] },
+    { "id": "s_past_due", "description": "Past Due",                    "terminal": false, "active_rule_ids": ["R01", "R02", "R03", "R04"] },
+    { "id": "s_default",  "description": "Default",                     "terminal": false, "active_rule_ids": [] },
+    { "id": "s_closed",   "description": "Account Closed",              "terminal": true,  "active_rule_ids": [] }
+  ],
+  "initial_state": "s_active",
+  "transitions": [
+    {
+      "id": "T01",
+      "from_states": ["s_active"],
+      "to_state": "s_accruing",
+      "event_type": "purchase",
+      "guard": "event_amount + balance <= credit_limit",
+      "effects": [
+        { "type": "ASSET_TRANSFER", "description": "Credit extended for purchase", "target": "balance", "action": "accumulate", "formula": "event_amount" }
+      ],
+      "description": "Purchase within credit limit opens interest accrual"
+    },
+    {
+      "id": "T02",
+      "from_states": ["s_active"],
+      "to_state": "s_accruing",
+      "event_type": "purchase",
+      "guard": "event_amount + balance > credit_limit",
+      "effects": [
+        { "type": "ASSET_TRANSFER", "description": "Credit extended (over limit)", "target": "balance", "action": "accumulate", "formula": "event_amount" },
+        { "id": "R05_E1", "type": "PAYMENT", "description": "Over-limit penalty", "payment_formula": "overlimit_fee", "payment_from": "Cardholder", "payment_to": "WesTex Community Credit Union", "target": "total_fees", "action": "accumulate", "formula": "overlimit_fee" }
+      ],
+      "description": "Purchase exceeding credit limit triggers over-limit penalty"
+    },
+    {
+      "id": "T03",
+      "from_states": ["s_accruing"],
+      "to_state": "s_accruing",
+      "event_type": "purchase",
+      "guard": null,
+      "effects": [
+        { "type": "ASSET_TRANSFER", "description": "Additional purchase", "target": "balance", "action": "accumulate", "formula": "event_amount" }
+      ],
+      "description": "Additional purchase while interest is accruing"
+    },
+    {
+      "id": "T04",
+      "from_states": ["s_accruing"],
+      "to_state": "s_accruing",
+      "event_type": "cash_advance",
+      "guard": null,
+      "effects": [
+        { "type": "ASSET_TRANSFER", "description": "Cash advance (no grace period)", "target": "balance", "action": "accumulate", "formula": "event_amount" }
+      ],
+      "description": "Cash advance — no grace period applies"
+    },
+    {
+      "id": "T05",
+      "from_states": ["s_accruing"],
+      "to_state": "s_accruing",
+      "event_type": "billing_cycle_close",
+      "guard": "balance > 0",
+      "effects": [
+        { "id": "R03_E1", "type": "PAYMENT", "description": "Periodic interest charge", "payment_formula": "round(balance * (apr / 365) * event_days_in_cycle, 2)", "payment_from": "Cardholder", "payment_to": "WesTex Community Credit Union", "target": "accrued_interest", "action": "assign", "formula": "round(balance * (apr / 365) * event_days_in_cycle, 2)" },
+        { "type": "ASSET_TRANSFER", "description": "Interest added to balance", "target": "balance", "action": "accumulate", "formula": "accrued_interest" },
+        { "type": "RULE_ACTIVATION", "description": "Compute minimum payment", "target": "minimum_payment_due", "action": "assign", "formula": "max(min_payment_floor, round(balance * min_payment_rate, 2))" }
+      ],
+      "description": "Billing cycle closes: compute interest and minimum payment due"
+    },
+    {
+      "id": "T06",
+      "from_states": ["s_accruing"],
+      "to_state": "s_grace",
+      "event_type": "payment_received",
+      "guard": "event_amount >= balance",
+      "effects": [
+        { "type": "PAYMENT", "description": "Full balance paid", "target": "balance", "action": "assign", "formula": "0" },
+        { "type": "STATE_TRANSITION", "description": "Grace period restored", "target": "days_past_due", "action": "assign", "formula": "0" }
+      ],
+      "description": "Full payment restores grace period"
+    },
+    {
+      "id": "T07",
+      "from_states": ["s_accruing"],
+      "to_state": "s_accruing",
+      "event_type": "payment_received",
+      "guard": "event_amount >= minimum_payment_due and event_amount < balance",
+      "effects": [
+        { "type": "PAYMENT", "description": "Partial payment applied", "target": "balance", "action": "assign", "formula": "max(0, balance - event_amount)" }
+      ],
+      "description": "Partial payment (at least minimum) applied to balance"
+    },
+    {
+      "id": "T08",
+      "from_states": ["s_accruing"],
+      "to_state": "s_past_due",
+      "event_type": "payment_deadline_passed",
+      "guard": "days_past_due == 0",
+      "effects": [
+        { "id": "R04_E1", "type": "PAYMENT", "description": "Late payment penalty", "payment_formula": "late_fee", "payment_from": "Cardholder", "payment_to": "WesTex Community Credit Union", "cap": "29.00", "target": "total_fees", "action": "accumulate", "formula": "late_fee" },
+        { "type": "ASSET_TRANSFER", "description": "Late fee added to balance", "target": "balance", "action": "accumulate", "formula": "late_fee" },
+        { "type": "STATE_TRANSITION", "description": "Record delinquency", "target": "days_past_due", "action": "assign", "formula": "event_days_late" }
+      ],
+      "description": "Missed payment deadline — late penalty assessed"
+    },
+    {
+      "id": "T09",
+      "from_states": ["s_past_due"],
+      "to_state": "s_accruing",
+      "event_type": "payment_received",
+      "guard": "event_amount >= minimum_payment_due",
+      "effects": [
+        { "type": "PAYMENT", "description": "Payment cures delinquency", "target": "balance", "action": "assign", "formula": "max(0, balance - event_amount)" },
+        { "type": "STATE_TRANSITION", "description": "Delinquency cured", "target": "days_past_due", "action": "assign", "formula": "0" }
+      ],
+      "description": "Payment cures past-due status"
+    },
+    {
+      "id": "T10",
+      "from_states": ["s_past_due"],
+      "to_state": "s_default",
+      "event_type": "payment_deadline_passed",
+      "guard": "days_past_due >= 60",
+      "effects": [
+        { "type": "ACCELERATION", "description": "Full balance accelerated — immediately due" }
+      ],
+      "description": "60+ days delinquent triggers default"
+    },
+    {
+      "id": "T11",
+      "from_states": ["s_past_due"],
+      "to_state": "s_past_due",
+      "event_type": "payment_deadline_passed",
+      "guard": "days_past_due < 60",
+      "effects": [
+        { "type": "STATE_TRANSITION", "description": "Accrue delinquency days", "target": "days_past_due", "action": "accumulate", "formula": "event_days_late" }
+      ],
+      "description": "Still within cure window, accruing delinquency"
+    },
+    {
+      "id": "T12",
+      "from_states": ["s_default"],
+      "to_state": "s_closed",
+      "event_type": "account_closed",
+      "guard": null,
+      "effects": [
+        { "type": "TERMINATION", "description": "Account closed — credit union may exercise security interest" }
+      ],
+      "description": "Account closure and collection"
+    },
+    {
+      "id": "T13",
+      "from_states": ["s_grace"],
+      "to_state": "s_accruing",
+      "event_type": "purchase",
+      "guard": null,
+      "effects": [
+        { "type": "ASSET_TRANSFER", "description": "New purchase ends grace period", "target": "balance", "action": "accumulate", "formula": "event_amount" }
+      ],
+      "description": "Purchase during grace period ends the grace period"
+    },
+    {
+      "id": "T14",
+      "from_states": ["s_grace"],
+      "to_state": "s_grace",
+      "event_type": "billing_cycle_close",
+      "guard": "balance == 0",
+      "effects": [],
+      "description": "No balance — grace period continues"
+    }
+  ],
+  "unmappable_rules": [
+    {
+      "id": "U01",
+      "type": "POWER",
+      "party": "WesTex Community Credit Union",
+      "counterparty": "Cardholder",
+      "action": "Refuse to authorize transactions deemed illegal or high-risk",
+      "activation": "ACTIVE",
+      "triggers": [],
+      "effects": [],
+      "constraints": [],
+      "exceptions": [],
+      "expiry": null,
+      "description": "Credit union may refuse illegal or high-risk transactions.",
+      "mappable": false,
+      "unmappable_reason": "Discretionary power — not mechanically executable"
+    },
+    {
+      "id": "U02",
+      "type": "REPRESENTATION",
+      "party": "Cardholder",
+      "counterparty": "WesTex Community Credit Union",
+      "action": "Grants security interest in all accounts",
+      "activation": "ACTIVE",
+      "triggers": [],
+      "effects": [],
+      "constraints": [],
+      "exceptions": ["IRA and tax-advantaged accounts excluded"],
+      "expiry": null,
+      "description": "Security interest grant — legal declaration, not computable.",
+      "mappable": false,
+      "unmappable_reason": "Legal declaration — no computable state change"
+    },
+    {
+      "id": "U03",
+      "type": "COVENANT",
+      "party": "Cardholder",
+      "counterparty": "WesTex Community Credit Union",
+      "action": "Waive right to sue for illegal card use; indemnify credit union",
+      "activation": "ACTIVE",
+      "triggers": [],
+      "effects": [],
+      "constraints": [],
+      "exceptions": [],
+      "expiry": null,
+      "description": "Indemnification and waiver — procedural, not executable.",
+      "mappable": false,
+      "unmappable_reason": "Procedural/declarative — cannot be computed"
+    }
+  ]
+}

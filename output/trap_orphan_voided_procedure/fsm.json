@@ -1,0 +1,1964 @@
+{
+  "contract_id": "trap_orphan_voided_procedure",
+  "parties": [
+    "Meridian Engineering Group Inc.",
+    "ClearPath Municipal Infrastructure Authority"
+  ],
+  "initial_state": "ACTIVE",
+  "params": {
+    "parties": [
+      "Meridian Engineering Group Inc.",
+      "ClearPath Municipal Infrastructure Authority"
+    ],
+    "base_dates": {
+      "effective_date": "2024-07-01",
+      "required_delivery_date": "2024-07-01 + 210 days",
+      "com_acceptance_date": null,
+      "del_date": null,
+      "holdback_release_date": null
+    },
+    "amounts": {
+      "contract_price": "5400000",
+      "holdback_amount": "540000",
+      "per_node_deduction": "38571",
+      "late_delivery_penalty_rate": "4500",
+      "early_delivery_incentive_rate": "2250",
+      "third_party_remediation_cap_per_incident": "25000"
+    },
+    "rates": {
+      "late_penalty_per_day": "4500",
+      "early_incentive_per_day": "2250"
+    },
+    "durations": {
+      "pdr_days": 45,
+      "cdr_days": 90,
+      "fat_days": 180,
+      "del_days": 210,
+      "sat_days": 240,
+      "com_days": 270,
+      "sat_testing_window_days": 30,
+      "warranty_months": 24,
+      "warranty_days": 730,
+      "holdback_release_months": 12,
+      "holdback_release_days": 365,
+      "holdback_release_payment_days": 30,
+      "warranty_remedy_days": 30,
+      "late_delivery_grace_days": 14,
+      "max_correction_period_days": 45,
+      "force_majeure_notice_business_days": 5,
+      "holdback_dispute_arbitration_deadline_days": 30
+    },
+    "thresholds": {
+      "late_penalty_cap": "405000",
+      "early_incentive_cap": "63000",
+      "milestone_credit_max_days": 10,
+      "total_monitoring_nodes": 14,
+      "late_delivery_grace_period_days": 14
+    }
+  },
+  "states": [
+    {
+      "id": "ACTIVE",
+      "description": "Contract is active, milestones PDR/CDR/FAT in progress",
+      "terminal": false,
+      "active_rule_ids": [
+        "R1",
+        "R2",
+        "R3",
+        "R4",
+        "R35",
+        "R36"
+      ]
+    },
+    {
+      "id": "DELIVERY_PENDING",
+      "description": "Design milestones complete, awaiting physical delivery (DEL)",
+      "terminal": false,
+      "active_rule_ids": [
+        "R5",
+        "R35",
+        "R36"
+      ]
+    },
+    {
+      "id": "DELIVERY_LATE",
+      "description": "Delivery is late but within grace period (0-14 days)",
+      "terminal": false,
+      "active_rule_ids": [
+        "R5",
+        "R23",
+        "R35",
+        "R36"
+      ]
+    },
+    {
+      "id": "DELIVERY_LATE_PENALTY_ACCRUING",
+      "description": "Delivery is late beyond grace period, penalties accruing",
+      "terminal": false,
+      "active_rule_ids": [
+        "R5",
+        "R6",
+        "R23",
+        "R35",
+        "R36"
+      ]
+    },
+    {
+      "id": "PENALTY_SUSPENDED",
+      "description": "Late delivery penalty accrual suspended due to force majeure",
+      "terminal": false,
+      "active_rule_ids": [
+        "R5",
+        "R23",
+        "R35",
+        "R36"
+      ]
+    },
+    {
+      "id": "SAT_TESTING",
+      "description": "Delivery complete, Buyer conducting Site Acceptance Testing",
+      "terminal": false,
+      "active_rule_ids": [
+        "R7",
+        "R35",
+        "R36"
+      ]
+    },
+    {
+      "id": "DEFECT_CORRECTION",
+      "description": "Defect Notice issued during SAT, Supplier remedying defects",
+      "terminal": false,
+      "active_rule_ids": [
+        "R8",
+        "R35",
+        "R36"
+      ]
+    },
+    {
+      "id": "SAT_PASSED",
+      "description": "SAT passed (explicitly or deemed), ready for commissioning",
+      "terminal": false,
+      "active_rule_ids": [
+        "R9",
+        "R12",
+        "R35",
+        "R36"
+      ]
+    },
+    {
+      "id": "COMMISSIONING",
+      "description": "COM milestone in progress",
+      "terminal": false,
+      "active_rule_ids": [
+        "R9",
+        "R35",
+        "R36"
+      ]
+    },
+    {
+      "id": "WARRANTY_ACTIVE",
+      "description": "Acceptance Certificate issued, warranty period active",
+      "terminal": false,
+      "active_rule_ids": [
+        "R13",
+        "R14",
+        "R18",
+        "R19",
+        "R20",
+        "R35",
+        "R36"
+      ]
+    },
+    {
+      "id": "WARRANTY_CLAIM_PENDING",
+      "description": "Warranty claim submitted, Supplier must remedy within 30 days",
+      "terminal": false,
+      "active_rule_ids": [
+        "R19",
+        "R20",
+        "R35",
+        "R36"
+      ]
+    },
+    {
+      "id": "HOLDBACK_RELEASED",
+      "description": "Holdback released after warranty period and all claims resolved",
+      "terminal": false,
+      "active_rule_ids": [
+        "R35",
+        "R36"
+      ]
+    },
+    {
+      "id": "ARBITRATION",
+      "description": "Dispute escalated to binding arbitration",
+      "terminal": false,
+      "active_rule_ids": [
+        "R26",
+        "R27",
+        "R29",
+        "R31",
+        "R33",
+        "R35",
+        "R36"
+      ]
+    },
+    {
+      "id": "COMPLETED",
+      "description": "All obligations fulfilled, warranty period expired, holdback released",
+      "terminal": true,
+      "active_rule_ids": []
+    },
+    {
+      "id": "TERMINATED",
+      "description": "Contract terminated due to failure or breach",
+      "terminal": true,
+      "active_rule_ids": []
+    }
+  ],
+  "transitions": [
+    {
+      "id": "TR1",
+      "from_states": [
+        "ACTIVE"
+      ],
+      "to_state": "DELIVERY_PENDING",
+      "event_type": "fat_milestone_completed",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E1",
+          "type": "STATE_TRANSITION",
+          "new_state": "DELIVERY_PENDING",
+          "description": "FAT completed, moving to delivery phase"
+        }
+      ],
+      "description": "Factory Acceptance Testing milestone completed"
+    },
+    {
+      "id": "TR2",
+      "from_states": [
+        "DELIVERY_PENDING"
+      ],
+      "to_state": "SAT_TESTING",
+      "event_type": "delivery_completed_on_time",
+      "guard": "days_late <= 0",
+      "effects": [
+        {
+          "id": "E2",
+          "type": "STATE_TRANSITION",
+          "new_state": "SAT_TESTING",
+          "description": "On-time delivery, SAT testing begins"
+        },
+        {
+          "id": "E3",
+          "type": "RULE_ACTIVATION",
+          "target_rule_id": "R7",
+          "new_state": "active",
+          "description": "Activate SAT testing obligation for Buyer"
+        }
+      ],
+      "description": "DEL milestone completed on time or early"
+    },
+    {
+      "id": "TR3",
+      "from_states": [
+        "DELIVERY_PENDING"
+      ],
+      "to_state": "SAT_TESTING",
+      "event_type": "delivery_completed_early",
+      "guard": "days_early > 0",
+      "effects": [
+        {
+          "id": "E4",
+          "type": "PAYMENT",
+          "payment_formula": "days_early * early_incentive_per_day",
+          "payment_from": "ClearPath Municipal Infrastructure Authority",
+          "payment_to": "Meridian Engineering Group Inc.",
+          "cap": 63000,
+          "description": "Early delivery incentive at $2,250/day, capped at $63,000"
+        },
+        {
+          "id": "E5",
+          "type": "STATE_TRANSITION",
+          "new_state": "SAT_TESTING",
+          "description": "Early delivery, SAT testing begins"
+        },
+        {
+          "id": "E6",
+          "type": "RULE_ACTIVATION",
+          "target_rule_id": "R7",
+          "new_state": "active",
+          "description": "Activate SAT testing obligation for Buyer"
+        }
+      ],
+      "description": "DEL milestone completed early, incentive payment triggered"
+    },
+    {
+      "id": "TR4",
+      "from_states": [
+        "DELIVERY_PENDING"
+      ],
+      "to_state": "DELIVERY_LATE",
+      "event_type": "delivery_deadline_missed",
+      "guard": "days_late > 0 and days_late <= late_delivery_grace_period_days",
+      "effects": [
+        {
+          "id": "E7",
+          "type": "STATE_TRANSITION",
+          "new_state": "DELIVERY_LATE",
+          "description": "Delivery late but within 14-day grace period"
+        }
+      ],
+      "description": "Delivery missed but within grace period (1-14 days late)"
+    },
+    {
+      "id": "TR5",
+      "from_states": [
+        "DELIVERY_LATE"
+      ],
+      "to_state": "DELIVERY_LATE_PENALTY_ACCRUING",
+      "event_type": "grace_period_exceeded",
+      "guard": "days_late > late_delivery_grace_period_days",
+      "effects": [
+        {
+          "id": "E8",
+          "type": "RETROACTIVE_REVISION",
+          "description": "Penalties calculated retroactively from day 1 of delay"
+        },
+        {
+          "id": "E9",
+          "type": "PAYMENT",
+          "payment_formula": "days_late * late_penalty_per_day",
+          "payment_from": "Meridian Engineering Group Inc.",
+          "payment_to": "ClearPath Municipal Infrastructure Authority",
+          "cap": 405000,
+          "description": "Late delivery liquidated damages at $4,500/day from day 1, capped at $405,000"
+        },
+        {
+          "id": "E10",
+          "type": "STATE_TRANSITION",
+          "new_state": "DELIVERY_LATE_PENALTY_ACCRUING",
+          "description": "Grace period exceeded, penalties now accruing"
+        },
+        {
+          "id": "E11",
+          "type": "RULE_ACTIVATION",
+          "target_rule_id": "R6",
+          "new_state": "active",
+          "description": "Activate late delivery penalty rule"
+        }
+      ],
+      "description": "Delivery delay exceeds 14-day grace period, penalties apply retroactively"
+    },
+    {
+      "id": "TR6",
+      "from_states": [
+        "DELIVERY_LATE_PENALTY_ACCRUING"
+      ],
+      "to_state": "PENALTY_SUSPENDED",
+      "event_type": "force_majeure_declared",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E12",
+          "type": "STATE_TRANSITION",
+          "new_state": "PENALTY_SUSPENDED",
+          "description": "Force majeure suspends penalty accrual"
+        },
+        {
+          "id": "E13",
+          "type": "RULE_ACTIVATION",
+          "target_rule_id": "R23",
+          "new_state": "active",
+          "description": "Activate force majeure notice requirements"
+        }
+      ],
+      "description": "Force majeure event declared, suspending late delivery penalties"
+    },
+    {
+      "id": "TR7",
+      "from_states": [
+        "PENALTY_SUSPENDED"
+      ],
+      "to_state": "DELIVERY_LATE_PENALTY_ACCRUING",
+      "event_type": "force_majeure_ended",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E14",
+          "type": "STATE_TRANSITION",
+          "new_state": "DELIVERY_LATE_PENALTY_ACCRUING",
+          "description": "Force majeure ended, penalties resume accruing"
+        }
+      ],
+      "description": "Force majeure condition resolved, penalty accrual resumes"
+    },
+    {
+      "id": "TR8",
+      "from_states": [
+        "DELIVERY_LATE",
+        "DELIVERY_LATE_PENALTY_ACCRUING",
+        "PENALTY_SUSPENDED"
+      ],
+      "to_state": "SAT_TESTING",
+      "event_type": "delivery_completed_late",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E15",
+          "type": "PAYMENT",
+          "payment_formula": "days_late * late_penalty_per_day",
+          "payment_from": "Meridian Engineering Group Inc.",
+          "payment_to": "ClearPath Municipal Infrastructure Authority",
+          "cap": 405000,
+          "description": "Final late delivery penalty payment on actual delivery"
+        },
+        {
+          "id": "E16",
+          "type": "STATE_TRANSITION",
+          "new_state": "SAT_TESTING",
+          "description": "Late delivery completed, SAT testing begins"
+        },
+        {
+          "id": "E17",
+          "type": "RULE_ACTIVATION",
+          "target_rule_id": "R7",
+          "new_state": "active",
+          "description": "Activate SAT testing obligation for Buyer"
+        }
+      ],
+      "description": "Delivery finally completed despite lateness, SAT begins"
+    },
+    {
+      "id": "TR9",
+      "from_states": [
+        "SAT_TESTING"
+      ],
+      "to_state": "DEFECT_CORRECTION",
+      "event_type": "defect_notice_issued",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E18",
+          "type": "STATE_TRANSITION",
+          "new_state": "DEFECT_CORRECTION",
+          "description": "Defect Notice issued, Supplier must remedy"
+        },
+        {
+          "id": "E19",
+          "type": "RULE_ACTIVATION",
+          "target_rule_id": "R8",
+          "new_state": "active",
+          "description": "Activate defect remediation obligation"
+        },
+        {
+          "id": "E20",
+          "type": "CURE_WINDOW",
+          "duration_days": 45,
+          "description": "Supplier has up to 45 days total for defect correction"
+        }
+      ],
+      "description": "Buyer issues Defect Notice during SAT period"
+    },
+    {
+      "id": "TR10",
+      "from_states": [
+        "SAT_TESTING"
+      ],
+      "to_state": "SAT_PASSED",
+      "event_type": "sat_passed_explicitly",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E21",
+          "type": "STATE_TRANSITION",
+          "new_state": "SAT_PASSED",
+          "description": "SAT explicitly passed by Buyer"
+        },
+        {
+          "id": "E22",
+          "type": "RULE_ACTIVATION",
+          "target_rule_id": "R9",
+          "new_state": "active",
+          "description": "Activate commissioning milestone"
+        }
+      ],
+      "description": "Buyer explicitly passes SAT"
+    },
+    {
+      "id": "TR11",
+      "from_states": [
+        "SAT_TESTING"
+      ],
+      "to_state": "SAT_PASSED",
+      "event_type": "sat_deemed_passed",
+      "guard": "sat_testing_days >= sat_testing_window_days",
+      "effects": [
+        {
+          "id": "E23",
+          "type": "STATE_TRANSITION",
+          "new_state": "SAT_PASSED",
+          "description": "SAT deemed passed after 30-day window without Defect Notice"
+        },
+        {
+          "id": "E24",
+          "type": "RULE_ACTIVATION",
+          "target_rule_id": "R9",
+          "new_state": "active",
+          "description": "Activate commissioning milestone"
+        }
+      ],
+      "description": "SAT deemed passed after 30 days with no Defect Notice"
+    },
+    {
+      "id": "TR12",
+      "from_states": [
+        "DEFECT_CORRECTION"
+      ],
+      "to_state": "SAT_TESTING",
+      "event_type": "defects_remedied",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E25",
+          "type": "STATE_TRANSITION",
+          "new_state": "SAT_TESTING",
+          "description": "Defects remedied, SAT retesting begins"
+        }
+      ],
+      "description": "Supplier remedies defects, SAT retesting commences"
+    },
+    {
+      "id": "TR13",
+      "from_states": [
+        "SAT_PASSED"
+      ],
+      "to_state": "COMMISSIONING",
+      "event_type": "commissioning_started",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E26",
+          "type": "STATE_TRANSITION",
+          "new_state": "COMMISSIONING",
+          "description": "COM milestone work begins"
+        }
+      ],
+      "description": "Commissioning phase begins after SAT passage"
+    },
+    {
+      "id": "TR14",
+      "from_states": [
+        "COMMISSIONING"
+      ],
+      "to_state": "WARRANTY_ACTIVE",
+      "event_type": "acceptance_certificate_issued",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E27",
+          "type": "STATE_TRANSITION",
+          "new_state": "WARRANTY_ACTIVE",
+          "description": "Acceptance Certificate issued, warranty period begins"
+        },
+        {
+          "id": "E28",
+          "type": "RULE_ACTIVATION",
+          "target_rule_id": "R18",
+          "new_state": "active",
+          "description": "Activate 24-month warranty period"
+        },
+        {
+          "id": "E29",
+          "type": "RULE_ACTIVATION",
+          "target_rule_id": "R13",
+          "new_state": "active",
+          "description": "Activate holdback withholding"
+        },
+        {
+          "id": "E30",
+          "type": "RULE_ACTIVATION",
+          "target_rule_id": "R14",
+          "new_state": "active",
+          "description": "Activate holdback release timeline (12 months)"
+        }
+      ],
+      "description": "COM completed, Acceptance Certificate issued, warranty begins"
+    },
+    {
+      "id": "TR15",
+      "from_states": [
+        "WARRANTY_ACTIVE"
+      ],
+      "to_state": "WARRANTY_CLAIM_PENDING",
+      "event_type": "warranty_claim_submitted",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E31",
+          "type": "STATE_TRANSITION",
+          "new_state": "WARRANTY_CLAIM_PENDING",
+          "description": "Warranty claim submitted in writing"
+        },
+        {
+          "id": "E32",
+          "type": "RULE_ACTIVATION",
+          "target_rule_id": "R20",
+          "new_state": "active",
+          "description": "Activate Supplier's warranty remedy obligation"
+        },
+        {
+          "id": "E33",
+          "type": "CURE_WINDOW",
+          "duration_days": 30,
+          "description": "Supplier has 30 days to remedy warranty defect"
+        }
+      ],
+      "description": "Buyer submits written warranty claim"
+    },
+    {
+      "id": "TR16",
+      "from_states": [
+        "WARRANTY_CLAIM_PENDING"
+      ],
+      "to_state": "WARRANTY_ACTIVE",
+      "event_type": "warranty_claim_resolved",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E34",
+          "type": "STATE_TRANSITION",
+          "new_state": "WARRANTY_ACTIVE",
+          "description": "Warranty claim resolved, warranty continues"
+        }
+      ],
+      "description": "Warranty claim remedied and resolved"
+    },
+    {
+      "id": "TR17",
+      "from_states": [
+        "WARRANTY_ACTIVE"
+      ],
+      "to_state": "HOLDBACK_RELEASED",
+      "event_type": "holdback_release_triggered",
+      "guard": "months_since_com >= holdback_release_months and open_warranty_claims == 0",
+      "effects": [
+        {
+          "id": "E35",
+          "type": "PAYMENT",
+          "payment_formula": "holdback_amount - holdback_deductions",
+          "payment_from": "ClearPath Municipal Infrastructure Authority",
+          "payment_to": "Meridian Engineering Group Inc.",
+          "cap": null,
+          "description": "Release holdback after 12 months and all warranty claims resolved"
+        },
+        {
+          "id": "E36",
+          "type": "STATE_TRANSITION",
+          "new_state": "HOLDBACK_RELEASED",
+          "description": "Holdback released within 30 days of trigger date"
+        }
+      ],
+      "description": "Holdback released after 12 months post-COM and all claims resolved"
+    },
+    {
+      "id": "TR18",
+      "from_states": [
+        "HOLDBACK_RELEASED"
+      ],
+      "to_state": "COMPLETED",
+      "event_type": "warranty_period_expired",
+      "guard": "months_since_com >= 24",
+      "effects": [
+        {
+          "id": "E37",
+          "type": "STATE_TRANSITION",
+          "new_state": "COMPLETED",
+          "description": "24-month warranty expired, all obligations fulfilled"
+        }
+      ],
+      "description": "Warranty period expires, contract completes successfully"
+    },
+    {
+      "id": "TR19",
+      "from_states": [
+        "ACTIVE",
+        "DELIVERY_PENDING",
+        "DELIVERY_LATE",
+        "DELIVERY_LATE_PENALTY_ACCRUING",
+        "PENALTY_SUSPENDED",
+        "SAT_TESTING",
+        "DEFECT_CORRECTION",
+        "SAT_PASSED",
+        "COMMISSIONING",
+        "WARRANTY_ACTIVE",
+        "WARRANTY_CLAIM_PENDING",
+        "HOLDBACK_RELEASED"
+      ],
+      "to_state": "ARBITRATION",
+      "event_type": "dispute_filed",
+      "guard": null,
+      "effects": [
+        {
+          "id": "E38",
+          "type": "STATE_TRANSITION",
+          "new_state": "ARBITRATION",
+          "description": "Dispute escalated to binding arbitration"
+        },
+        {
+          "id": "E39",
+          "type": "RULE_ACTIVATION",
+          "target_rule_id": "R26",
+          "new_state": "active",
+          "description": "Activate arbitration obligation"
+        },
+        {
+          "id": "E40",
+          "type": "PAYMENT",
+          "payment_formula": "arbitration_costs / 2",
+          "payment_from": "Meridian Engineering Group Inc.",
+          "payment_to": "Arbitrator",
+          "cap": null,
+          "description": "Supplier pays 50% of arbitration costs"
+        },
+        {
+          "id": "E41",
+          "type": "PAYMENT",
+          "payment_formula": "arbitration_costs / 2",
+          "payment_from": "ClearPath Municipal Infrastructure Authority",
+          "payment_to": "Arbitrator",
+          "cap": null,
+          "description": "Buyer pays 50% of arbitration costs"
+        }
+      ],
+      "description": "Either party files dispute for binding arbitration"
+    },
+    {
+      "id": "TR20",
+      "from_states": [
+        "ARBITRATION"
+      ],
+      "to_state": "ACTIVE",
+      "event_type": "arbitration_resolved_continue",
+      "guard": "arbitration_decision == 'continue'",
+      "effects": [
+        {
+          "id": "E42",
+          "type": "STATE_TRANSITION",
+          "new_state": "ACTIVE",
+          "description": "Arbitration resolved, contract continues"
+        }
+      ],
+      "description": "Arbitration resolved in favor of continuing contract"
+    },
+    {
+      "id": "TR21",
+      "from_states": [
+        "ARBITRATION"
+      ],
+      "to_state": "TERMINATED",
+      "event_type": "arbitration_resolved_terminate",
+      "guard": "arbitration_decision == 'terminate'",
+      "effects": [
+        {
+          "id": "E43",
+          "type": "TERMINATION",
+          "new_state": "TERMINATED",
+          "description": "Arbitration results in contract termination"
+        }
+      ],
+      "description": "Arbitration resolved in favor of terminating contract"
+    },
+    {
+      "id": "TR22",
+      "from_states": [
+        "DELIVERY_LATE_PENALTY_ACCRUING"
+      ],
+      "to_state": "TERMINATED",
+      "event_type": "late_penalty_cap_reached",
+      "guard": "total_penalties >= late_penalty_cap",
+      "effects": [
+        {
+          "id": "E44",
+          "type": "PAYMENT",
+          "payment_formula": "late_penalty_cap",
+          "payment_from": "Meridian Engineering Group Inc.",
+          "payment_to": "ClearPath Municipal Infrastructure Authority",
+          "cap": 405000,
+          "description": "Final penalty payment at cap of $405,000"
+        },
+        {
+          "id": "E45",
+          "type": "TERMINATION",
+          "new_state": "TERMINATED",
+          "description": "Contract terminates after reaching maximum late penalty"
+        }
+      ],
+      "description": "Late delivery penalties reach $405,000 cap, potential termination"
+    },
+    {
+      "id": "TR23",
+      "from_states": [
+        "DEFECT_CORRECTION"
+      ],
+      "to_state": "TERMINATED",
+      "event_type": "defect_correction_failed",
+      "guard": "correction_days > max_correction_period_days",
+      "effects": [
+        {
+          "id": "E46",
+          "type": "TERMINATION",
+          "new_state": "TERMINATED",
+          "description": "Contract terminated after defect correction period exceeded 45 days"
+        }
+      ],
+      "description": "Supplier fails to remedy defects within 45-day maximum correction period"
+    },
+    {
+      "id": "TR24",
+      "from_states": [
+        "WARRANTY_CLAIM_PENDING"
+      ],
+      "to_state": "WARRANTY_ACTIVE",
+      "event_type": "warranty_remedy_completed",
+      "guard": "remedy_days <= warranty_remedy_days",
+      "effects": [
+        {
+          "id": "E47",
+          "type": "STATE_TRANSITION",
+          "new_state": "WARRANTY_ACTIVE",
+          "description": "Warranty remedy completed within 30 days"
+        }
+      ],
+      "description": "Supplier successfully remedies warranty claim within 30-day window"
+    }
+  ],
+  "rules": [
+    {
+      "id": "R1",
+      "type": "OBLIGATION",
+      "party": "Meridian Engineering Group Inc.",
+      "counterparty": "ClearPath Municipal Infrastructure Authority",
+      "action": "Design Infrastructure Monitoring System",
+      "activation": "INACTIVE",
+      "description": "Supplier shall design, manufacture, integrate, test, and commission an automated Infrastructure Monitoring System for Buyer's fourteen (14) regional water-distribution monitoring nodes, including sensors, communication hardware, central software platform, and staff training, in accordance with the Statement of Work (Exhibit A) and Technical Specifications (Exhibit B).",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [],
+      "effects": [],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R2",
+      "type": "OBLIGATION",
+      "party": "Meridian Engineering Group Inc.",
+      "counterparty": "ClearPath Municipal Infrastructure Authority",
+      "action": "Complete PDR milestone",
+      "activation": "INACTIVE",
+      "description": "Preliminary Design Review completed by CED + 45 days",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T1",
+          "type": "DATE_TRIGGER",
+          "condition": "PDR due date",
+          "reference_date": "effective_date",
+          "duration": "45 days",
+          "duration_days": 45
+        }
+      ],
+      "effects": [],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R3",
+      "type": "OBLIGATION",
+      "party": "Meridian Engineering Group Inc.",
+      "counterparty": "ClearPath Municipal Infrastructure Authority",
+      "action": "Complete CDR milestone",
+      "activation": "INACTIVE",
+      "description": "Critical Design Review completed by CED + 90 days",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T2",
+          "type": "DATE_TRIGGER",
+          "condition": "CDR due date",
+          "reference_date": "effective_date",
+          "duration": "90 days",
+          "duration_days": 90
+        }
+      ],
+      "effects": [],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R4",
+      "type": "OBLIGATION",
+      "party": "Meridian Engineering Group Inc.",
+      "counterparty": "ClearPath Municipal Infrastructure Authority",
+      "action": "Complete FAT milestone",
+      "activation": "INACTIVE",
+      "description": "Factory Acceptance Testing passed by CED + 180 days",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T3",
+          "type": "DATE_TRIGGER",
+          "condition": "FAT due date",
+          "reference_date": "effective_date",
+          "duration": "180 days",
+          "duration_days": 180
+        }
+      ],
+      "effects": [],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R5",
+      "type": "OBLIGATION",
+      "party": "Meridian Engineering Group Inc.",
+      "counterparty": "ClearPath Municipal Infrastructure Authority",
+      "action": "Complete DEL milestone - physical delivery",
+      "activation": "INACTIVE",
+      "description": "System physically delivered to Buyer's Operations Center by CED + 210 days (Required Delivery Date)",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T4",
+          "type": "DATE_TRIGGER",
+          "condition": "DEL due date (Required Delivery Date)",
+          "reference_date": "effective_date",
+          "duration": "210 days",
+          "duration_days": 210
+        }
+      ],
+      "effects": [
+        {
+          "id": "E1",
+          "type": "RULE_ACTIVATION",
+          "description": "Triggers SAT testing period obligation on Buyer",
+          "target_rule_id": "R7"
+        },
+        {
+          "id": "E2",
+          "type": "RULE_ACTIVATION",
+          "description": "Triggers late delivery penalty rule if not completed by deadline",
+          "target_rule_id": "R6"
+        },
+        {
+          "id": "E3",
+          "type": "RULE_ACTIVATION",
+          "description": "Triggers early delivery incentive rule if completed before deadline",
+          "target_rule_id": "R11"
+        }
+      ],
+      "constraints": [],
+      "exceptions": [
+        "R23"
+      ]
+    },
+    {
+      "id": "R6",
+      "type": "OBLIGATION",
+      "party": "Meridian Engineering Group Inc.",
+      "counterparty": "ClearPath Municipal Infrastructure Authority",
+      "action": "Pay late delivery liquidated damages",
+      "activation": "INACTIVE",
+      "description": "If the DEL milestone is not completed by the Required Delivery Date, Supplier shall pay Buyer liquidated damages of $4,500 per calendar day of delay, beginning on the first day after the Required Delivery Date. A grace period of fourteen (14) calendar days applies; no penalty accrues within the grace period. If delay exceeds 14 days, all days from day 1 are penalised retroactively (threshold trigger, not an offset).",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T5",
+          "type": "THRESHOLD_TRIGGER",
+          "condition": "Delay exceeds 14 calendar days",
+          "reference_date": "required_delivery_date",
+          "threshold_field": "delay_days",
+          "threshold_value": "14",
+          "threshold_operator": "gt"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E4",
+          "type": "PAYMENT",
+          "description": "Liquidated damages payment from Supplier to Buyer at $4,500 per day",
+          "payment_formula": "delay_days * 4500",
+          "payment_from": "Meridian Engineering Group Inc.",
+          "payment_to": "ClearPath Municipal Infrastructure Authority",
+          "cap": "405000"
+        },
+        {
+          "id": "E5",
+          "type": "RETROACTIVE_REVISION",
+          "description": "Penalties calculated from day 1 of delay, not day 15"
+        }
+      ],
+      "constraints": [
+        {
+          "id": "C1",
+          "type": "GRACE_PERIOD",
+          "duration": "14 days",
+          "duration_days": 14,
+          "scope": [
+            "E4"
+          ],
+          "description": "No penalty accrues within 14-day grace period; if delay exceeds 14 days, all days from day 1 are retroactively penalized"
+        },
+        {
+          "id": "C2",
+          "type": "CAP",
+          "value": "405000",
+          "scope": [
+            "E4"
+          ],
+          "description": "Late delivery penalties shall not exceed $405,000 (7.5% of Contract Price)"
+        }
+      ],
+      "exceptions": [
+        "R10",
+        "R23"
+      ]
+    },
+    {
+      "id": "R7",
+      "type": "OBLIGATION",
+      "party": "ClearPath Municipal Infrastructure Authority",
+      "counterparty": "Meridian Engineering Group Inc.",
+      "action": "Conduct Site Acceptance Testing",
+      "activation": "INACTIVE",
+      "description": "Following physical delivery (DEL), Buyer shall conduct Site Acceptance Testing within thirty (30) calendar days.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T6",
+          "type": "EVENT_TRIGGER",
+          "condition": "DEL milestone completion",
+          "reference_date": "del_date",
+          "duration": "30 days",
+          "duration_days": 30
+        }
+      ],
+      "effects": [
+        {
+          "id": "E6",
+          "type": "STATE_TRANSITION",
+          "description": "SAT deemed passed if no Defect Notice issued within 30 days",
+          "new_state": "SAT_PASSED"
+        },
+        {
+          "id": "E7",
+          "type": "RULE_ACTIVATION",
+          "description": "Agreement proceeds to commissioning if SAT deemed passed",
+          "target_rule_id": "R9"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R8",
+      "type": "OBLIGATION",
+      "party": "Meridian Engineering Group Inc.",
+      "counterparty": "ClearPath Municipal Infrastructure Authority",
+      "action": "Remedy SAT defects",
+      "activation": "INACTIVE",
+      "description": "If SAT reveals defects, Supplier shall remedy at its own expense. The elapsed time between Buyer's written Defect Notice and Supplier's written confirmation of remedy is the 'Correction Period.' The Revised Delivery Date for penalty and incentive purposes equals the Actual DEL Date plus the Correction Period, subject to a maximum addition of 45 days across all correction rounds.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T7",
+          "type": "EVENT_TRIGGER",
+          "condition": "Buyer issues Defect Notice during SAT period"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E8",
+          "type": "STATE_TRANSITION",
+          "description": "Revised Delivery Date = Actual DEL Date + Correction Period",
+          "new_state": "DEFECT_CORRECTION"
+        }
+      ],
+      "constraints": [
+        {
+          "id": "C3",
+          "type": "CAP",
+          "duration": "45 days",
+          "duration_days": 45,
+          "scope": [
+            "E8"
+          ],
+          "description": "Maximum addition to Revised Delivery Date: 45 days across all correction rounds"
+        }
+      ],
+      "exceptions": []
+    },
+    {
+      "id": "R9",
+      "type": "OBLIGATION",
+      "party": "Meridian Engineering Group Inc.",
+      "counterparty": "ClearPath Municipal Infrastructure Authority",
+      "action": "Complete COM milestone - commissioning",
+      "activation": "INACTIVE",
+      "description": "System commissioned and live at all 14 nodes by CED + 270 days",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T8",
+          "type": "DATE_TRIGGER",
+          "condition": "COM due date",
+          "reference_date": "effective_date",
+          "duration": "270 days",
+          "duration_days": 270
+        },
+        {
+          "id": "T9",
+          "type": "CONDITION_PRECEDENT",
+          "condition": "SAT must be passed before COM can occur"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E9",
+          "type": "STATE_TRANSITION",
+          "description": "Contract transitions to Warranty Active status upon Acceptance Certificate issuance",
+          "new_state": "WARRANTY_ACTIVE"
+        },
+        {
+          "id": "E10",
+          "type": "RULE_ACTIVATION",
+          "description": "Triggers warranty period and holdback release timeline",
+          "target_rule_id": "R18"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R11",
+      "type": "OBLIGATION",
+      "party": "ClearPath Municipal Infrastructure Authority",
+      "counterparty": "Meridian Engineering Group Inc.",
+      "action": "Pay early delivery incentive",
+      "activation": "INACTIVE",
+      "description": "If the DEL milestone is completed before the Required Delivery Date, Buyer shall pay Supplier $2,250 per calendar day early, calculated from the actual delivery date to the Required Delivery Date. The early delivery incentive shall not exceed $63,000 (the 'Early Delivery Cap').",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T11",
+          "type": "EVENT_TRIGGER",
+          "condition": "DEL milestone completed before Required Delivery Date",
+          "reference_date": "required_delivery_date"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E12",
+          "type": "PAYMENT",
+          "description": "Early delivery incentive payment from Buyer to Supplier",
+          "payment_formula": "early_days * 2250",
+          "payment_from": "ClearPath Municipal Infrastructure Authority",
+          "payment_to": "Meridian Engineering Group Inc.",
+          "cap": "63000"
+        }
+      ],
+      "constraints": [
+        {
+          "id": "C5",
+          "type": "CAP",
+          "value": "63000",
+          "scope": [
+            "E12"
+          ],
+          "description": "Early delivery incentive shall not exceed $63,000"
+        }
+      ],
+      "exceptions": [
+        "R24"
+      ]
+    },
+    {
+      "id": "R12",
+      "type": "OBLIGATION",
+      "party": "ClearPath Municipal Infrastructure Authority",
+      "counterparty": "Meridian Engineering Group Inc.",
+      "action": "Issue Acceptance Certificate upon SAT passage",
+      "activation": "INACTIVE",
+      "description": "Upon SAT passage (original or after correction), Buyer issues a written Acceptance Certificate. The contract transitions to Warranty Active status.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T12",
+          "type": "EVENT_TRIGGER",
+          "condition": "SAT passed (original or after defect correction)"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E13",
+          "type": "STATE_TRANSITION",
+          "description": "Contract transitions to Warranty Active status",
+          "new_state": "WARRANTY_ACTIVE"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R13",
+      "type": "OBLIGATION",
+      "party": "ClearPath Municipal Infrastructure Authority",
+      "counterparty": "Meridian Engineering Group Inc.",
+      "action": "Withhold Holdback Amount from final payment",
+      "activation": "INACTIVE",
+      "description": "Ten percent (10%) of the Contract Price ($540,000) shall be withheld by Buyer from the final payment milestone invoice (the 'Holdback Amount').",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T13",
+          "type": "EVENT_TRIGGER",
+          "condition": "Final payment milestone invoice"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E14",
+          "type": "PAYMENT",
+          "description": "Holdback of $540,000 from final payment",
+          "payment_formula": "540000"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R14",
+      "type": "OBLIGATION",
+      "party": "ClearPath Municipal Infrastructure Authority",
+      "counterparty": "Meridian Engineering Group Inc.",
+      "action": "Release Holdback Amount",
+      "activation": "INACTIVE",
+      "description": "The Holdback Amount shall be released to Supplier in full within thirty (30) calendar days of the later of: (a) twelve (12) calendar months after the COM milestone acceptance date; and (b) resolution of all open warranty claims lodged before the twelve-month anniversary of COM. Partial release is not available; the full Holdback Amount is either released or retained (subject to deduction under Section 6.3).",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T14",
+          "type": "TEMPORAL_TRIGGER",
+          "condition": "Later of: (a) 12 months after COM acceptance date, or (b) resolution of all open warranty claims lodged before 12-month anniversary of COM",
+          "reference_date": "com_acceptance_date",
+          "duration": "12 months",
+          "duration_days": 365
+        },
+        {
+          "id": "T15",
+          "type": "EVENT_TRIGGER",
+          "condition": "Resolution of all open warranty claims lodged before twelve-month anniversary of COM"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E15",
+          "type": "PAYMENT",
+          "description": "Release of Holdback Amount to Supplier",
+          "payment_formula": "540000 - holdback_deductions",
+          "payment_from": "ClearPath Municipal Infrastructure Authority",
+          "payment_to": "Meridian Engineering Group Inc."
+        }
+      ],
+      "constraints": [
+        {
+          "id": "C6",
+          "type": "CONTROLLING_ITEM",
+          "duration": "30 days",
+          "duration_days": 30,
+          "scope": [
+            "E15"
+          ],
+          "description": "Holdback released within 30 days of trigger date; no partial release available"
+        }
+      ],
+      "exceptions": [
+        "R15"
+      ]
+    },
+    {
+      "id": "R19",
+      "type": "OBLIGATION",
+      "party": "ClearPath Municipal Infrastructure Authority",
+      "counterparty": "Meridian Engineering Group Inc.",
+      "action": "Submit warranty claims in writing",
+      "activation": "INACTIVE",
+      "description": "Buyer shall submit warranty claims in writing, specifying the non-conformance and the affected node(s).",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T19",
+          "type": "EVENT_TRIGGER",
+          "condition": "Defect discovered during warranty period"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E20",
+          "type": "RULE_ACTIVATION",
+          "description": "Triggers Supplier's warranty remedy obligation",
+          "target_rule_id": "R20"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R20",
+      "type": "OBLIGATION",
+      "party": "Meridian Engineering Group Inc.",
+      "counterparty": "ClearPath Municipal Infrastructure Authority",
+      "action": "Remedy warranty claims",
+      "activation": "INACTIVE",
+      "description": "Supplier shall remedy conforming warranty claims within thirty (30) calendar days of written notice at no cost to Buyer.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T20",
+          "type": "EVENT_TRIGGER",
+          "condition": "Receipt of written warranty claim from Buyer",
+          "duration": "30 days",
+          "duration_days": 30
+        }
+      ],
+      "effects": [
+        {
+          "id": "E21",
+          "type": "CURE_WINDOW",
+          "description": "30-day period to remedy warranty defect"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R23",
+      "type": "OBLIGATION",
+      "party": "Meridian Engineering Group Inc.",
+      "counterparty": "ClearPath Municipal Infrastructure Authority",
+      "action": "Provide force majeure notice and updates",
+      "activation": "INACTIVE",
+      "description": "Late delivery penalties under Section 3.1 shall be suspended for each calendar day that a documented force majeure event directly prevents Supplier from performing critical-path activities. Supplier shall provide written notice within five (5) business days of onset and weekly updates thereafter.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T23",
+          "type": "EVENT_TRIGGER",
+          "condition": "Force majeure event onset",
+          "duration": "5 business days",
+          "duration_days": 5
+        }
+      ],
+      "effects": [
+        {
+          "id": "E24",
+          "type": "STATE_TRANSITION",
+          "description": "Suspends late delivery penalty accrual for documented force majeure days",
+          "target_rule_id": "R6",
+          "new_state": "PENALTY_SUSPENDED"
+        }
+      ],
+      "constraints": [
+        {
+          "id": "C10",
+          "type": "GRACE_PERIOD",
+          "duration": "5 business days",
+          "duration_days": 5,
+          "scope": [
+            "E24"
+          ],
+          "description": "Written notice required within 5 business days of force majeure onset"
+        }
+      ],
+      "exceptions": []
+    },
+    {
+      "id": "R26",
+      "type": "OBLIGATION",
+      "party": "Meridian Engineering Group Inc.",
+      "counterparty": "ClearPath Municipal Infrastructure Authority",
+      "action": "Submit disputes to binding arbitration",
+      "activation": "INACTIVE",
+      "description": "Any and all disputes, claims, or controversies arising out of or relating to this Agreement, including disputes concerning its formation, performance, breach, termination, or validity, shall be resolved exclusively by binding arbitration administered by the American Arbitration Association ('AAA') under its Commercial Arbitration Rules, as modified by this Section 14. The arbitration shall be conducted in Austin, Texas, before a single arbitrator selected from the AAA's Large Complex Case roster.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T24",
+          "type": "EVENT_TRIGGER",
+          "condition": "Any dispute, claim, or controversy arising out of or relating to the Agreement"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E25",
+          "type": "STATE_TRANSITION",
+          "description": "Dispute enters binding arbitration",
+          "new_state": "ARBITRATION"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R27",
+      "type": "PROHIBITION",
+      "party": "Meridian Engineering Group Inc.",
+      "counterparty": "ClearPath Municipal Infrastructure Authority",
+      "action": "No litigation except for interim injunctive relief",
+      "activation": "INACTIVE",
+      "description": "The arbitration procedure in this Section 14 is the sole and exclusive dispute resolution mechanism for this Agreement. No party shall initiate litigation or any other dispute resolution procedure with respect to any dispute that is or could be subject to this Section 14, except to seek interim injunctive relief pending arbitration.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [],
+      "effects": [],
+      "constraints": [],
+      "exceptions": [
+        "R28"
+      ]
+    },
+    {
+      "id": "R29",
+      "type": "OBLIGATION",
+      "party": "Meridian Engineering Group Inc.",
+      "counterparty": "ClearPath Municipal Infrastructure Authority",
+      "action": "Share arbitration costs equally",
+      "activation": "INACTIVE",
+      "description": "The costs of arbitration, including arbitrator fees, shall be borne equally by the parties, except that the prevailing party may seek recovery of reasonable attorneys' fees and arbitration costs from the non-prevailing party as part of the arbitral award.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T25",
+          "type": "EVENT_TRIGGER",
+          "condition": "Arbitration proceeding initiated"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E26",
+          "type": "PAYMENT",
+          "description": "Equal sharing of arbitration costs",
+          "payment_formula": "arbitration_costs / 2",
+          "payment_from": "Meridian Engineering Group Inc."
+        }
+      ],
+      "constraints": [],
+      "exceptions": [
+        "R30"
+      ]
+    },
+    {
+      "id": "R31",
+      "type": "OBLIGATION",
+      "party": "ClearPath Municipal Infrastructure Authority",
+      "counterparty": "Meridian Engineering Group Inc.",
+      "action": "Share arbitration costs equally",
+      "activation": "INACTIVE",
+      "description": "The costs of arbitration, including arbitrator fees, shall be borne equally by the parties, except that the prevailing party may seek recovery of reasonable attorneys' fees and arbitration costs from the non-prevailing party as part of the arbitral award.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T27",
+          "type": "EVENT_TRIGGER",
+          "condition": "Arbitration proceeding initiated"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E28",
+          "type": "PAYMENT",
+          "description": "Equal sharing of arbitration costs",
+          "payment_formula": "arbitration_costs / 2",
+          "payment_from": "ClearPath Municipal Infrastructure Authority"
+        }
+      ],
+      "constraints": [],
+      "exceptions": [
+        "R30"
+      ]
+    },
+    {
+      "id": "R33",
+      "type": "PROHIBITION",
+      "party": "ClearPath Municipal Infrastructure Authority",
+      "counterparty": "Meridian Engineering Group Inc.",
+      "action": "No litigation except for interim injunctive relief",
+      "activation": "INACTIVE",
+      "description": "The arbitration procedure in this Section 14 is the sole and exclusive dispute resolution mechanism for this Agreement. No party shall initiate litigation or any other dispute resolution procedure with respect to any dispute that is or could be subject to this Section 14, except to seek interim injunctive relief pending arbitration.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [],
+      "effects": [],
+      "constraints": [],
+      "exceptions": [
+        "R34"
+      ]
+    },
+    {
+      "id": "R35",
+      "type": "OBLIGATION",
+      "party": "Meridian Engineering Group Inc.",
+      "counterparty": "ClearPath Municipal Infrastructure Authority",
+      "action": "Deliver notices per specified methods",
+      "activation": "INACTIVE",
+      "description": "All notices shall be delivered by (a) hand delivery with signed receipt, (b) nationally recognized overnight courier, or (c) email with confirmed read receipt, to the addresses set forth in Exhibit D. Notices are effective upon receipt.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T29",
+          "type": "EVENT_TRIGGER",
+          "condition": "Any notice required or permitted under the Agreement"
+        }
+      ],
+      "effects": [],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R36",
+      "type": "OBLIGATION",
+      "party": "ClearPath Municipal Infrastructure Authority",
+      "counterparty": "Meridian Engineering Group Inc.",
+      "action": "Deliver notices per specified methods",
+      "activation": "INACTIVE",
+      "description": "All notices shall be delivered by (a) hand delivery with signed receipt, (b) nationally recognized overnight courier, or (c) email with confirmed read receipt, to the addresses set forth in Exhibit D. Notices are effective upon receipt.",
+      "mappable": true,
+      "unmappable_reason": null,
+      "triggers": [
+        {
+          "id": "T30",
+          "type": "EVENT_TRIGGER",
+          "condition": "Any notice required or permitted under the Agreement"
+        }
+      ],
+      "effects": [],
+      "constraints": [],
+      "exceptions": []
+    }
+  ],
+  "unmappable_rules": [
+    {
+      "id": "R10",
+      "type": "PERMISSION",
+      "party": "Meridian Engineering Group Inc.",
+      "counterparty": "ClearPath Municipal Infrastructure Authority",
+      "action": "Earn milestone credit against late delivery penalties",
+      "activation": "INACTIVE",
+      "description": "If any of PDR, CDR, or FAT is completed ahead of schedule, the number of calendar days of early completion shall be credited against late delivery penalties calculated under Section 3.1, up to a maximum credit of 10 days in aggregate across all three pre-delivery milestones.",
+      "mappable": false,
+      "unmappable_reason": "PERMISSION is not in the four mappable primitives",
+      "triggers": [
+        {
+          "id": "T10",
+          "type": "EVENT_TRIGGER",
+          "condition": "PDR, CDR, or FAT completed ahead of scheduled due date"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E11",
+          "type": "PAYMENT",
+          "description": "Early milestone completion days credited against late delivery penalties",
+          "target_rule_id": "R6",
+          "payment_formula": "min(early_days_pdr + early_days_cdr + early_days_fat, 10) * 4500",
+          "cap": "45000"
+        }
+      ],
+      "constraints": [
+        {
+          "id": "C4",
+          "type": "CAP",
+          "value": "10",
+          "scope": [
+            "E11"
+          ],
+          "description": "Maximum aggregate credit across all three pre-delivery milestones: 10 days"
+        }
+      ],
+      "exceptions": []
+    },
+    {
+      "id": "R15",
+      "type": "POWER",
+      "party": "ClearPath Municipal Infrastructure Authority",
+      "counterparty": "Meridian Engineering Group Inc.",
+      "action": "Deduct from Holdback for non-conforming nodes",
+      "activation": "INACTIVE",
+      "description": "If, on the Holdback release date, one or more of the fourteen monitoring nodes is not operating in conformance with the Specifications, Buyer may deduct from the Holdback Amount $38,571 per non-conforming node (equal to 1/14th of the Holdback Amount) and release the remainder to Supplier. Retained amounts are liquidated damages for in-service non-conformance; no further warranty claim may be brought in respect of those nodes.",
+      "mappable": false,
+      "unmappable_reason": "POWER is not in the four mappable primitives",
+      "triggers": [
+        {
+          "id": "T16",
+          "type": "CONDITION_PRECEDENT",
+          "condition": "On Holdback release date, one or more nodes not conforming to Specifications",
+          "reference_date": "holdback_release_date"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E16",
+          "type": "PAYMENT",
+          "description": "Deduction from Holdback for non-conforming nodes",
+          "payment_formula": "non_conforming_node_count * 38571",
+          "payment_from": "Meridian Engineering Group Inc.",
+          "payment_to": "ClearPath Municipal Infrastructure Authority",
+          "cap": "540000"
+        },
+        {
+          "id": "E17",
+          "type": "FORFEITURE",
+          "description": "No further warranty claim may be brought for nodes subject to deduction",
+          "target_rule_id": "R18"
+        }
+      ],
+      "constraints": [
+        {
+          "id": "C7",
+          "type": "PRO_RATA",
+          "value": "38571",
+          "scope": [
+            "E16"
+          ],
+          "description": "Per-node deduction of $38,571 (1/14th of Holdback Amount)"
+        }
+      ],
+      "exceptions": []
+    },
+    {
+      "id": "R16",
+      "type": "POWER",
+      "party": "Meridian Engineering Group Inc.",
+      "counterparty": "ClearPath Municipal Infrastructure Authority",
+      "action": "Dispute Holdback deduction via arbitration",
+      "activation": "INACTIVE",
+      "description": "Notwithstanding Section 6.4, any dispute by Supplier regarding a Holdback deduction made by Buyer under Section 6.3 shall be submitted directly to arbitration under Section 14.1. Supplier's sole remedy upon disagreeing with a Holdback deduction is to file for arbitration under Section 14.1 within thirty (30) calendar days of Buyer's written deduction notice; failure to do so within this period is a waiver of Supplier's right to contest the deduction.",
+      "mappable": false,
+      "unmappable_reason": "POWER is not in the four mappable primitives",
+      "triggers": [
+        {
+          "id": "T17",
+          "type": "EVENT_TRIGGER",
+          "condition": "Supplier receives Buyer's written Holdback deduction notice under Section 6.3",
+          "duration": "30 days",
+          "duration_days": 30
+        }
+      ],
+      "effects": [
+        {
+          "id": "E18",
+          "type": "RULE_ACTIVATION",
+          "description": "Initiate arbitration under Section 14.1",
+          "target_rule_id": "R26",
+          "new_state": "ARBITRATION"
+        },
+        {
+          "id": "E19",
+          "type": "ASSET_TRANSFER",
+          "description": "Disputed deduction amount placed in escrow pending arbitration"
+        }
+      ],
+      "constraints": [
+        {
+          "id": "C8",
+          "type": "GRACE_PERIOD",
+          "duration": "30 days",
+          "duration_days": 30,
+          "scope": [
+            "E18"
+          ],
+          "description": "Must file for arbitration within 30 days of deduction notice or waive right to contest"
+        }
+      ],
+      "exceptions": []
+    },
+    {
+      "id": "R17",
+      "type": "IMMUNITY",
+      "party": "Meridian Engineering Group Inc.",
+      "counterparty": "ClearPath Municipal Infrastructure Authority",
+      "action": "Section 6.4 Holdback Dispute procedure superseded",
+      "activation": "INACTIVE",
+      "description": "Section 6.4 is superseded in its entirety by Section 14.3 and shall have no force or effect. The Holdback Dispute procedure described in Section 6.4 \u2014 including the Dispute Notice requirement, Holdback Dispute status, and the Joint Resolution Panel \u2014 is superseded.",
+      "mappable": false,
+      "unmappable_reason": "IMMUNITY is not in the four mappable primitives",
+      "triggers": [],
+      "effects": [],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R18",
+      "type": "WARRANTY",
+      "party": "Meridian Engineering Group Inc.",
+      "counterparty": "ClearPath Municipal Infrastructure Authority",
+      "action": "Warrant IMS against defects and non-conformance",
+      "activation": "INACTIVE",
+      "description": "Supplier warrants the IMS against defects in materials, workmanship, and conformance to Specifications for twenty-four (24) calendar months from the COM acceptance date. This warranty covers all fourteen monitoring nodes, communication hardware, and central software.",
+      "mappable": false,
+      "unmappable_reason": "WARRANTY is not in the four mappable primitives",
+      "triggers": [
+        {
+          "id": "T18",
+          "type": "TEMPORAL_TRIGGER",
+          "condition": "Warranty period begins at COM acceptance date",
+          "reference_date": "com_acceptance_date",
+          "duration": "24 months",
+          "duration_days": 730
+        }
+      ],
+      "effects": [],
+      "constraints": [],
+      "exceptions": [
+        "R15"
+      ]
+    },
+    {
+      "id": "R21",
+      "type": "POWER",
+      "party": "ClearPath Municipal Infrastructure Authority",
+      "counterparty": "Meridian Engineering Group Inc.",
+      "action": "Procure third-party warranty remediation if Supplier fails to remedy",
+      "activation": "INACTIVE",
+      "description": "Failure to remedy within this period entitles Buyer to procure third-party remediation and invoice Supplier for reasonable costs, up to $25,000 per incident.",
+      "mappable": false,
+      "unmappable_reason": "POWER is not in the four mappable primitives",
+      "triggers": [
+        {
+          "id": "T21",
+          "type": "ABSENCE_TRIGGER",
+          "condition": "Supplier fails to remedy warranty claim within 30 days",
+          "duration": "30 days",
+          "duration_days": 30
+        }
+      ],
+      "effects": [
+        {
+          "id": "E22",
+          "type": "PAYMENT",
+          "description": "Buyer may invoice Supplier for third-party remediation costs",
+          "payment_formula": "third_party_cost",
+          "payment_from": "Meridian Engineering Group Inc.",
+          "payment_to": "ClearPath Municipal Infrastructure Authority",
+          "cap": "25000"
+        }
+      ],
+      "constraints": [
+        {
+          "id": "C9",
+          "type": "CAP",
+          "value": "25000",
+          "scope": [
+            "E22"
+          ],
+          "description": "Third-party remediation cost cap: $25,000 per incident"
+        }
+      ],
+      "exceptions": []
+    },
+    {
+      "id": "R22",
+      "type": "IMMUNITY",
+      "party": "Meridian Engineering Group Inc.",
+      "counterparty": "ClearPath Municipal Infrastructure Authority",
+      "action": "Force majeure exemption from liability",
+      "activation": "INACTIVE",
+      "description": "Neither party shall be liable for delay or non-performance caused by events beyond that party's reasonable control, including acts of God, war, governmental embargo, flood, earthquake, or failure of a third-party sub-supplier whose failure could not have been avoided through commercially reasonable alternate sourcing.",
+      "mappable": false,
+      "unmappable_reason": "IMMUNITY is not in the four mappable primitives",
+      "triggers": [
+        {
+          "id": "T22",
+          "type": "EVENT_TRIGGER",
+          "condition": "Force majeure event occurs that prevents performance"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E23",
+          "type": "RULE_ACTIVATION",
+          "description": "Suspends late delivery penalty accrual",
+          "target_rule_id": "R23",
+          "new_state": "FORCE_MAJEURE"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R24",
+      "type": "IMMUNITY",
+      "party": "ClearPath Municipal Infrastructure Authority",
+      "counterparty": "Meridian Engineering Group Inc.",
+      "action": "Required Delivery Date not adjusted for force majeure (early incentive)",
+      "activation": "INACTIVE",
+      "description": "The Required Delivery Date used to calculate early delivery incentives under Section 4 shall not be adjusted for force majeure. Incentive windows are fixed.",
+      "mappable": false,
+      "unmappable_reason": "IMMUNITY is not in the four mappable primitives",
+      "triggers": [],
+      "effects": [],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R25",
+      "type": "IMMUNITY",
+      "party": "ClearPath Municipal Infrastructure Authority",
+      "counterparty": "Meridian Engineering Group Inc.",
+      "action": "Holdback release timeline not extended by force majeure",
+      "activation": "INACTIVE",
+      "description": "The Holdback release timeline in Section 6.2 is not suspended or extended by force majeure.",
+      "mappable": false,
+      "unmappable_reason": "IMMUNITY is not in the four mappable primitives",
+      "triggers": [],
+      "effects": [],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R28",
+      "type": "PERMISSION",
+      "party": "Meridian Engineering Group Inc.",
+      "counterparty": "ClearPath Municipal Infrastructure Authority",
+      "action": "Seek interim injunctive relief pending arbitration",
+      "activation": "INACTIVE",
+      "description": "No party shall initiate litigation or any other dispute resolution procedure with respect to any dispute that is or could be subject to this Section 14, except to seek interim injunctive relief pending arbitration.",
+      "mappable": false,
+      "unmappable_reason": "PERMISSION is not in the four mappable primitives",
+      "triggers": [],
+      "effects": [],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R30",
+      "type": "POWER",
+      "party": "Meridian Engineering Group Inc.",
+      "counterparty": "ClearPath Municipal Infrastructure Authority",
+      "action": "Prevailing party may recover fees and costs from non-prevailing party",
+      "activation": "INACTIVE",
+      "description": "The prevailing party may seek recovery of reasonable attorneys' fees and arbitration costs from the non-prevailing party as part of the arbitral award.",
+      "mappable": false,
+      "unmappable_reason": "POWER is not in the four mappable primitives",
+      "triggers": [
+        {
+          "id": "T26",
+          "type": "EVENT_TRIGGER",
+          "condition": "Arbitration award issued determining prevailing party"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E27",
+          "type": "PAYMENT",
+          "description": "Prevailing party may recover attorneys' fees and costs",
+          "payment_formula": "attorneys_fees + arbitration_costs"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R32",
+      "type": "POWER",
+      "party": "ClearPath Municipal Infrastructure Authority",
+      "counterparty": "Meridian Engineering Group Inc.",
+      "action": "Prevailing party may recover fees and costs from non-prevailing party",
+      "activation": "INACTIVE",
+      "description": "The prevailing party may seek recovery of reasonable attorneys' fees and arbitration costs from the non-prevailing party as part of the arbitral award.",
+      "mappable": false,
+      "unmappable_reason": "POWER is not in the four mappable primitives",
+      "triggers": [
+        {
+          "id": "T28",
+          "type": "EVENT_TRIGGER",
+          "condition": "Arbitration award issued determining prevailing party"
+        }
+      ],
+      "effects": [
+        {
+          "id": "E29",
+          "type": "PAYMENT",
+          "description": "Prevailing party may recover attorneys' fees and costs",
+          "payment_formula": "attorneys_fees + arbitration_costs"
+        }
+      ],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R34",
+      "type": "PERMISSION",
+      "party": "ClearPath Municipal Infrastructure Authority",
+      "counterparty": "Meridian Engineering Group Inc.",
+      "action": "Seek interim injunctive relief pending arbitration",
+      "activation": "INACTIVE",
+      "description": "No party shall initiate litigation or any other dispute resolution procedure with respect to any dispute that is or could be subject to this Section 14, except to seek interim injunctive relief pending arbitration.",
+      "mappable": false,
+      "unmappable_reason": "PERMISSION is not in the four mappable primitives",
+      "triggers": [],
+      "effects": [],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R37",
+      "type": "POWER",
+      "party": "Meridian Engineering Group Inc.",
+      "counterparty": "ClearPath Municipal Infrastructure Authority",
+      "action": "Amend Agreement only by written instrument",
+      "activation": "INACTIVE",
+      "description": "This Agreement may only be amended by a written instrument signed by authorized representatives of both parties.",
+      "mappable": false,
+      "unmappable_reason": "POWER is not in the four mappable primitives",
+      "triggers": [],
+      "effects": [],
+      "constraints": [],
+      "exceptions": []
+    },
+    {
+      "id": "R38",
+      "type": "POWER",
+      "party": "ClearPath Municipal Infrastructure Authority",
+      "counterparty": "Meridian Engineering Group Inc.",
+      "action": "Amend Agreement only by written instrument",
+      "activation": "INACTIVE",
+      "description": "This Agreement may only be amended by a written instrument signed by authorized representatives of both parties.",
+      "mappable": false,
+      "unmappable_reason": "POWER is not in the four mappable primitives",
+      "triggers": [],
+      "effects": [],
+      "constraints": [],
+      "exceptions": []
+    }
+  ]
+}

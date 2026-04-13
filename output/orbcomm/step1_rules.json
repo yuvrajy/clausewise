@@ -1,0 +1,353 @@
+{
+  "rules": [
+    {
+      "id": "R1",
+      "type": "OBLIGATION",
+      "party": "Orbital Sciences Corporation",
+      "action": "Design, manufacture, test and deliver EDU Unit and six Additional Payloads",
+      "mappable": true,
+      "description": "Orbital shall design, manufacture, test and deliver one (1) payload (without antenna) engineering development unit (the 'EDU Unit') and six (6) additional Automatic Identification System (AIS) Signal payloads (the 'Additional Payloads') in accordance with the Statement of Work and Specifications attached hereto, including (without limitation) the delivery schedule set forth in Section 2.1.1 of the SOW (the 'Delivery Schedule')."
+    },
+    {
+      "id": "R2",
+      "type": "OBLIGATION",
+      "party": "Orbital Sciences Corporation",
+      "action": "Deliver Additional Payloads (less antenna) within deadline",
+      "mappable": true,
+      "description": "Additional Payloads (less the antenna subsystem) must be delivered within fourteen (14) months of the Effective Date plus sixty (60) days grace period."
+    },
+    {
+      "id": "R3",
+      "type": "OBLIGATION",
+      "party": "Orbital Sciences Corporation",
+      "action": "Deliver antenna subsystems within deadline",
+      "mappable": true,
+      "description": "Antenna subsystems must be delivered within fourteen (14) months of the Effective Date plus ninety (90) days grace period."
+    },
+    {
+      "id": "R4",
+      "type": "OBLIGATION",
+      "party": "ORBCOMM Inc",
+      "action": "Pay firm fixed price for Additional Payloads",
+      "mappable": true,
+      "description": "The firm fixed price for the six (6) Additional Payloads, each with an additional SRX, shall total $17,000,000 (the 'Price'), which ORBCOMM shall pay Orbital, in accordance with Exhibit E-1 of this Amendment."
+    },
+    {
+      "id": "R5",
+      "type": "OBLIGATION",
+      "party": "Orbital Sciences Corporation",
+      "action": "Pay liquidated damages for late delivery",
+      "mappable": true,
+      "description": "If one or more of the Additional Payloads is not delivered in accordance with the requirements of this Amendment within fourteen (14) months of the Effective Date plus sixty (60) days grace period (no penalty shall be incurred in the grace period) for the Additional Payloads (less the antenna subsystem) and fourteen (14) months plus ninety (90) days grace period for the antenna subsystem associated therewith, starting on the first day after such applicable grace period has been exhausted, Orbital shall pay ORBCOMM liquidated delay damages of 0.05% ($8,500) per day for each Additional Payload that has not been so delivered for each day of delay, up to a total amount not to exceed 15 percent (15%) of the Price ($2,550,000) and not to exceed $25,000 per day and inclusive of the penalties described in clause 3.(iv) below."
+    },
+    {
+      "id": "R6",
+      "type": "OBLIGATION",
+      "party": "ORBCOMM Inc",
+      "action": "Pay on-time delivery incentive",
+      "mappable": true,
+      "description": "If the EDU Unit and all of the Additional Payloads are delivered in accordance with the requirements of this Amendment by the date specified in the Delivery Schedule, ORBCOMM shall pay Orbital a single on-time delivery incentive of 1.2% of the Price ($204,000)."
+    },
+    {
+      "id": "R7",
+      "type": "OBLIGATION",
+      "party": "ORBCOMM Inc",
+      "action": "Pay early delivery incentive",
+      "mappable": true,
+      "description": "If all of the Additional Payloads are so delivered on time, for each day that the Additional Payloads are so delivered early, ORBCOMM shall pay Orbital 0.01% of Price ($1700) per day of early delivery, up to a total amount not to exceed $100,000 for such early delivery (for all Additional Payloads combined)."
+    },
+    {
+      "id": "R8",
+      "type": "REPRESENTATION",
+      "party": "Orbital Sciences Corporation",
+      "action": "Timely delivery requires both payload and antenna within deadlines",
+      "mappable": false,
+      "description": "Timely delivery of an Additional Payload shall require the timely delivery of both the payload unit (without the antenna) and the associated antenna (A) within fourteen (14) months of the Effective Date plus sixty (60) days grace period for the Additional Payloads (less the antenna subsystem) and fourteen (14) months plus ninety (90) days grace period for the antenna subsystem associated therewith, for purposes of clause 3(i) above and (B) in accordance with the Delivery Schedule for purposes of clause 3(ii) above."
+    },
+    {
+      "id": "R9",
+      "type": "COVENANT",
+      "party": "Orbital Sciences Corporation",
+      "action": "Late delivery penalty calculation method for separate items",
+      "mappable": false,
+      "description": "For purposes of calculating late delivery penalties, however, late deliveries of separate items associated with the same Additional Payload shall be determined by the greatest lateness of any single item, but shall not be additive. For example, if the first flight Additional Payload (less the antenna subsystem) is delivered seventy-five (75) days late, and the first flight antenna subsystem is delivered one hundred (100) days late, the late charge shall be calculated on the basis that the first Additional Payload was delivered seventy-five (75) days late, or fifteen (15) days worth of late charges."
+    },
+    {
+      "id": "R10",
+      "type": "OBLIGATION",
+      "party": "Orbital Sciences Corporation",
+      "action": "Pay power penalty if payload exceeds weight limits",
+      "mappable": true,
+      "description": "If ORBCOMM agrees to accept Additional Payloads that exceed the maximum operating power and/or weight limits set forth in the Specifications, then Orbital shall pay ORBCOMM as compensation therefor, $10,000 per Kg in excess of 20.31 Kg (inclusive of 1kg grace) for the total Additional Payload mass as set forth in Section 4.5.4 of the Specifications and $10,000 per 5 Watts in excess of 120 Watts (inclusive of 5 Watts margin) of total Additional Payload power as set forth in Section 4.5.5 of the Specifications, in each case per Additional Payload, and in each case pro rated for partial amounts in excess of such maximum weight and/or power. The maximum payment that shall be paid for exceeding the power and/or weight limits shall not exceed $100,000."
+    },
+    {
+      "id": "R11",
+      "type": "PERMISSION",
+      "party": "ORBCOMM Inc",
+      "action": "Direct Orbital to perform additional environmental testing",
+      "mappable": false,
+      "description": "If ORBCOMM directs (in writing) Orbital to perform the additional environmental testing for flight payloads as set forth in Section 6.3.2.2 of the SOW, ORBCOMM shall pay Orbital an additional amount of $94,000 for the first Additional Payload so tested at ORBCOMM's direction and an amount of $26,000 for each subsequent Additional Payload thereafter. In addition, Orbital shall be allowed up to fourteen (14 days of schedule relief as necessary to accomplish such testing. ORBCOMM's direction for this additional testing must be received within six (6) months after the Effective Date."
+    },
+    {
+      "id": "R12",
+      "type": "COVENANT",
+      "party": "Orbital Sciences Corporation",
+      "action": "Calculate time and material charges per Exhibit E-1",
+      "mappable": false,
+      "description": "All time and material charges, if applicable, shall be calculated in accordance with Exhibit E-1 hereto. Where insofar in this regard it becomes necessary to calculate 'costs,' costs shall be limited to reasonable, out of pocket, and documented costs actually incurred, and only insofar as the costs exceed the cost that would have had to been incurred by Orbital in any event without additional charge."
+    },
+    {
+      "id": "R13",
+      "type": "OBLIGATION",
+      "party": "ORBCOMM Inc",
+      "action": "Hold back 4% of Price until one year after successful IOT",
+      "mappable": true,
+      "description": "As shown in Exhibit E-1, four percent (4%) of the Price ($680,000) (the 'Holdback Amount') shall be held back by ORBCOMM until one-year (12 months) after the successful completion of payload IOT for the Additional Payloads. Said Holdback Amount shall be paid by ORBCOMM to Orbital if all of the Additional Payloads are successfully operating in accordance with their Specifications on said first anniversary date."
+    },
+    {
+      "id": "R14",
+      "type": "OBLIGATION",
+      "party": "ORBCOMM Inc",
+      "action": "Deliver performance bond or letter of credit",
+      "mappable": true,
+      "description": "In order to holdback such amounts, ORBCOMM shall, not later than thirty (30) days prior to launch, deliver to ORBITAL a performance bond or letter of credit to receive such payment, failing which ORBCOMM shall make the Holdback Payment to Orbital or a mutually agreeable third party escrow agent at that time, but subject to refund by Orbital (or release to ORBCOMM by such escrow agent), on a pro rata basis, if one or more of the Additional Payloads are not so successfully operating on said first anniversary date."
+    },
+    {
+      "id": "R15",
+      "type": "OBLIGATION",
+      "party": "ORBCOMM Inc",
+      "action": "Make Holdback Payment if bond/LC not delivered",
+      "mappable": true,
+      "description": "If ORBCOMM fails to deliver bond/LC within deadline: ORBCOMM shall make the Holdback Payment to Orbital or a mutually agreeable third party escrow agent at that time, but subject to refund by Orbital (or release to ORBCOMM by such escrow agent), on a pro rata basis, if one or more of the Additional Payloads are not so successfully operating on said first anniversary date."
+    },
+    {
+      "id": "R16",
+      "type": "POWER",
+      "party": "ORBCOMM Inc",
+      "action": "Option to purchase up to 2 Optional Payloads",
+      "mappable": false,
+      "description": "ORBCOMM shall have the option to require Orbital to manufacture, test and deliver to ORBCOMM up to two (2) Additional Payloads (in addition to those delivered pursuant to clause 1 above) in accordance with the SOW and the Specifications (the 'Optional Payloads'). The firm fixed price for each Optional Payload, each with an additional SRX, shall be $2,200,000. Delivery of each Optional Payload(less the antenna subsystem) will be fourteen (14) months (plus sixty (60) days grace period) and fourteen (14) months (plus ninety (90) days grace period) for the antenna subsystem associated therewith, after ORBCOMM's written direction is received exercising this option and the first milestone payment for each Optional Payload in the amount of $200,000 is received. The payment schedule for the Optional Payloads shall correspond as closely as possible (in terms of time and percentage of total price) to the AP Milestones set forth on Exhibit E-1. This option must be exercised, if at all and at ORBCOMM's sole discretion, no later than three (3) months after the Effective Date with respect to each Additional Option. This option may be exercised by ORBCOMM in whole or in part."
+    },
+    {
+      "id": "R17",
+      "type": "OBLIGATION",
+      "party": "Orbital Sciences Corporation",
+      "action": "Manufacture, test and deliver Optional Payloads if option exercised",
+      "mappable": true,
+      "description": "Upon exercise of option, Orbital must manufacture, test and deliver up to two Optional Payloads per SOW and Specifications. Delivery of each Optional Payload (less antenna subsystem) within 14 months plus 60 days grace period after written direction and first milestone payment received. Delivery of antenna subsystem within 14 months plus 90 days grace period after written direction and payment received."
+    },
+    {
+      "id": "R18",
+      "type": "IMMUNITY",
+      "party": "Orbital Sciences Corporation",
+      "action": "Not responsible for late charges during force majeure period",
+      "mappable": false,
+      "description": "If and to the extent that a delay in delivery is excused by force majeure then Orbital shall not be responsible for late charges under clause 3(i) above for the period of such force majeure delay. The time required for delivery in order for Orbital to achieve on-time or early delivery incentives under clause 3(ii) above shall, however, not be extended by force majeure delays."
+    },
+    {
+      "id": "R19",
+      "type": "OBLIGATION",
+      "party": "Orbital Sciences Corporation",
+      "action": "Provide all associated deliverables without additional charge",
+      "mappable": true,
+      "description": "Orbital acknowledges and agrees that it shall provide all associated deliverables, including the EDU Unit, documentation, and services, as specified in the Procurement Agreement, this Amendment, and the SOW without additional charge, except if and to the extent that a particular task is expressly stated as being subject to additional payment for time and material expenses."
+    },
+    {
+      "id": "R20",
+      "type": "OBLIGATION",
+      "party": "Orbital Sciences Corporation",
+      "action": "Be responsible for all U.S. tax payments",
+      "mappable": true,
+      "description": "Orbital shall be responsible for all United States (including political subdivisions) tax payments, liabilities, or claims required by present or future laws and regulations."
+    },
+    {
+      "id": "R21",
+      "type": "OBLIGATION",
+      "party": "ORBCOMM Inc",
+      "action": "Be responsible for all non-U.S. taxes and customs duties",
+      "mappable": true,
+      "description": "ORBCOMM shall be responsible for all non-U.S. (including political subdivisions) taxes, liabilities, or claims, and any customs duties, if any, levied upon or measured by the sale, the sales price, or the use of the equipment deliverable under this Amendment required by present or future laws and regulations."
+    },
+    {
+      "id": "R22",
+      "type": "REPRESENTATION",
+      "party": "Orbital Sciences Corporation",
+      "action": "Transfer of title passes before entering non-U.S. territory",
+      "mappable": false,
+      "description": "Transfer of title to each deliverable item will pass to ORBCOMM prior to each deliverable item entering non-U.S. territory and after each deliverable item leaves the United States."
+    },
+    {
+      "id": "R23",
+      "type": "COVENANT",
+      "party": "Orbital Sciences Corporation",
+      "action": "Make reasonable changes for tax efficiency",
+      "mappable": false,
+      "description": "Orbital shall agree to make reasonable changes in the Procurement Agreement and this Amendment, such as modifying the place of delivery and/or delaying the passage of title, as ORBCOMM may request in writing, in order to improve the tax efficiencies with respect to the Additional Payloads, provided that any such change shall be economically neutral to Orbital."
+    },
+    {
+      "id": "R24",
+      "type": "OBLIGATION",
+      "party": "ORBCOMM Inc",
+      "action": "Indemnify Orbital for damages from holding title after delivery",
+      "mappable": true,
+      "description": "ORBCOMM shall indemnify and hold harmless Orbital from and against any damages as a result of Orbital holding title to any Additional Payloads following delivery thereof to the shipper at Orbital's facility."
+    },
+    {
+      "id": "R25",
+      "type": "COVENANT",
+      "party": "Orbital Sciences Corporation",
+      "action": "Provide reasonable assistance for insurance matters",
+      "mappable": false,
+      "description": "Orbital shall, at ORBCOMM's request, provide reasonable assistance to ORBCOMM, in seeking to obtain launch and/or in-orbit insurance and/or in pursuing any claim thereunder, including participating in a reasonable number of technical presentations to insurers and providing such documentation as may be reasonably requested."
+    },
+    {
+      "id": "R26",
+      "type": "COVENANT",
+      "party": "Orbital Sciences Corporation",
+      "action": "Remedy defects found in integration testing",
+      "mappable": false,
+      "description": "If integration testing reveals defects in the Additional Payloads resulting from a defect in workmanship or materials or noncompliance with the SOW or Specifications, Orbital shall be responsible, at its own expense, for the timely repair and correction of the Additional Payloads, if practical at the facility of the integrator (with the time spent by its personnel not charged against then allocated time to ORBCOMM) and if not, at Orbital's facilities, with all transportation, insurance, and risk of loss in transit to and from the integrator's facilities and those of Orbital borne by Orbital."
+    },
+    {
+      "id": "R27",
+      "type": "OBLIGATION",
+      "party": "Orbital Sciences Corporation",
+      "action": "Grant first priority security interest in work",
+      "mappable": true,
+      "description": "As collateral for the timely performance by Orbital of its work hereunder, Orbital hereby grants to ORBCOMM a first priority security interest in the work and work in progress and any proceeds therefrom with respect to the Additional Payloads."
+    },
+    {
+      "id": "R28",
+      "type": "OBLIGATION",
+      "party": "ORBCOMM Inc",
+      "action": "Execute release of security interest upon title transfer",
+      "mappable": true,
+      "description": "ORBCOMM agrees to execute any release of such security interest when Orbital has transferred to it title to the Additional Payloads and all deliverables associated therewith."
+    },
+    {
+      "id": "R29",
+      "type": "OBLIGATION",
+      "party": "Orbital Sciences Corporation",
+      "action": "Execute documentation of security interest as requested",
+      "mappable": true,
+      "description": "Orbital shall execute such documentation thereof as ORBCOMM may reasonably request."
+    },
+    {
+      "id": "R30",
+      "type": "OBLIGATION",
+      "party": "Orbital Sciences Corporation",
+      "action": "Properly inventory and identify work",
+      "mappable": true,
+      "description": "Supplies, prints, materials, components, subsystems, and systems as associated with such work shall be properly inventoried and identified as associated with such work in accordance with Orbital's normal inventory control practice, documentation of which shall be subject to inspection by ORBCOMM, and shall not be redeployed to other programs without ORBCOMM's consent."
+    },
+    {
+      "id": "R31",
+      "type": "OBLIGATION",
+      "party": "Orbital Sciences Corporation",
+      "action": "Execute and perform Preferred Escrow Agreement",
+      "mappable": true,
+      "description": "Orbital shall, in addition, contemporaneously with its entry into this Amendment, execute (as the 'Depositor') and thereafter perform the obligations of a Depositor under the 'Preferred Escrow Agreement' with Iron Mountain and ORBCOMM (as the 'Preferred Beneficiary'), attached hereto as Exhibit G."
+    },
+    {
+      "id": "R32",
+      "type": "OBLIGATION",
+      "party": "ORBCOMM Inc",
+      "action": "Pay Iron Mountain's fees under Preferred Escrow Agreement",
+      "mappable": true,
+      "description": "ORBCOMM agrees that it shall pay Iron Mountain's fees under the Preferred Escrow Agreement."
+    },
+    {
+      "id": "R33",
+      "type": "POWER",
+      "party": "ORBCOMM Inc",
+      "action": "Right to adjust or terminate Preferred Escrow Agreement",
+      "mappable": false,
+      "description": "Subject to ORBCOMM's obligation to pay Iron Mountain's fees, Orbital agrees that ORBCOMM shall have the right to adjust the level of work to be performed by Iron Mountain and/or terminate the Preferred Escrow Agreement in accordance with its terms and Orbital shall execute and deliver such instructions to Iron Mountain as ORBCOMM may reasonably request to reflect ORBCOMM's decisions in this regard."
+    },
+    {
+      "id": "R34",
+      "type": "COVENANT",
+      "party": "Orbital Sciences Corporation",
+      "action": "Comply with all applicable laws and regulations",
+      "mappable": false,
+      "description": "Each Party shall comply with all applicable laws and regulations with respect to the performance of this Amendment."
+    },
+    {
+      "id": "R35",
+      "type": "COVENANT",
+      "party": "ORBCOMM Inc",
+      "action": "Comply with all applicable laws and regulations",
+      "mappable": false,
+      "description": "Each Party shall comply with all applicable laws and regulations with respect to the performance of this Amendment."
+    },
+    {
+      "id": "R36",
+      "type": "PERMISSION",
+      "party": "ORBCOMM Inc",
+      "action": "May seek specific performance",
+      "mappable": false,
+      "description": "Nothing in the Procurement Agreement or this Amendment shall be deemed to bar either party from seeking specific performance of the other party's obligations hereunder."
+    },
+    {
+      "id": "R37",
+      "type": "PERMISSION",
+      "party": "Orbital Sciences Corporation",
+      "action": "May seek specific performance",
+      "mappable": false,
+      "description": "Nothing in the Procurement Agreement or this Amendment shall be deemed to bar either party from seeking specific performance of the other party's obligations hereunder."
+    },
+    {
+      "id": "R38",
+      "type": "PROHIBITION",
+      "party": "ORBCOMM Inc",
+      "action": "Must not make public announcement without approval",
+      "mappable": true,
+      "description": "Except as may be required by applicable laws, neither party will make a public announcement regarding this Amendment without the approval of the other party, which approval will not be unreasonably withheld."
+    },
+    {
+      "id": "R39",
+      "type": "PROHIBITION",
+      "party": "Orbital Sciences Corporation",
+      "action": "Must not make public announcement without approval",
+      "mappable": true,
+      "description": "Except as may be required by applicable laws, neither party will make a public announcement regarding this Amendment without the approval of the other party, which approval will not be unreasonably withheld."
+    }
+  ],
+  "params": {
+    "parties": [
+      "ORBCOMM Inc",
+      "Orbital Sciences Corporation",
+      "Iron Mountain"
+    ],
+    "amounts": {
+      "contract_price": "17000000",
+      "holdback_amount": "680000",
+      "optional_payload_price": "2200000",
+      "optional_payload_first_milestone": "200000",
+      "on_time_incentive": "204000",
+      "early_delivery_per_day": "1700",
+      "late_delivery_per_day": "8500",
+      "additional_testing_first": "94000",
+      "additional_testing_subsequent": "26000",
+      "power_penalty_per_5w": "10000",
+      "weight_penalty_per_kg": "10000"
+    },
+    "rates": {
+      "on_time_incentive_percent": "0.012",
+      "early_delivery_percent_per_day": "0.0001",
+      "late_delivery_percent_per_day": "0.0005",
+      "holdback_percent": "0.04"
+    },
+    "durations": {
+      "delivery_window_months": 14,
+      "payload_grace_period_days": 60,
+      "antenna_grace_period_days": 90,
+      "payment_net_days": 10,
+      "optional_payload_exercise_months": 3,
+      "additional_testing_direction_months": 6,
+      "additional_testing_schedule_relief_days": 14,
+      "holdback_period_months": 12,
+      "bond_lc_deadline_days_before_launch": 30
+    }
+  }
+}
