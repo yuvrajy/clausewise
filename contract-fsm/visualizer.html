@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contract FSM Visualizer</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#09090b}</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback, useMemo } = React;
+
+/* ═══════════════════════════════════════════
+   AUTO-LAYOUT — scales to contract complexity
+   ═══════════════════════════════════════════ */
+
+function autoLayout(states, transitions, initial) {
+  const ids = states.map(s => s.id), n = ids.length;
+  if (!n) return { pos: {}, w: 400, h: 300 };
+
+  const adj = {};
+  ids.forEach(id => (adj[id] = new Set()));
+  transitions.forEach(t => {
+    const fs = t.from_states || t.from || [t.from_state];
+    (Array.isArray(fs) ? fs : [fs]).forEach(f => {
+      if (adj[f]) adj[f].add(t.to_state || t.to);
+    });
+  });
+
+  // BFS depth
+  const depth = {};
+  const queue = [initial];
+  depth[initial] = 0;
+  while (queue.length) {
+    const c = queue.shift();
+    for (const nb of adj[c] || []) {
+      if (depth[nb] === undefined) { depth[nb] = depth[c] + 1; queue.push(nb); }
+    }
+  }
+  const maxD = Math.max(0, ...Object.values(depth));
+  ids.forEach(id => { if (depth[id] === undefined) depth[id] = maxD + 1; });
+
+  const layers = {};
+  ids.forEach(id => (layers[depth[id]] = layers[depth[id]] || []).push(id));
+
+  const nL = Object.keys(layers).length;
+  const nodeW = 180, nodeH = 56;
+  const gapX = 100, gapY = 50;
+  const padX = 100, padY = 60;
+
+  const maxPerLayer = Math.max(...Object.values(layers).map(l => l.length));
+  const totalW = padX * 2 + nL * nodeW + (nL - 1) * gapX;
+  const totalH = padY * 2 + maxPerLayer * nodeH + (maxPerLayer - 1) * gapY;
+
+  const pos = {};
+  Object.entries(layers).forEach(([d, grp]) => {
+    const di = parseInt(d);
+    const x = padX + nodeW / 2 + di * (nodeW + gapX);
+    const colH = grp.length * nodeH + (grp.length - 1) * gapY;
+    const startY = (totalH - colH) / 2;
+    grp.forEach((id, i) => {
+      pos[id] = { x, y: startY + nodeH / 2 + i * (nodeH + gapY) };
+    });
+  });
+
+  return { pos, w: Math.max(totalW, 600), h: Math.max(totalH, 300) };
+}
+
+
+/* ═══════════════════════════════════════════
+   CLIENT-SIDE DECOMPILER
+   ═══════════════════════════════════════════ */
+
+function decompileFSM(fsm) {
+  if (!fsm) return "";
+  const L = [];
+  const cid = fsm.contract_id || "?";
+  const parties = (fsm.parties || []).slice().sort();
+  const states = (fsm.states || []).slice().sort((a, b) => a.id.localeCompare(b.id));
+  const transitions = (fsm.transitions || []).slice().sort((a, b) => a.id.localeCompare(b.id));
+  const rules = (fsm.rules || []).slice().sort((a, b) => a.id.localeCompare(b.id));
+  const params = fsm.params || {};
+  const initial = fsm.initial_state;
+  const unmappable = (fsm.unmappable_rules || []).slice().sort((a, b) => (a.id || "").localeCompare(b.id || ""));
+
+  L.push("=".repeat(60), `CONTRACT: ${cid}`, "=".repeat(60), "");
+  L.push("PARTIES", "─".repeat(40));
+  parties.forEach((p, i) => L.push(`  ${i + 1}. ${p}`));
+  L.push("");
+
+  const am = params.amounts || {}, ra = params.rates || {}, du = params.durations || {};
+  if (Object.keys(am).length || Object.keys(ra).length || Object.keys(du).length) {
+    L.push("CONTRACT PARAMETERS", "─".repeat(40));
+    Object.entries(am).sort().forEach(([k, v]) => L.push(`  ${k.replace(/_/g, " ")}: $${parseFloat(v).toLocaleString()}`));
+    Object.entries(ra).sort().forEach(([k, v]) => { const r = parseFloat(v); L.push(`  ${k.replace(/_/g, " ")}: ${r < 1 ? (r * 100).toFixed(2) + "%" : v}`); });
+    Object.entries(du).sort().forEach(([k, v]) => L.push(`  ${k.replace(/_/g, " ")}: ${v} days`));
+    L.push("");
+  }
+
+  L.push("CONTRACT STATES", "─".repeat(40));
+  states.forEach(s => {
+    let m = ""; if (s.id === initial) m = " ← initial"; if (s.terminal) m = " ← terminal";
+    L.push(`  ${s.description}${m}`);
+  });
+  L.push("");
+
+  const mappable = rules.filter(r => r.mappable !== false);
+  if (mappable.length) {
+    L.push("RULES", "─".repeat(40));
+    mappable.forEach(r => {
+      L.push(`  ${r.id} [${r.type}] ${r.party} → ${r.counterparty}`);
+      L.push(`    ${r.action}`);
+      if (r.description) L.push(`    ${r.description}`);
+      (r.triggers || []).forEach(t => L.push(`    Trigger [${t.type}]: ${t.condition}`));
+      (r.effects || []).forEach(e => {
+        L.push(`    Effect [${e.type}]: ${e.description}`);
+        if (e.payment_formula) L.push(`      Formula: ${e.payment_formula}`);
+        if (e.cap) L.push(`      Cap: $${e.cap}`);
+      });
+      L.push("");
+    });
+  }
+
+  L.push("STATE TRANSITIONS", "─".repeat(40));
+  const byS = {};
+  transitions.forEach(t => {
+    const fs = t.from_states || t.from || [t.from_state];
+    (Array.isArray(fs) ? fs : [fs]).forEach(f => (byS[f] = byS[f] || []).push(t));
+  });
+  states.forEach(s => {
+    const ts = byS[s.id]; if (!ts) return;
+    L.push(`  When in "${s.description}":`);
+    ts.sort((a, b) => a.id.localeCompare(b.id)).forEach(t => {
+      const ev = (t.event_type || "").replace(/_/g, " ");
+      const tgt = states.find(st => st.id === (t.to_state || t.to));
+      L.push(`    On "${ev}":`);
+      if (t.guard) L.push(`      Guard: ${t.guard}`);
+      if (t.description) L.push(`      ${t.description}`);
+      const same = (t.from_states || t.from || []).every(f => f === (t.to_state || t.to));
+      L.push(`      → ${same ? "remains" : `"${tgt?.description || t.to_state || t.to}"`}`);
+    });
+    L.push("");
+  });
+
+  if (unmappable.length) {
+    L.push("UNMODELED RULES", "─".repeat(40));
+    unmappable.forEach(r => {
+      L.push(`  ${r.id} [${r.type}] ${r.description || r.action || ""}`);
+      if (r.unmappable_reason) L.push(`    Reason: ${r.unmappable_reason}`);
+    });
+    L.push("");
+  }
+  L.push("=".repeat(60), "END OF CONTRACT", "=".repeat(60));
+  return L.join("\n");
+}
+
+
+/* ═══════════════════════════════════════════
+   THEME
+   ═══════════════════════════════════════════ */
+
+function evColor(ev) {
+  const map = { purchase: "#60a5fa", cash_advance: "#c084fc", billing_cycle_close: "#fb923c", payment_received: "#34d399", payment_deadline_passed: "#f87171", account_closed: "#9ca3af" };
+  return map[ev] || `hsl(${[...(ev || "x")].reduce((a, c) => a + c.charCodeAt(0), 0) % 360}, 55%, 60%)`;
+}
+const RC = { OBLIGATION: "#60a5fa", PROHIBITION: "#f87171", PERMISSION: "#34d399", POWER: "#fb923c", IMMUNITY: "#c084fc", REPRESENTATION: "#eab308", WARRANTY: "#a78bfa", COVENANT: "#9ca3af" };
+const VC = ["#60a5fa", "#fb923c", "#f87171", "#34d399", "#c084fc", "#eab308", "#a78bfa", "#f472b6", "#38bdf8", "#4ade80"];
+const mono = "'IBM Plex Mono','JetBrains Mono','Fira Code',monospace";
+
+function truncate(s, n) { return s && s.length > n ? s.slice(0, n - 1) + "…" : s; }
+
+
+/* ═══════════════════════════════════════════
+   SVG DIAGRAM
+   ═══════════════════════════════════════════ */
+
+function Diagram({ fsm, layout, cur, prev, firedT }) {
+  const { pos, w, h } = layout;
+  const states = fsm.states || [];
+  const transitions = fsm.transitions || [];
+  const initial = fsm.initial_state;
+  const NW = 170, NH = 48;
+  const [tip, setTip] = useState(null); // {x, y, state}
+  const svgRef = useRef(null);
+
+  const edges = {};
+  transitions.forEach(t => {
+    const froms = t.from_states || t.from || [t.from_state];
+    const to = t.to_state || t.to;
+    (Array.isArray(froms) ? froms : [froms]).forEach(f => {
+      const k = `${f}→${to}`;
+      (edges[k] = edges[k] || []).push(t);
+    });
+  });
+
+  const handleEnter = (e, s) => {
+    const el = svgRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    setTip({
+      x: e.clientX - rect.left + el.scrollLeft,
+      y: e.clientY - rect.top + el.scrollTop - 12,
+      state: s
+    });
+  };
+
+  return (
+    <div style={{ overflowX: "auto", overflowY: "auto", maxHeight: 520, borderRadius: 8, position: "relative" }} ref={svgRef}>
+      {/* Tooltip */}
+      {tip && (
+        <div style={{
+          position: "absolute", left: tip.x, top: tip.y, transform: "translate(-50%, -100%)",
+          background: "#27272a", border: "1px solid #3f3f46", borderRadius: 6,
+          padding: "8px 12px", maxWidth: 320, zIndex: 10, pointerEvents: "none",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
+        }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: "#fafafa", marginBottom: 3, lineHeight: 1.3 }}>{tip.state.description}</div>
+          <div style={{ fontSize: 9, fontFamily: mono, color: "#52525b", marginBottom: 2 }}>{tip.state.id}{tip.state.terminal ? " · terminal" : ""}{tip.state.id === initial ? " · initial" : ""}</div>
+          {(tip.state.active_rule_ids || []).length > 0 && (
+            <div style={{ fontSize: 9, fontFamily: mono, color: "#71717a", marginTop: 4 }}>
+              Rules: {tip.state.active_rule_ids.join(", ")}
+            </div>
+          )}
+        </div>
+      )}
+      <svg viewBox={`0 0 ${w} ${h}`} width={Math.max(w, 600)} height={Math.max(h, 300)} style={{ display: "block", minWidth: "100%" }}>
+        <defs>
+          <marker id="ar" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="6" markerHeight="4" orient="auto"><path d="M0 0L10 3.5L0 7z" fill="#3f3f46" /></marker>
+          <marker id="al" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="6" markerHeight="4" orient="auto"><path d="M0 0L10 3.5L0 7z" fill="#a78bfa" /></marker>
+          <filter id="gl"><feGaussianBlur stdDeviation="3" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+        </defs>
+
+        {/* Edges */}
+        {Object.entries(edges).map(([k, ts]) => {
+          const [fk, tk] = k.split("→");
+          const fp = pos[fk], tp = pos[tk];
+          if (!fp || !tp) return null;
+          const lit = firedT && ts.some(t => t.id === firedT);
+          const col = lit ? "#a78bfa" : "#3f3f46";
+          const sw = lit ? 2 : 0.8;
+          const mk = lit ? "url(#al)" : "url(#ar)";
+          const sty = lit ? { filter: "url(#gl)" } : {};
+
+          if (fk === tk) {
+            return <path key={k} d={`M${fp.x - 20} ${fp.y - NH / 2}C${fp.x - 55} ${fp.y - NH - 30},${fp.x + 55} ${fp.y - NH - 30},${fp.x + 20} ${fp.y - NH / 2}`} fill="none" stroke={col} strokeWidth={sw} markerEnd={mk} style={sty} />;
+          }
+          const dx = tp.x - fp.x, dy = tp.y - fp.y, ln = Math.sqrt(dx * dx + dy * dy) || 1;
+          const nx = dx / ln, ny = dy / ln;
+          const x1 = fp.x + nx * (NW / 2 + 4), y1 = fp.y + ny * (NH / 2 + 2);
+          const x2 = tp.x - nx * (NW / 2 + 4), y2 = tp.y - ny * (NH / 2 + 2);
+          const mx = (x1 + x2) / 2 - ny * 18, my = (y1 + y2) / 2 + nx * 18;
+          return <path key={k} d={`M${x1} ${y1}Q${mx} ${my} ${x2} ${y2}`} fill="none" stroke={col} strokeWidth={sw} markerEnd={mk} style={sty} />;
+        })}
+
+        {/* Nodes */}
+        {states.map(s => {
+          const p = pos[s.id];
+          if (!p) return null;
+          const iC = s.id === cur, wP = s.id === prev && prev !== cur;
+          let fi = "#18181b", st = "#3f3f46", tx = "#a1a1aa";
+          if (s.id === initial && !iC && !wP) { st = "#60a5fa"; tx = "#93c5fd"; }
+          if (s.terminal && !iC) { st = "#ef4444"; tx = "#fca5a5"; }
+          if (wP) { st = "#a78bfa"; tx = "#c4b5fd"; fi = "#1a1625"; }
+          if (iC) { st = "#34d399"; tx = "#6ee7b7"; fi = "#052e16"; }
+          const label = truncate(s.description || s.id, 30);
+          const fullLabel = s.description || s.id;
+
+          return (
+            <g key={s.id}
+              onMouseEnter={(e) => handleEnter(e, s)}
+              onMouseMove={(e) => handleEnter(e, s)}
+              onMouseLeave={() => setTip(null)}
+              style={{ cursor: "pointer" }}>
+              <rect x={p.x - NW / 2} y={p.y - NH / 2} width={NW} height={NH} rx={6}
+                fill={fi} stroke={st} strokeWidth={iC ? 2 : 1}
+                style={iC ? { filter: "url(#gl)" } : {}} />
+              {s.id === initial && <polygon points={`${p.x - NW / 2 - 14},${p.y} ${p.x - NW / 2 - 4},${p.y - 5} ${p.x - NW / 2 - 4},${p.y + 5}`} fill={st} />}
+              {s.terminal && <rect x={p.x - NW / 2 + 3} y={p.y - NH / 2 + 3} width={NW - 6} height={NH - 6} rx={4} fill="none" stroke={st} strokeWidth={0.5} strokeDasharray="3 2" />}
+              <text x={p.x} y={p.y + 1} textAnchor="middle" dominantBaseline="middle"
+                fill={tx} fontSize="8.5" fontFamily={mono} fontWeight={iC ? 700 : 500}>
+                {label}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
+
+/* ═══════════════════════════════════════════
+   SMALL COMPONENTS
+   ═══════════════════════════════════════════ */
+
+function Bdg({ label, color }) {
+  return <span style={{ display: "inline-block", padding: "2px 8px", borderRadius: 4, fontSize: 10, fontFamily: mono, fontWeight: 600, color, border: `1px solid ${color}25`, background: `${color}10`, whiteSpace: "nowrap" }}>{label}</span>;
+}
+
+function Bar({ label, value, max, color, money }) {
+  const pct = max > 0 ? Math.min(100, (Math.abs(value) / max) * 100) : 0;
+  const fmt = money ? `$${Number(value).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : String(value);
+  return (
+    <div style={{ marginBottom: 8 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10.5, fontFamily: mono, marginBottom: 2 }}>
+        <span style={{ color: "#71717a", maxWidth: "60%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{label}</span>
+        <span style={{ color, fontWeight: 600 }}>{fmt}</span>
+      </div>
+      <div style={{ height: 4, background: "#27272a", borderRadius: 2, overflow: "hidden" }}>
+        <div style={{ height: "100%", width: `${pct}%`, background: color, borderRadius: 2, transition: "width 0.4s ease" }} />
+      </div>
+    </div>
+  );
+}
+
+
+/* ═══════════════════════════════════════════
+   APP
+   ═══════════════════════════════════════════ */
+
+function App() {
+  const [fsmT, setFsmT] = useState("");
+  const [exT, setExT] = useState("");
+  const [fsm, setFsm] = useState(null);
+  const [exec, setExec] = useState(null);
+  const [err, setErr] = useState("");
+  const [step, setStep] = useState(-1);
+  const [playing, setPl] = useState(false);
+  const [tab, setTab] = useState("diagram");
+  const [selState, setSelState] = useState(null);
+  const pr = useRef(null);
+
+  const load = useCallback(() => {
+    try {
+      const f = JSON.parse(fsmT); setFsm(f); setErr(""); setStep(-1); setPl(false); setSelState(null);
+      if (exT.trim()) { try { setExec(JSON.parse(exT)); } catch (e2) { setErr(`Exec JSON: ${e2.message}`); } }
+    } catch (e) { setErr(`FSM JSON: ${e.message}`); }
+  }, [fsmT, exT]);
+
+  const layout = useMemo(() => fsm ? autoLayout(fsm.states || [], fsm.transitions || [], fsm.initial_state) : { pos: {}, w: 400, h: 300 }, [fsm]);
+
+  const log = exec?.log || [];
+  const entry = step >= 0 && step < log.length ? log[step] : null;
+  const cur = entry ? (entry.state_after || entry.to) : fsm?.initial_state;
+  const prev = entry ? (entry.state_before || entry.from) : null;
+  const firedT = entry?.transition_fired || null;
+  const snap = entry?.fields_snapshot || entry?.variables_snapshot || {};
+
+  const varNames = useMemo(() => {
+    if (!log.length) return [];
+    const ns = new Set();
+    log.forEach(e => { const s = e.fields_snapshot || e.variables_snapshot || {}; Object.keys(s).forEach(k => ns.add(k)); });
+    return [...ns].filter(k => !k.startsWith("paid_") && !k.startsWith("__")).sort();
+  }, [log]);
+
+  const moneyV = useMemo(() => {
+    const s = new Set();
+    Object.keys(fsm?.params?.amounts || {}).forEach(k => s.add(k));
+    varNames.forEach(n => { if (/balance|fee|payment|interest|cost|amount|total|accrued|penalty|price/i.test(n)) s.add(n); });
+    return s;
+  }, [fsm, varNames]);
+
+  const maxV = useMemo(() => {
+    const m = {}; varNames.forEach(k => m[k] = 0);
+    log.forEach(e => { const s = e.fields_snapshot || e.variables_snapshot || {}; varNames.forEach(k => { const v = Math.abs(Number(s[k]) || 0); if (v > m[k]) m[k] = v; }); });
+    varNames.forEach(k => { if (m[k] === 0) m[k] = 1; }); return m;
+  }, [log, varNames]);
+
+  const english = useMemo(() => fsm ? decompileFSM(fsm) : "", [fsm]);
+  const next = useCallback(() => setStep(s => { if (s >= log.length - 1) { setPl(false); return s; } return s + 1; }), [log.length]);
+  useEffect(() => { if (playing) pr.current = setInterval(next, 1100); else clearInterval(pr.current); return () => clearInterval(pr.current); }, [playing, next]);
+
+  const curStateObj = fsm?.states?.find(s => s.id === cur);
+  const stD = curStateObj?.description || cur || "—";
+  const aR = curStateObj?.active_rule_ids || [];
+
+  const Btn = (p) => <button {...p} style={{ padding: "6px 14px", fontSize: 11, fontWeight: 600, cursor: p.disabled ? "default" : "pointer", background: "#27272a", border: "1px solid #3f3f46", borderRadius: 6, color: p.disabled ? "#52525b" : "#d4d4d8", fontFamily: mono, opacity: p.disabled ? 0.5 : 1, ...p.style }}>{p.children}</button>;
+
+  /* ── LOAD SCREEN ── */
+  if (!fsm) return (
+    <div style={{ fontFamily: "'Söhne',sans-serif", background: "#09090b", color: "#d4d4d8", minHeight: "100vh", maxWidth: 860, margin: "0 auto", padding: "48px 32px" }}>
+      <span style={{ fontSize: 9, fontFamily: mono, color: "#34d399", letterSpacing: 2.5, textTransform: "uppercase", fontWeight: 700 }}>Contract Visualizer</span>
+      <h1 style={{ fontSize: 22, fontWeight: 700, color: "#fafafa", margin: "8px 0 6px", letterSpacing: "-0.03em" }}>Load Any Contract</h1>
+      <p style={{ fontSize: 13, color: "#71717a", margin: "0 0 28px" }}>Paste the FSM JSON from your pipeline. Optionally add execution_result.json for step-through.</p>
+      <label style={{ fontSize: 9, fontFamily: mono, color: "#52525b", textTransform: "uppercase", letterSpacing: 1.5, display: "block", marginBottom: 6 }}>FSM Definition JSON *</label>
+      <textarea value={fsmT} onChange={e => setFsmT(e.target.value)} placeholder="Paste FSM JSON..." style={{ width: "100%", height: 180, background: "#18181b", border: "1px solid #27272a", borderRadius: 8, color: "#d4d4d8", fontFamily: mono, fontSize: 11, padding: 14, resize: "vertical", boxSizing: "border-box", marginBottom: 16 }} />
+      <label style={{ fontSize: 9, fontFamily: mono, color: "#52525b", textTransform: "uppercase", letterSpacing: 1.5, display: "block", marginBottom: 6 }}>Execution Result JSON (optional)</label>
+      <textarea value={exT} onChange={e => setExT(e.target.value)} placeholder="Paste execution_result.json..." style={{ width: "100%", height: 120, background: "#18181b", border: "1px solid #27272a", borderRadius: 8, color: "#d4d4d8", fontFamily: mono, fontSize: 11, padding: 14, resize: "vertical", boxSizing: "border-box", marginBottom: 16 }} />
+      {err && <div style={{ color: "#f87171", fontSize: 11, fontFamily: mono, marginBottom: 12 }}>{err}</div>}
+      <Btn onClick={load} style={{ background: "#052e16", color: "#34d399", borderColor: "#34d39940", padding: "10px 28px", fontSize: 13 }}>Load & Visualize</Btn>
+    </div>
+  );
+
+  /* ── TABS ── */
+  const nStates = (fsm.states || []).length;
+  const nRules = (fsm.rules || []).length;
+  const nTrans = (fsm.transitions || []).length;
+  const tabs = [
+    { id: "diagram", l: `States (${nStates})` },
+    ...(nRules ? [{ id: "rules", l: `Rules (${nRules})` }] : []),
+    { id: "english", l: "English" },
+    ...(log.length ? [{ id: "log", l: `Log (${log.length})` }] : []),
+  ];
+
+  return (
+    <div style={{ fontFamily: "'Söhne',sans-serif", background: "#09090b", color: "#d4d4d8", minHeight: "100vh", maxWidth: 1040, margin: "0 auto" }}>
+
+      {/* Header */}
+      <div style={{ padding: "20px 24px 0", borderBottom: "1px solid #27272a" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+          <span style={{ fontSize: 8.5, fontFamily: mono, color: "#34d399", letterSpacing: 2, textTransform: "uppercase", fontWeight: 700 }}>Executable Contract</span>
+          <span style={{ fontSize: 8.5, fontFamily: mono, color: "#52525b" }}>{nStates} states · {nTrans} transitions · {nRules} rules</span>
+          <button onClick={() => { setFsm(null); setExec(null); setStep(-1); setPl(false); }} style={{ marginLeft: "auto", background: "none", border: "1px solid #3f3f46", borderRadius: 4, color: "#71717a", fontSize: 9, padding: "3px 8px", cursor: "pointer", fontFamily: mono }}>New ↻</button>
+        </div>
+        <h1 style={{ fontSize: 17, fontWeight: 700, color: "#fafafa", margin: "0 0 14px", letterSpacing: "-0.02em" }}>{fsm.contract_id}</h1>
+        <div style={{ display: "flex", gap: 0 }}>{tabs.map(t =>
+          <button key={t.id} onClick={() => setTab(t.id)} style={{ padding: "8px 14px", fontSize: 10.5, fontWeight: 600, cursor: "pointer", background: "none", border: "none", borderBottom: tab === t.id ? "2px solid #fafafa" : "2px solid transparent", color: tab === t.id ? "#fafafa" : "#71717a", fontFamily: mono }}>{t.l}</button>
+        )}</div>
+      </div>
+
+      <div style={{ padding: "20px 24px" }}>
+
+        {/* ── DIAGRAM ── */}
+        {tab === "diagram" && (<>
+          <div style={{ background: "#18181b", borderRadius: 8, border: "1px solid #27272a", padding: 12, marginBottom: 16 }}>
+            <Diagram fsm={fsm} layout={layout} cur={cur} prev={prev} firedT={firedT} />
+          </div>
+
+          {/* Controls */}
+          {log.length > 0 && (
+            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 16 }}>
+              <Btn onClick={() => { setStep(-1); setPl(false); }}>↺</Btn>
+              <Btn onClick={() => setStep(s => Math.max(-1, s - 1))} disabled={step < 0}>◂</Btn>
+              <Btn onClick={() => setPl(!playing)} style={{ background: playing ? "#7f1d1d15" : "#05291015", color: playing ? "#f87171" : "#34d399", borderColor: playing ? "#f8717125" : "#34d39925" }}>{playing ? "⏸ " : "▸ Play"}</Btn>
+              <Btn onClick={next} disabled={step >= log.length - 1}>▸</Btn>
+              <span style={{ marginLeft: "auto", fontSize: 10, fontFamily: mono, color: "#52525b" }}>{step + 1} / {log.length}</span>
+            </div>
+          )}
+
+          {/* State + vars side by side */}
+          <div style={{ display: "grid", gridTemplateColumns: log.length ? "1fr 1fr" : "1fr", gap: 14 }}>
+            <div style={{ background: "#18181b", borderRadius: 8, border: "1px solid #27272a", padding: 16 }}>
+              <div style={{ fontSize: 8.5, color: "#52525b", textTransform: "uppercase", letterSpacing: 1.5, marginBottom: 6, fontFamily: mono }}>Current State</div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: "#34d399", marginBottom: 8, lineHeight: 1.3 }}>{stD}</div>
+
+              {aR.length > 0 && (
+                <div style={{ marginBottom: 12 }}>
+                  <div style={{ fontSize: 8.5, color: "#52525b", textTransform: "uppercase", letterSpacing: 1.5, marginBottom: 4, fontFamily: mono }}>Active Rules ({aR.length})</div>
+                  <div style={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
+                    {aR.map(rid => {
+                      const r = fsm.rules?.find(x => x.id === rid);
+                      return <Bdg key={rid} label={rid} color={r ? RC[r.type] || "#9ca3af" : "#71717a"} />;
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {entry ? (<>
+                <div style={{ fontSize: 8.5, color: "#52525b", textTransform: "uppercase", letterSpacing: 1.5, marginBottom: 4, marginTop: 8, fontFamily: mono }}>Event</div>
+                <div style={{ marginBottom: 8 }}>
+                  <Bdg label={(entry.event_type || entry.trigger || "").replace(/_/g, " ")} color={evColor(entry.event_type || entry.trigger || "")} />
+                  {firedT && <span style={{ fontSize: 9, color: "#3f3f46", marginLeft: 6, fontFamily: mono }}>{firedT}</span>}
+                </div>
+                {entry.description && <div style={{ fontSize: 11, color: "#d4d4d8", padding: "8px 10px", background: "#09090b", borderRadius: 4, border: "1px solid #27272a", fontFamily: mono, lineHeight: 1.4 }}>{entry.description}</div>}
+                {entry.note && <div style={{ fontSize: 10, color: "#eab308", marginTop: 6, fontFamily: mono }}>⚠ {entry.note}</div>}
+              </>) : (
+                <div style={{ fontSize: 11, color: "#52525b", fontStyle: "italic" }}>{log.length ? "Press Play or ▸ to begin." : "Load execution result for step-through."}</div>
+              )}
+            </div>
+
+            {log.length > 0 && (
+              <div style={{ background: "#18181b", borderRadius: 8, border: "1px solid #27272a", padding: 16, maxHeight: 340, overflowY: "auto" }}>
+                <div style={{ fontSize: 8.5, color: "#52525b", textTransform: "uppercase", letterSpacing: 1.5, marginBottom: 10, fontFamily: mono }}>Variables ({varNames.length})</div>
+                {varNames.slice(0, 15).map((k, i) =>
+                  <Bar key={k} label={k.replace(/_/g, " ")} value={Number(snap[k]) || 0} max={maxV[k]} color={VC[i % VC.length]} money={moneyV.has(k)} />
+                )}
+              </div>
+            )}
+          </div>
+        </>)}
+
+        {/* ── RULES ── */}
+        {tab === "rules" && (
+          <div style={{ display: "grid", gap: 8 }}>
+            {(fsm.rules || []).filter(r => r.mappable !== false).map(r => {
+              const c = RC[r.type] || "#9ca3af";
+              return (
+                <div key={r.id} style={{ padding: "10px 14px", background: "#18181b", borderRadius: 6, border: `1px solid ${c}18` }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 3 }}>
+                    <Bdg label={r.id} color={c} />
+                    <span style={{ fontSize: 9, fontFamily: mono, color: "#52525b" }}>{r.type}</span>
+                    <span style={{ fontSize: 10, color: "#a1a1aa" }}>{r.party} → {r.counterparty}</span>
+                  </div>
+                  <div style={{ fontSize: 11.5, color: "#d4d4d8", fontWeight: 600 }}>{r.action}</div>
+                  {r.description && <div style={{ fontSize: 10.5, color: "#71717a", marginTop: 2 }}>{r.description}</div>}
+                  {(r.effects || []).map((e, i) => e.payment_formula && <div key={i} style={{ fontSize: 9.5, color: "#fb923c", marginTop: 3, fontFamily: mono }}>Formula: {e.payment_formula}{e.cap ? ` · cap $${e.cap}` : ""}</div>)}
+                </div>
+              );
+            })}
+            {(fsm.unmappable_rules || []).length > 0 && <>
+              <div style={{ fontSize: 8.5, color: "#52525b", textTransform: "uppercase", letterSpacing: 1.5, marginTop: 12, fontFamily: mono }}>Unmappable ({fsm.unmappable_rules.length})</div>
+              {fsm.unmappable_rules.map(r =>
+                <div key={r.id} style={{ padding: "8px 14px", background: "#18181b", borderRadius: 6, border: "1px solid #27272a" }}>
+                  <Bdg label={`${r.id} ${r.type}`} color="#eab308" />
+                  <span style={{ fontSize: 10, color: "#71717a", marginLeft: 8 }}>{r.description || r.action}</span>
+                </div>
+              )}
+            </>}
+          </div>
+        )}
+
+        {/* ── ENGLISH ── */}
+        {tab === "english" && (
+          <div style={{ background: "#18181b", borderRadius: 8, border: "1px solid #27272a", padding: 20 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+              <Bdg label="DETERMINISTIC" color="#34d399" />
+              <span style={{ fontSize: 9, fontFamily: mono, color: "#52525b" }}>No LLMs · Template · Diff-safe</span>
+            </div>
+            <pre style={{ fontSize: 10.5, lineHeight: 1.6, color: "#d4d4d8", whiteSpace: "pre-wrap", fontFamily: mono, margin: 0, maxHeight: 600, overflowY: "auto" }}>{english}</pre>
+          </div>
+        )}
+
+        {/* ── LOG ── */}
+        {tab === "log" && log.length > 0 && (
+          <div style={{ background: "#18181b", borderRadius: 8, border: "1px solid #27272a", overflow: "hidden", maxHeight: 500, overflowY: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 10, fontFamily: mono }}>
+              <thead><tr style={{ borderBottom: "1px solid #27272a", position: "sticky", top: 0, background: "#18181b" }}>
+                {["#", "From", "Event", "T", "To", "Description"].map(h => <th key={h} style={{ padding: "8px 8px", textAlign: "left", color: "#52525b", fontWeight: 600, fontSize: 8.5, textTransform: "uppercase", letterSpacing: 1 }}>{h}</th>)}
+              </tr></thead>
+              <tbody>{log.map((e, i) => {
+                const fd = fsm.states?.find(s => s.id === (e.state_before || e.from))?.description || e.state_before;
+                const td = fsm.states?.find(s => s.id === (e.state_after || e.to))?.description || e.state_after;
+                const ev = e.event_type || e.trigger || "";
+                return (
+                  <tr key={i} onClick={() => { setStep(i); setTab("diagram"); }} style={{ borderBottom: "1px solid #ffffff06", cursor: "pointer", background: i === step ? "#34d39908" : "transparent" }}>
+                    <td style={{ padding: "6px 8px", color: "#52525b" }}>{e.step}</td>
+                    <td style={{ padding: "6px 8px", color: "#a1a1aa", maxWidth: 120, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{truncate(fd, 25)}</td>
+                    <td style={{ padding: "6px 8px" }}><Bdg label={ev.replace(/_/g, " ")} color={evColor(ev)} /></td>
+                    <td style={{ padding: "6px 8px", color: "#52525b" }}>{e.transition_fired || "—"}</td>
+                    <td style={{ padding: "6px 8px", color: "#a1a1aa", maxWidth: 120, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{truncate(td, 25)}</td>
+                    <td style={{ padding: "6px 8px", color: "#52525b", maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{e.description || e.note || ""}</td>
+                  </tr>
+                );
+              })}</tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Footer */}
+        <div style={{ marginTop: 20, padding: "10px 14px", background: "#18181b", borderRadius: 6, border: "1px solid #27272a", display: "flex", gap: 16, fontSize: 9, fontFamily: mono, color: "#3f3f46", flexWrap: "wrap" }}>
+          <span>Prose →<span style={{ color: "#60a5fa" }}> LLM </span>→ Rules</span>
+          <span>Rules →<span style={{ color: "#c084fc" }}> DET </span>→ FSM</span>
+          <span>FSM →<span style={{ color: "#c084fc" }}> DET </span>→ Python</span>
+          <span>FSM →<span style={{ color: "#c084fc" }}> DET </span>→ English</span>
+          <span style={{ marginLeft: "auto", color: "#34d399" }}>LLM-free round-trip ✓</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
+</script>
+</body>
+</html>
